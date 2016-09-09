@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
 [assembly: AssemblyTitle("ACTWebSocket.Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("WebSocket plugin for Advanced Combat Tracker")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ACTWebSocket.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("ZCube.kr")]
+[assembly: AssemblyProduct("ACTWebSocket")]
+[assembly: AssemblyCopyright("Copyright © ZCube.kr 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

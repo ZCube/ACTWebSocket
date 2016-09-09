@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ACTWebSocket")]
 [assembly: AssemblyDescription("WebSocket plugin for Advanced Combat Tracker")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("쿨냠쿨냠")]
+[assembly: AssemblyCompany("ZCube.kr")]
 [assembly: AssemblyProduct("ACTWebSocket")]
-[assembly: AssemblyCopyright("Copyright © 쿨냠쿨냠 2016")]
+[assembly: AssemblyCopyright("Copyright © ZCube.kr 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
