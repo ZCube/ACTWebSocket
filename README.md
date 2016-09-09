@@ -86,6 +86,14 @@ WebSocket Plugin for Advanced Combat Tracker v3
   ...
 ```
 
+## 요구 사항 ##
+
+* .Net Framework 4.5
+
+## 빌드 방법 ##
+
+1. external/websocket-sharp를 빌드후 dll 파일을 external 디렉토리에 복사
+2. ACTWebSocket.Loader에서 ACTWebSocket.sln으로 빌드.
 
 ## License ##
 
