@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket", "ACTWebSocket.csproj", "{77632F40-9B68-4321-9090-6692FB06CE45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket", "ACTWebSocket.Loader/ACTWebSocket.csproj", "{77632F40-9B68-4321-9090-6692FB06CE45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket.Core", "..\ACTWebSocket.Core\ACTWebSocket.Core.csproj", "{41EFD039-54EF-41B6-8737-1DA118AF2FE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket.Core", "ACTWebSocket.Core\ACTWebSocket.Core.csproj", "{41EFD039-54EF-41B6-8737-1DA118AF2FE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

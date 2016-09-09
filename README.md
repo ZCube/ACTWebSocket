@@ -90,10 +90,28 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
 * .Net Framework 4.5
 
+## 사용 시 주의 사항 ##
+
+* ravahn/FFXIV_ACT_Plugin 
+
+LogLine을 수정함으로 이 플러그인 먼저 로드 되는지 후에 로드되는지에 따라 로그 메세지가 바뀜.
+아래와 같은 경로에서 설정 파일을 수정하여 ACTWebSocket이 먼저 로드 될 필요가 있음.
+
+%APPDATA%\Advanced Combat Tracker\Config\Advanced Combat Tracker.config.xml
+
+``` xml
+    <ActPlugins>
+        <Plugin Enabled="True" Path="...\ACTWebSocket.dll" />
+        <Plugin Enabled="True" Path="...\FFXIV_ACT_Plugin.dll" />
+    </ActPlugins>
+```
+
+
+
 ## 빌드 방법 ##
 
 1. external/websocket-sharp를 빌드후 dll 파일을 external 디렉토리에 복사
-2. ACTWebSocket.Loader에서 ACTWebSocket.sln으로 빌드.
+2. ACTWebSocket.sln으로 빌드.
 
 ## License ##
 

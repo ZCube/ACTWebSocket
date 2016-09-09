@@ -6,3 +6,4 @@
 */obj/*
 */packages/*
 *.user
+/Dist/*

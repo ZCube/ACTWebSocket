@@ -33,3 +33,9 @@ Libraries Or SourceFiles used by ACTWebSocket:
    
      See LICENSE.txt
      websocket-sharp is provided under The MIT License.
+     
+ * ChatLog
+   http://www.inven.co.kr/board/powerbbs.php?come_idx=4338&l=3372
+   
+     라그린네
+     배포 가능 여부를 확인하였습니다.
