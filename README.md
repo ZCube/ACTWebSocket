@@ -95,6 +95,10 @@ WebSocket Plugin for Advanced Combat Tracker v3
 1. external/websocket-sharp를 빌드후 dll 파일을 external 디렉토리에 복사
 2. ACTWebSocket.Loader에서 ACTWebSocket.sln으로 빌드.
 
+## 해야할 일 ##
+
+1. 웹서버의 보안관련 문제 개선
+
 ## License ##
 
 ACTWebSocket is provided under The MIT License.
