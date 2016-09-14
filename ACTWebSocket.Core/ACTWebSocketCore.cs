@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -16,11 +17,12 @@ namespace ACTWebSocket_Plugin
     public partial class ACTWebSocketCore
     {
         public ACTWebSocketCore(){}
-
+        
         public Dictionary<String, Boolean> Filters = new Dictionary<string, bool>();
         HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
+        public String randomDir = "Test";
 
         class EchoSocketBehavior : WebSocketBehavior
         {
@@ -48,24 +50,46 @@ namespace ACTWebSocket_Plugin
         {
             StopServer();
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
-            
+
             // TODO : SSL
             //wssv = new WebSocketServer(System.Net.IPAddress.Parse(address), port, true);
             //wssv.SslConfiguration.ServerCertificate =
             //  new X509Certificate2("/path/to/cert.pfx", "password for cert.pfx");
 
-            httpServer.AddWebSocketService<EchoSocketBehavior>("/MiniParse");
-            httpServer.AddWebSocketService<EchoSocketBehavior>("/BeforeLogLineRead");
+            String parent_path = "";
+            if(randomDir != null)
+            {
+                parent_path = "/" + randomDir;
+            }
+            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
+            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
+            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
 
 
             httpServer.RootPath = pluginDirectory;
-
+            httpServer.OnConnect += (sender, e) =>
+            {
+                var req = e.Request;
+            };
             httpServer.OnGet += (sender, e) =>
             {
                 var req = e.Request;
                 var res = e.Response;
+                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
+                if(randomDir != null)
+                {
+                    if (!path.StartsWith(parent_path))
+                    {
+                        res.StatusCode = (int)HttpStatusCode.NotFound;
+                        return;
+                    }
+                }
+                if(path.StartsWith(parent_path))
+                {
+                    path = path.Substring(parent_path.Length);
+                }
                 if (path == "/")
                     path += "index.html";
 
@@ -80,7 +104,31 @@ namespace ACTWebSocket_Plugin
                 {
                     res.ContentType = "text/html";
                     res.ContentEncoding = Encoding.UTF8;
-                    content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", (domain != null && domain.Length > 0 ? domain : address) + ":" + port.ToString()));
+                    String host = "";
+                    if (address == "127.0.0.1" || address == "localhost")
+                    {
+                        host = "localhost";
+                    }
+                    else  if (domain != null && domain.Length >0)
+                    {
+                        host = domain;
+                    }
+
+                    String host_port = host + ":" + port.ToString();
+                    if (context.User != null)
+                    {
+                        String username = context.User.Identity.Name;
+                        NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
+                        String password = cred.Password;
+                        host_port = username + ":" + password + "@" + host + ":" + port.ToString();
+                    }
+                    else
+                    {
+                        host_port = host + ":" + port.ToString();
+                    }
+                    host_port += parent_path;
+
+                    content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
                 }
                 else if (path.EndsWith(".js"))
                 {
@@ -91,19 +139,17 @@ namespace ACTWebSocket_Plugin
                 res.WriteContent(content);
             };
 
-            // TODO : Basic Auth
-            /*
-            wssv.Realm = "ACTWebSocket";
-            wssv.AuthenticationSchemes = AuthenticationSchemes.Basic;
-            wssv.UserCredentialsFinder = id => {
-                var name = id.Name;
+            //// TODO : Basic Auth
+            //httpServer.Realm = "ACTWebSocket";
+            //httpServer.AuthenticationSchemes = AuthenticationSchemes.Basic;
+            //httpServer.UserCredentialsFinder = id => {
+            //    var name = id.Name;
 
-                // Return user name, password, and roles.
-                return name == "nobita"
-                       ? new NetworkCredential(name, "password", "gunfighter")
-                       : null; // If the user credentials aren't found.
-            };
-            */
+            //    // Return user name, password, and roles.
+            //    return name == "nobita"
+            //           ? new NetworkCredential(name, "password", "gunfighter")
+            //           : null; // If the user credentials aren't found.
+            //};
 
             httpServer.Start();
 
@@ -146,6 +192,11 @@ namespace ACTWebSocket_Plugin
             if (httpServer != null)
             {
                 httpServer.Stop();
+                foreach(var s in httpServer.WebSocketServices.Hosts)
+                {
+                    httpServer.RemoveWebSocketService(s.Path);
+                }
+
                 httpServer = null;
             }
             if (updateTimer != null)
@@ -167,11 +218,16 @@ namespace ACTWebSocket_Plugin
         {
             if (httpServer != null)
             {
+                String parent_path = "";
+                if (randomDir != null)
+                {
+                    parent_path = "/" + randomDir;
+                }
                 foreach (var s in httpServer.WebSocketServices.Hosts)
                 {
                     if(Filters.ContainsKey(v) && Filters[v])
                     {
-                        if (s.Path.CompareTo(v) == 0)
+                        if (s.Path.CompareTo(parent_path + v) == 0)
                         {
                             s.Sessions.Broadcast(text);
                         }
