@@ -180,8 +180,6 @@ namespace ACTWebSocket_Plugin
             // autostart
             // 
             resources.ApplyResources(this.autostart, "autostart");
-            this.autostart.Checked = true;
-            this.autostart.CheckState = System.Windows.Forms.CheckState.Checked;
             this.autostart.Name = "autostart";
             this.autostart.UseVisualStyleBackColor = true;
             // 
@@ -392,7 +390,7 @@ namespace ACTWebSocket_Plugin
         }
 
 		Label lblStatus;	// The status label that appears in ACT's Plugin tab
-		string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\PluginSample.config.xml");
+		string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
         SettingsSerializer xmlSettings;
 
         #region IActPluginV1 Members
