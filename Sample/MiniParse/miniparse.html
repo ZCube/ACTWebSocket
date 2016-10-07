@@ -351,6 +351,7 @@
 /* ACTWebSocket  Begin */
 
   var wsUri = "ws://@HOST_PORT@/MiniParse";
+  var pageActive = true;
   function connectWebSocket(uri)
   {
     websocket = new WebSocket(uri);
@@ -374,7 +375,25 @@
       websocket.close();
     };
   }    
-  connectWebSocket(wsUri);
+
+  function disconnectWebSocket(){
+    pageActive = false;
+    websocket.close();
+  };
+
+
+  $(document).ready(function() {
+    pageActive = true;
+    connectWebSocket(wsUri);
+  });
+  if (document.addEventListener) {
+      window.onbeforeunload = function() {
+          disconnectWebSocket();
+      };
+      window.addEventListener("unload", function() {
+          disconnectWebSocket();
+      }, false);
+  }
 /* ACTWebSocket  End */
     </script>
 </head>
