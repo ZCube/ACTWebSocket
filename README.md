@@ -28,6 +28,7 @@ WebSocket Plugin for Advanced Combat Tracker v3
 ``` javascript
   ...
   var wsUri = "ws://@HOST_PORT@/BeforeLogLineRead";
+  var pageActive = true;
   function connectWebSocket(uri)
   {
     websocket = new WebSocket(uri);
@@ -45,13 +46,33 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
     //websocket.onopen = function(evt) { };
     websocket.onclose = function(evt) { 
-      setTimeout(function(){connectWebSocket(uri)}, 5000);
+      if(pageActive)
+      {
+        setTimeout(function(){connectWebSocket(uri)}, 5000);
+      }
     };
     websocket.onerror = function(evt) {
       websocket.close();
     };
-  }    
-  connectWebSocket(wsUri);
+  }
+
+  function disconnectWebSocket(){
+    pageActive = false;
+    websocket.close();
+  };
+
+  $(document).ready(function() {
+    pageActive = true;
+    connectWebSocket(wsUri);
+  });
+  if (document.addEventListener) {
+      window.onbeforeunload = function() {
+          disconnectWebSocket();
+      };
+      window.addEventListener("unload", function() {
+          disconnectWebSocket();
+      }, false);
+  }
   ...
 ```    
 
@@ -59,6 +80,7 @@ WebSocket Plugin for Advanced Combat Tracker v3
 ``` javascript
   ...
   var wsUri = "ws://@HOST_PORT@/MiniParse";
+  var pageActive = true;
   function connectWebSocket(uri)
   {
     websocket = new WebSocket(uri);
@@ -82,7 +104,24 @@ WebSocket Plugin for Advanced Combat Tracker v3
       websocket.close();
     };
   }    
-  connectWebSocket(wsUri);
+
+  function disconnectWebSocket(){
+    pageActive = false;
+    websocket.close();
+  };
+
+  $(document).ready(function() {
+    pageActive = true;
+    connectWebSocket(wsUri);
+  });
+  if (document.addEventListener) {
+      window.onbeforeunload = function() {
+          disconnectWebSocket();
+      };
+      window.addEventListener("unload", function() {
+          disconnectWebSocket();
+      }, false);
+  }
   ...
 ```
 
