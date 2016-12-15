@@ -387,6 +387,7 @@ namespace ACTWebSocket_Plugin
 
         ~ACTWebSocketMain()
         {
+            SaveSettings();
         }
 
 		Label lblStatus;	// The status label that appears in ACT's Plugin tab

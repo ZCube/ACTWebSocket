@@ -99,7 +99,11 @@ namespace ACTWebSocket_Plugin
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
-
+                if (path.EndsWith(".svg") || path.EndsWith(".svgz"))
+                {
+                    res.ContentType = "image/svg+xml";
+                    res.ContentEncoding = Encoding.UTF8;
+                }
                 if (path.EndsWith(".html"))
                 {
                     res.ContentType = "text/html";
