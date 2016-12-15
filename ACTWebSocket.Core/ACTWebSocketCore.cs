@@ -99,12 +99,10 @@ namespace ACTWebSocket_Plugin
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
-                if (path.EndsWith(".svg") || path.EndsWith(".svgz"))
-                {
-                    res.ContentType = "image/svg+xml";
-                    res.ContentEncoding = Encoding.UTF8;
-                }
-                if (path.EndsWith(".html"))
+                String extension = System.IO.Path.GetExtension(path);
+                extension = extension.ToLower();
+                res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
+                if (extension == "html" || extension == ".js")
                 {
                     res.ContentType = "text/html";
                     res.ContentEncoding = Encoding.UTF8;
@@ -133,11 +131,6 @@ namespace ACTWebSocket_Plugin
                     host_port += parent_path;
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
-                }
-                else if (path.EndsWith(".js"))
-                {
-                    res.ContentType = "application/javascript";
-                    res.ContentEncoding = Encoding.UTF8;
                 }
 
                 res.WriteContent(content);
