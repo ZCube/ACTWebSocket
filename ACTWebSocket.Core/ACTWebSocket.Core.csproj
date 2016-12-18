@@ -34,6 +34,10 @@
     <Reference Include="Advanced Combat Tracker">
       <HintPath>c:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
     </Reference>
+    <Reference Include="MimeTypeMap, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaTypeMap.2.1.0.0\lib\net40\MimeTypeMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -58,9 +62,18 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ACTWebSocket.ko-KR.resx">
+      <DependentUpon>ACTWebSocket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ACTWebSocket.ko.resx">
+      <DependentUpon>ACTWebSocket.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ACTWebSocket.resx">
       <DependentUpon>ACTWebSocket.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

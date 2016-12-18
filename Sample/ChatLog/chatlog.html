@@ -54,7 +54,9 @@
 		<div class="button" style="left:60px; top:210px;" on="Y" data="_8">링8</div>
 		<script>
 
+// websocket - begin
   var wsUri = "ws://@HOST_PORT@/BeforeLogLineRead";
+  var pageActive = true;
   function connectWebSocket(uri)
   {
     websocket = new WebSocket(uri);
@@ -78,7 +80,26 @@
       websocket.close();
     };
   }    
-  connectWebSocket(wsUri);
+
+  function disconnectWebSocket(){
+    pageActive = false;
+    websocket.close();
+  };
+
+
+  $(document).ready(function() {
+    pageActive = true;
+    connectWebSocket(wsUri);
+  });
+  if (document.addEventListener) {
+      window.onbeforeunload = function() {
+          disconnectWebSocket();
+      };
+      window.addEventListener("unload", function() {
+          disconnectWebSocket();
+      }, false);
+  }
+// websocket - end
     
 			log("혼잣말", "Chatscraper Initialized.")
 			$(".button").click(function(){
