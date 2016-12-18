@@ -413,7 +413,6 @@ namespace ACTWebSocket_Plugin
         public ACTWebSocketMain()
         {
             InitializeComponent();
-            ((Control)this.tabPage2).Enabled = false;
         }
 
         ~ACTWebSocketMain()
@@ -586,7 +585,6 @@ namespace ACTWebSocket_Plugin
             buttonOn.Enabled = false;
             buttonOff.Enabled = true;
             randomURL.Enabled = false;
-            ((Control)this.tabPage2).Enabled = true;
             //tabPage1
         }
 
@@ -599,7 +597,6 @@ namespace ACTWebSocket_Plugin
             buttonOn.Enabled = true;
             buttonOff.Enabled = false;
             randomURL.Enabled = true;
-            ((Control)this.tabPage2).Enabled = false;
         }
 
         private void buttonOn_Click(object sender, EventArgs e)
