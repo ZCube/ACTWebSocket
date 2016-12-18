@@ -662,6 +662,109 @@ namespace ACTWebSocket_Plugin
             xWriter.Close();
         }
 
+        void SaveSettingXML(string url, JObject o)
+        {
+            XmlDocument doc = new XmlDocument();
+            // Root node : Overlays
+            // Child node rule : Overlays/Overlay
+            // Child node settings : Overlays/Overlay/*
+            string emptySetting = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Overlays></Overlays>";
+
+            if (File.Exists(Environment.CurrentDirectory + "\\overlayconfig.xml"))
+                doc.Load(Environment.CurrentDirectory + "\\overlayconfig.xml");
+            else
+                doc.LoadXml(emptySetting);
+
+            XmlElement setting = null;
+
+            foreach(XmlElement xe in doc.SelectNodes("/Overlays/Overlay"))
+            {
+                if(xe.SelectSingleNode("/Overlay/Url").InnerText == url)
+                {
+                    setting = xe as XmlElement;
+                    break;
+                }
+            }
+
+            string[] objects = 
+                { "Url", "x", "y", "width", "height", "useDragFilter", "useDragMove", "NoActive", "Transparent", "hide"};
+
+            if(setting == null)
+            {
+                setting = doc.CreateElement("Overlay");
+                foreach(string s in objects)
+                {
+                    XmlElement elem = doc.CreateElement(s);
+                    if(s == "Url")
+                    {
+                        elem.InnerText = url;
+                    }
+                    else
+                    {
+                        elem.InnerText = o[s].ToString();
+                    }
+                    setting.AppendChild(elem);
+                }
+                doc.AppendChild(setting);
+            }
+            else
+            {
+                foreach(string s in objects)
+                {
+                    if (s == "Url") continue;
+                    setting.SelectSingleNode("/Overlay/" + s).InnerText = o[s].ToString();
+                }
+            }
+
+            doc.Save(Environment.CurrentDirectory + "\\overlayconfig.xml");
+        }
+
+        JObject LoadSettingXml(string url)
+        {
+            XmlDocument doc = new XmlDocument();
+            JObject o = new JObject();
+            // default values
+            o["useDragFilter"] = true;
+            o["useDragMove"] = true;
+            o["hide"] = false;
+            o["width"] = 100;
+            o["height"] = 100;
+            o["x"] = 0;
+            o["y"] = 0;
+            o["Transparent"] = true;
+            o["NoActivate"] = true;
+
+
+            string[] objects =
+                { "x", "y", "width", "height", "useDragFilter", "useDragMove", "NoActive", "Transparent", "hide"};
+
+            if (File.Exists(Environment.CurrentDirectory + "\\overlayconfig.xml"))
+            {
+                doc.Load(Environment.CurrentDirectory + "\\overlayconfig.xml");
+                foreach(XmlElement xe in doc.SelectNodes("/Overlays/Overlay"))
+                {
+                    if(xe.SelectSingleNode("/Overlay/Url").InnerText == url)
+                    {
+                        foreach (string s in objects)
+                        {
+                            if(s == "x" || s == "y" || s == "width" || s == "height")
+                            {
+                                o[s] = int.Parse(xe.SelectSingleNode("/Overlay/" + s).InnerText);
+                            }
+                            else
+                            {
+                                o[s] = (xe.SelectSingleNode("/Overlay/" + s).InnerText.ToLower() == "true" ? true : false);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            return o;
+        }
+
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             UpdateList();
