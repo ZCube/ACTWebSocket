@@ -93,6 +93,8 @@ namespace ACTWebSocket_Plugin
                 if (path == "/")
                     path += "index.html";
 
+                path = System.Uri.UnescapeDataString(path);
+
                 var content = httpServer.GetFile(path);
                 if (content == null)
                 {
