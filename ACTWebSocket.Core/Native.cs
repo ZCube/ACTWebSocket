@@ -14,6 +14,18 @@ namespace ACTWebSocket.Core
             return unchecked((int)intPtr.ToInt64());
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;        // x position of upper-left corner
+            public int Top;         // y position of upper-left corner
+            public int Right;       // x position of lower-right corner
+            public int Bottom;      // y position of lower-right corner
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
@@ -212,19 +224,38 @@ namespace ACTWebSocket.Core
         {
             public IntPtr dwData;
             public int cbData;
-            [MarshalAs(UnmanagedType.SafeArray)]
-            public byte[] lpData;
+            [MarshalAs(UnmanagedType.LPStr)]
+            public string lpData;
         }
 
         public static void SendMessageToWindow(IntPtr hwnd, uint i, string str)
         {
-            byte[] buff = System.Text.Encoding.UTF8.GetBytes(str);
+            //byte[] buff = System.Text.Encoding.UTF8.GetBytes(str);
+            String bs = Base64Encoding(str) + "\0";
             COPYDATASTRUCT cds = new COPYDATASTRUCT();
             cds.dwData = IntPtr.Zero;
-            cds.cbData = buff.Length + 1;
-            cds.lpData = buff;
-
+            cds.cbData = bs.Length + 1;
+            cds.lpData = bs;
             SendMessage(hwnd, WM_COPYDATA, new IntPtr(i), ref cds);
         }
+
+        public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = oEncoding.GetBytes(EncodingText);
+            return System.Convert.ToBase64String(arr);
+        }
+
+        public static string Base64Decoding(string DecodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = System.Convert.FromBase64String(DecodingText);
+            return oEncoding.GetString(arr);
+        }
+
     }
 }
