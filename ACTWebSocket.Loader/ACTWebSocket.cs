@@ -30,6 +30,9 @@ namespace ACTWebSocket_Plugin
         {
 
         }
+        ~ACTWebSocket()
+        {
+        }
         IActPluginV1 main = null;
         AssemblyResolver asmResolver = null;
         #region IActPluginV1 Members

@@ -12,6 +12,8 @@ using System.Xml;
 
 namespace ACTWebSocket_Plugin
 {
+    using ACTWebSocket.Core;
+    using Newtonsoft.Json.Linq;
     using System.Diagnostics;
     using System.Linq;
     using System.Net.Sockets;
@@ -64,6 +66,12 @@ namespace ACTWebSocket_Plugin
         private GroupBox serverStatus;
         private GroupBox groupBox1;
         private SplitContainer splitContainer1;
+        private Button button4;
+        private GroupBox groupBox2;
+        private CheckBox checkBox6;
+        private CheckBox checkBox5;
+        private CheckBox checkBox4;
+        private CheckBox checkBox3;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
         /// Required designer variable.
@@ -115,15 +123,21 @@ namespace ACTWebSocket_Plugin
             this.label13 = new System.Windows.Forms.Label();
             this.startoption = new System.Windows.Forms.GroupBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
-            this.miniparse = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.miniparse = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.othersets = new System.Windows.Forms.GroupBox();
             this.serverStatus = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.miniparse.SuspendLayout();
@@ -134,6 +148,7 @@ namespace ACTWebSocket_Plugin
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -301,6 +316,16 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
+            // label15
+            // 
+            resources.ApplyResources(this.label15, "label15");
+            this.label15.Name = "label15";
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.Name = "label14";
+            // 
             // miniparse
             // 
             this.miniparse.Controls.Add(this.label17);
@@ -312,25 +337,15 @@ namespace ACTWebSocket_Plugin
             this.miniparse.Name = "miniparse";
             this.miniparse.TabStop = false;
             // 
-            // label14
+            // label17
             // 
-            resources.ApplyResources(this.label14, "label14");
-            this.label14.Name = "label14";
-            // 
-            // label15
-            // 
-            resources.ApplyResources(this.label15, "label15");
-            this.label15.Name = "label15";
+            resources.ApplyResources(this.label17, "label17");
+            this.label17.Name = "label17";
             // 
             // label16
             // 
             resources.ApplyResources(this.label16, "label16");
             this.label16.Name = "label16";
-            // 
-            // label17
-            // 
-            resources.ApplyResources(this.label17, "label17");
-            this.label17.Name = "label17";
             // 
             // othersets
             // 
@@ -344,7 +359,6 @@ namespace ACTWebSocket_Plugin
             // 
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
-            this.serverStatus.Controls.Add(this.copyURL);
             resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
@@ -363,16 +377,59 @@ namespace ACTWebSocket_Plugin
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.button4);
+            this.splitContainer1.Panel1.Controls.Add(this.listBox1);
             this.splitContainer1.Panel1.Controls.Add(this.button1);
-            this.splitContainer1.Panel1.Controls.Add(this.listBox2);
+            this.splitContainer1.Panel1.Controls.Add(this.copyURL);
             this.splitContainer1.Panel1.Controls.Add(this.button2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.listBox1);
-            this.splitContainer1.Panel2.Controls.Add(this.button3);
-            this.splitContainer1.Panel2.Controls.Add(this.checkBox1);
-            this.splitContainer1.Panel2.Controls.Add(this.checkBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.listBox2);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBox6);
+            this.groupBox2.Controls.Add(this.checkBox5);
+            this.groupBox2.Controls.Add(this.checkBox4);
+            this.groupBox2.Controls.Add(this.checkBox3);
+            this.groupBox2.Controls.Add(this.checkBox1);
+            this.groupBox2.Controls.Add(this.checkBox2);
+            this.groupBox2.Controls.Add(this.button3);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // checkBox3
+            // 
+            resources.ApplyResources(this.checkBox3, "checkBox3");
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            resources.ApplyResources(this.checkBox4, "checkBox4");
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox5
+            // 
+            resources.ApplyResources(this.checkBox5, "checkBox5");
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            resources.ApplyResources(this.button4, "button4");
+            this.button4.Name = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox6
+            // 
+            resources.ApplyResources(this.checkBox6, "checkBox6");
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.UseVisualStyleBackColor = true;
             // 
             // ACTWebSocketMain
             // 
@@ -400,9 +457,10 @@ namespace ACTWebSocket_Plugin
             this.groupBox1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -413,11 +471,11 @@ namespace ACTWebSocket_Plugin
         public ACTWebSocketMain()
         {
             InitializeComponent();
-            ((Control)this.tabPage2).Enabled = false;
         }
 
         ~ACTWebSocketMain()
         {
+            CloseAll();
             SaveSettings();
         }
 
@@ -484,6 +542,7 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
 
+            CloseAll();
             SaveSettings();
             lblStatus.Text = "Plugin Exited";
         }
@@ -530,6 +589,22 @@ namespace ACTWebSocket_Plugin
                 }
                 xReader.Close();
             }
+
+            // validate
+            try
+            {
+                int p = Convert.ToInt16(port.Text);
+            }
+            catch (Exception e)
+            {
+                port.Text = "10501";
+            }
+
+            if (hostname.Text.Length == 0)
+            {
+                hostname.Text = "localhost";
+            }
+
         }
         void SaveSettings()
         {
@@ -579,14 +654,21 @@ namespace ACTWebSocket_Plugin
             {
                 core.randomDir = null;
             }
-            core.StartServer(localhostOnly.Checked ? "127.0.0.1" : "0.0.0.0", Convert.ToInt16(port.Text), hostname.Text.Trim());
-            localhostOnly.Enabled = false;
-            port.Enabled = false;
-            hostname.Enabled = false;
-            buttonOn.Enabled = false;
-            buttonOff.Enabled = true;
-            randomURL.Enabled = false;
-            ((Control)this.tabPage2).Enabled = true;
+            try
+            {
+                core.StartServer(localhostOnly.Checked ? "127.0.0.1" : "0.0.0.0", Convert.ToInt16(port.Text), hostname.Text.Trim());
+                localhostOnly.Enabled = false;
+                port.Enabled = false;
+                hostname.Enabled = false;
+                buttonOn.Enabled = false;
+                buttonOff.Enabled = true;
+                randomURL.Enabled = false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                core.StopServer();
+            }
             //tabPage1
         }
 
@@ -599,7 +681,6 @@ namespace ACTWebSocket_Plugin
             buttonOn.Enabled = true;
             buttonOff.Enabled = false;
             randomURL.Enabled = true;
-            ((Control)this.tabPage2).Enabled = false;
         }
 
         private void buttonOn_Click(object sender, EventArgs e)
@@ -678,23 +759,6 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private void copyURL_Click(object sender, EventArgs e)
-        {
-            String url = "";
-            if (localhostOnly.Checked)
-            {
-                url = "http://localhost:" + port.Text + "/";
-            }
-            else
-            {
-                url = "http://" + hostname.Text + ":" + port.Text + "/";
-            }
-            if (core.randomDir != null)
-            {
-                url += core.randomDir + "/";
-            }
-            Clipboard.SetText(url);
-        }
         string GetRelativePath(string filespec, string folder)
         {
             Uri pathUri = new Uri(filespec);
@@ -707,44 +771,23 @@ namespace ACTWebSocket_Plugin
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
-        public static List<String> SearchForWindow(string title)
+        public void CloseAll()
         {
-            SearchData sd = new SearchData { TitleKeyword = title };
-            EnumWindows(new EnumWindowsProc(EnumProc), ref sd);
-            return sd.overlayWindowTitles;
-        }
-
-        public static bool EnumProc(IntPtr hWnd, ref SearchData data)
-        {
-            // Check classname and title 
-            // This is different from FindWindow() in that the code below allows partial matches
-            StringBuilder sb = new StringBuilder(1024);
-            GetWindowText(hWnd, sb, sb.Capacity);
-            if (sb.ToString().StartsWith(data.TitleKeyword))
+            UpdateList();
+            for(int i=0;i<listBox2.Items.Count;++i)
             {
-                data.overlayWindowTitles.Add(sb.ToString());
+                String title = this.listBox2.Items[i].ToString();
+                IntPtr hwnd = Native.FindWindow(null, title);
+                if (hwnd == null || hwnd.ToInt64() == 0)
+                {
+                }
+                else
+                {
+                    Native.SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
+                    Native.CloseWindow(hwnd);
+                }
             }
-            return true;
         }
-
-        public class SearchData
-        {
-            public String TitleKeyword = "";
-            public List<String> overlayWindowTitles = new List<String>();
-        }
-
-        private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, ref SearchData data);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
         public void UpdateList()
         {
             this.listBox1.Items.Clear();
@@ -752,7 +795,7 @@ namespace ACTWebSocket_Plugin
             {
                 this.listBox1.Items.Add(GetRelativePath(file, pluginDirectory));
             }
-            List<String> titles = SearchForWindow("overlay_");
+            List<String> titles = Native.SearchForWindow("overlay_");
             this.listBox2.Items.Clear();
             this.listBox2.Sorted = true;
             foreach (string title in titles)
@@ -764,6 +807,24 @@ namespace ACTWebSocket_Plugin
         private void button1_Click(object sender, EventArgs e)
         {
             UpdateList();
+        }
+
+        public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = oEncoding.GetBytes(EncodingText);
+            return System.Convert.ToBase64String(arr);
+        }
+
+        public static string Base64Decoding(string DecodingText, System.Text.Encoding oEncoding = null)
+        {
+            if (oEncoding == null)
+                oEncoding = System.Text.Encoding.UTF8;
+
+            byte[] arr = System.Convert.FromBase64String(DecodingText);
+            return oEncoding.GetString(arr);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -790,31 +851,47 @@ namespace ACTWebSocket_Plugin
                 this.listBox2.Items.Add(title);
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = overlayPath;
-                startInfo.Arguments = param + " " + title;
+                String json = "";
+                JObject o = new JObject();
+                o["useDragFilter"] = true;
+                o["useDragMove"] = true;
+                o["hide"] = false;
+                //o["width"] = 100;
+                //o["height"] = 100;
+                //o["x"] = 0;
+                //o["y"] = 0;
+                o["Transparent"] = true;
+                o["NoActivate"] = true;
+                json = o.ToString();
+                startInfo.Arguments = param + " " + title + " " + Base64Encoding(json);
                 Process.Start(startInfo);
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void copyURL_Click(object sender, EventArgs e)
         {
+            String url = "";
+            if (localhostOnly.Checked)
+            {
+                url = "http://localhost:" + port.Text + "/";
+            }
+            else
+            {
+                url = "http://" + hostname.Text + ":" + port.Text + "/";
+            }
+            if (core.randomDir != null)
+            {
+                url += core.randomDir + "/";
+            }
             if (this.listBox1.SelectedIndex >= 0)
             {
-                String url = "";
-                if (localhostOnly.Checked)
-                {
-                    url = "http://localhost:" + port.Text + "/";
-                }
-                else
-                {
-                    url = "http://" + hostname.Text + ":" + port.Text + "/";
-                }
-                if (core.randomDir != null)
-                {
-                    url += core.randomDir + "/";
-                }
-                String param = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
-                param = param.Replace("%5C", "/");
-                Clipboard.SetText(param);
+                String fullURL = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                fullURL = fullURL.Replace("%5C", "/");
+                Clipboard.SetText(fullURL);
+            }
+            else
+            {
+                Clipboard.SetText(url);
             }
         }
 
@@ -823,180 +900,23 @@ namespace ACTWebSocket_Plugin
             UpdateList();
         }
 
-        private static int ToIntPtr32(IntPtr intPtr)
-        {
-            return unchecked((int)intPtr.ToInt64());
-        }
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool CloseWindow(IntPtr hWnd);
-
-        [DllImport("kernel32.dll", EntryPoint = "SetLastError")]
-        public static extern void SetLastError(int dwErrorCode);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
-        public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
-        public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
-        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
-        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_EX_TRANSPARENT = 0x00000020;
-        public const int WS_EX_NOACTIVATE  = 0x08000000;
-
-        public static IntPtr GetWindowLongFlag(IntPtr hWnd, IntPtr value)
-        {
-            int nIndex = GWL_EXSTYLE;
-            int error = 0;
-            IntPtr result = IntPtr.Zero;
-
-            SetLastError(0);
-
-            if (IntPtr.Size == 4)
-            {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(result32);
-            }
-            else
-            {
-                result = GetWindowLongPtr(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            result = new IntPtr(result.ToInt64() & value.ToInt64());
-
-            return result;
-        }
-
-        public static IntPtr SetWindowLongFlag(IntPtr hWnd, IntPtr value)
-        {
-            int nIndex = GWL_EXSTYLE;
-            int error = 0;
-            IntPtr result = IntPtr.Zero;
-
-            SetLastError(0);
-
-            if (IntPtr.Size == 4)
-            {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(result32);
-            }
-            else
-            {
-                result = GetWindowLongPtr(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            result = new IntPtr(result.ToInt64() | value.ToInt64());
-
-            if (IntPtr.Size == 4)
-            {
-                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(result32);
-            }
-            else
-            {
-                result = SetWindowLongPtr(hWnd, nIndex, result);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            return result;
-        }
-
-        public static IntPtr UnsetWindowLongFlag(IntPtr hWnd, IntPtr value)
-        {
-            int nIndex = GWL_EXSTYLE;
-            int error = 0;
-            IntPtr result = IntPtr.Zero;
-
-            SetLastError(0);
-
-            if (IntPtr.Size == 4)
-            {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(result32);
-            }
-            else
-            {
-                result = GetWindowLongPtr(hWnd, nIndex);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            result = new IntPtr(result.ToInt64() & ~value.ToInt64());
-
-            if (IntPtr.Size == 4)
-            {
-                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
-                error = Marshal.GetLastWin32Error();
-                result = new IntPtr(result32);
-            }
-            else
-            {
-                result = SetWindowLongPtr(hWnd, nIndex, result);
-                error = Marshal.GetLastWin32Error();
-            }
-
-            if ((result == IntPtr.Zero) && (error != 0))
-            {
-                throw new System.ComponentModel.Win32Exception(error);
-            }
-
-            return result;
-        }
-        
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = FindWindow(null, title);
+                IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
-                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
                     UpdateList();
                 }
                 else
                 {
-                    if (checkBox1.Checked)
-                        SetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT));
-                    else
-                        UnsetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT));
+                    JObject o = new JObject();
+                    o["Transparent"] = checkBox1.Checked;
+                    o["NoActivate"] = checkBox2.Checked;
+                    String json = o.ToString();
+                    Native.SendMessageToWindow(hwnd, 1, json);
                 }
             }
 
@@ -1007,7 +927,7 @@ namespace ACTWebSocket_Plugin
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = FindWindow(null, title);
+                IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
                     //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
@@ -1015,10 +935,11 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    if (checkBox2.Checked)
-                        SetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE));
-                    else
-                        UnsetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE));
+                    JObject o = new JObject();
+                    o["Transparent"] = checkBox1.Checked;
+                    o["NoActivate"] = checkBox2.Checked;
+                    String json = o.ToString();
+                    Native.SendMessageToWindow(hwnd, 1, json);
                 }
             }
         }
@@ -1028,7 +949,7 @@ namespace ACTWebSocket_Plugin
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = FindWindow(null, title);
+                IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
                     //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
@@ -1036,8 +957,8 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    checkBox1.Checked = (GetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT)).ToInt64() > 0);
-                    checkBox2.Checked = (GetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE)).ToInt64() > 0);
+                    checkBox1.Checked = (Native.GetWindowLongFlag(hwnd, new IntPtr(Native.WS_EX_TRANSPARENT)).ToInt64() > 0);
+                    checkBox2.Checked = (Native.GetWindowLongFlag(hwnd, new IntPtr(Native.WS_EX_NOACTIVATE)).ToInt64() > 0);
                 }
             }
         }
@@ -1047,7 +968,7 @@ namespace ACTWebSocket_Plugin
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = FindWindow(null, title);
+                IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
                     //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
@@ -1055,8 +976,8 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
-                    CloseWindow(hwnd);
+                    Native.SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
+                    Native.CloseWindow(hwnd);
                     this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
                 }
             }
