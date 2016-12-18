@@ -66,6 +66,7 @@
     <Compile Include="Native.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ACTWebSocket.ko-KR.resx">
