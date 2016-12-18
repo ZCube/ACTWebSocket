@@ -83,6 +83,8 @@ namespace ACTWebSocket_Plugin
         private TextBox url;
         private Label label5;
         private Button button5;
+        private TrackBar zoom;
+        private Label label6;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
         /// Required designer variable.
@@ -149,6 +151,9 @@ namespace ACTWebSocket_Plugin
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.url = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.opacity = new System.Windows.Forms.TrackBar();
             this.overlayTitle = new System.Windows.Forms.TextBox();
@@ -157,9 +162,8 @@ namespace ACTWebSocket_Plugin
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.url = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.zoom = new System.Windows.Forms.TrackBar();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.miniparse.SuspendLayout();
@@ -174,6 +178,7 @@ namespace ACTWebSocket_Plugin
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.opacity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zoom)).BeginInit();
             this.SuspendLayout();
             // 
             // port
@@ -447,6 +452,8 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.zoom);
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.button5);
             this.groupBox2.Controls.Add(this.url);
             this.groupBox2.Controls.Add(this.label5);
@@ -464,6 +471,23 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // button5
+            // 
+            resources.ApplyResources(this.button5, "button5");
+            this.button5.Name = "button5";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // url
+            // 
+            resources.ApplyResources(this.url, "url");
+            this.url.Name = "url";
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
             // 
             // label4
             // 
@@ -524,22 +548,20 @@ namespace ACTWebSocket_Plugin
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // label5
+            // label6
             // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
             // 
-            // url
+            // zoom
             // 
-            resources.ApplyResources(this.url, "url");
-            this.url.Name = "url";
-            // 
-            // button5
-            // 
-            resources.ApplyResources(this.button5, "button5");
-            this.button5.Name = "button5";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.zoom.LargeChange = 25;
+            resources.ApplyResources(this.zoom, "zoom");
+            this.zoom.Maximum = 500;
+            this.zoom.Minimum = 25;
+            this.zoom.Name = "zoom";
+            this.zoom.Value = 25;
+            this.zoom.Scroll += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // ACTWebSocketMain
             // 
@@ -575,6 +597,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.opacity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zoom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -735,6 +758,16 @@ namespace ACTWebSocket_Plugin
                     foreach (String title in keysLoaded)
                     {
                         overlayWindows[title] = overlayWindowsLoaded[title];
+                        JObject o = (JObject)overlayWindows[title];
+                        JToken val = null;
+                        if (!o.TryGetValue("zoom", out val))
+                        {
+                            o["zoom"] = 1.0;
+                        }
+                        if (!o.TryGetValue("opacity", out val))
+                        {
+                            o["opacity"] = 1.0;
+                        }
                     }
                     foreach (String title in keysLoaded)
                     {
@@ -1100,6 +1133,7 @@ namespace ACTWebSocket_Plugin
                         overlayWindows[title]["useDragMove"] = true;
                         overlayWindows[title]["useResizeGrip"] = true;
                         overlayWindows[title]["opacity"] = 1.0;
+                        overlayWindows[title]["zoom"] = 1.0;
                         overlayWindows[title]["title"] = title;
                     }
                     else
@@ -1212,6 +1246,7 @@ namespace ACTWebSocket_Plugin
                 o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
                 o["url"] = url;
                 o["title"] = title;
+                o["zoom"] = 1.0;
                 //o["width"] = 100;
                 //o["height"] = 100;
                 //o["x"] = 0;
@@ -1297,6 +1332,7 @@ namespace ACTWebSocket_Plugin
                     o["useDragMove"] = checkBox4.Checked && checkBox5.Checked;
                     o["useResizeGrip"] = checkBox6.Checked;
                     o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
+                    o["zoom"] = (double)zoom.Value / (double)100.0;
                     String json = o.ToString();
                     Native.SendMessageToWindow(hwnd, 1, json);
 
@@ -1333,6 +1369,7 @@ namespace ACTWebSocket_Plugin
                         checkBox5.Checked = overlayWindows[title].Value<Boolean>("useDragMove");
                         checkBox6.Checked = overlayWindows[title].Value<Boolean>("useResizeGrip");
                         opacity.Value = (int)(overlayWindows[title].Value<double>("opacity") * (double)opacity.Maximum);
+                        zoom.Value = (int)(overlayWindows[title].Value<double>("zoom") * (double)100);
                         url.Text = overlayWindows[title].Value<String>("url");
                     }
                 }
