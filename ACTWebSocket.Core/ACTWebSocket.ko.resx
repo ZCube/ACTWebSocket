@@ -117,90 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 22</value>
-  </data>
   <data name="label2.Text" xml:space="preserve">
     <value>포트</value>
   </data>
-  <data name="port.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 69</value>
-  </data>
-  <data name="port.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 21</value>
-  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 282</value>
-  </data>
-  <data name="server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 41</value>
+    <value>3, 550</value>
   </data>
   <data name="server.Text" xml:space="preserve">
     <value>서버</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 22</value>
-  </data>
   <data name="label3.Text" xml:space="preserve">
     <value>자동 시작</value>
-  </data>
-  <data name="autostart.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 3</value>
-  </data>
-  <data name="autostart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 16</value>
   </data>
   <data name="autostart.Text" xml:space="preserve">
     <value>ACT 실행시 자동 서버 시작</value>
   </data>
-  <data name="MiniParseUse.Location" type="System.Drawing.Point, System.Drawing">
-    <value>128, 3</value>
-  </data>
-  <data name="MiniParseUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>497, 24</value>
-  </data>
   <data name="MiniParseUse.Text" xml:space="preserve">
     <value>사용</value>
-  </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 30</value>
   </data>
   <data name="label7.Text" xml:space="preserve">
     <value>MiniParse 사용</value>
   </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 30</value>
-  </data>
   <data name="label5.Text" xml:space="preserve">
     <value>정렬 키</value>
   </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 30</value>
-  </data>
   <data name="label6.Text" xml:space="preserve">
     <value>정렬 타입</value>
-  </data>
-  <data name="MiniParseSortKey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>128, 33</value>
-  </data>
-  <data name="MiniParseSortKey.Size" type="System.Drawing.Size, System.Drawing">
-    <value>497, 21</value>
-  </data>
-  <data name="sortType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>128, 63</value>
-  </data>
-  <data name="sortType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>497, 20</value>
-  </data>
-  <data name="tableLayoutPanel3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>628, 132</value>
-  </data>
-  <data name="tabMiniParse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>702, 143</value>
-  </data>
-  <data name="BeforeLogLineReadUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>537, 24</value>
   </data>
   <data name="BeforeLogLineReadUse.Text" xml:space="preserve">
     <value>사용</value>
@@ -208,92 +151,28 @@
   <data name="label8.Text" xml:space="preserve">
     <value>LogLineRead 사용</value>
   </data>
-  <data name="OnLogLineReadUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>537, 24</value>
-  </data>
   <data name="OnLogLineReadUse.Text" xml:space="preserve">
     <value>사용</value>
   </data>
   <data name="label10.Text" xml:space="preserve">
     <value>OnLogLineRead 사용</value>
   </data>
-  <data name="tableLayoutPanel4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>678, 132</value>
-  </data>
-  <data name="tabLogLineRead.Size" type="System.Drawing.Size, System.Drawing">
-    <value>702, 143</value>
-  </data>
-  <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 91</value>
-  </data>
-  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 169</value>
-  </data>
-  <data name="buttonOff.Location" type="System.Drawing.Point, System.Drawing">
-    <value>239, 3</value>
-  </data>
-  <data name="buttonOff.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 29</value>
-  </data>
   <data name="buttonOff.Text" xml:space="preserve">
     <value>끄기</value>
-  </data>
-  <data name="buttonOn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 29</value>
   </data>
   <data name="buttonOn.Text" xml:space="preserve">
     <value>켜기</value>
   </data>
-  <data name="copyURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>475, 3</value>
-  </data>
-  <data name="copyURL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 29</value>
-  </data>
   <data name="copyURL.Text" xml:space="preserve">
     <value>URL 복사</value>
-  </data>
-  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 285</value>
-  </data>
-  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 35</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 22</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>로컬만 사용</value>
   </data>
-  <data name="localhostOnly.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 25</value>
-  </data>
-  <data name="localhostOnly.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 16</value>
-  </data>
   <data name="localhostOnly.Text" xml:space="preserve">
     <value>로컬만 사용 (외부에서 접속 불가)</value>
   </data>
-  <data name="hostname.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 47</value>
-  </data>
-  <data name="hostname.Size" type="System.Drawing.Size, System.Drawing">
-    <value>710, 21</value>
-  </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>73, 22</value>
-  </data>
   <data name="label4.Text" xml:space="preserve">
     <value>호스트네임</value>
-  </data>
-  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 29</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>792, 361</value>
   </data>
 </root>

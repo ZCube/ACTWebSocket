@@ -102,7 +102,7 @@ namespace ACTWebSocket_Plugin
                 String extension = System.IO.Path.GetExtension(path);
                 extension = extension.ToLower();
                 res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
-                if (extension == "html" || extension == ".js")
+                if (extension == ".html" || extension == ".js")
                 {
                     res.ContentType = "text/html";
                     res.ContentEncoding = Encoding.UTF8;
@@ -222,6 +222,7 @@ namespace ACTWebSocket_Plugin
                 }
                 foreach (var s in httpServer.WebSocketServices.Hosts)
                 {
+                    String x = s.Path;
                     if(Filters.ContainsKey(v) && Filters[v])
                     {
                         if (s.Path.CompareTo(parent_path + v) == 0)

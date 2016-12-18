@@ -62,6 +62,9 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ACTWebSocket.ko-KR.resx">
+      <DependentUpon>ACTWebSocket.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ACTWebSocket.ko.resx">
       <DependentUpon>ACTWebSocket.cs</DependentUpon>
     </EmbeddedResource>

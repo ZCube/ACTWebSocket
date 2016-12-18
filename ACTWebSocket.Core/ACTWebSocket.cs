@@ -12,9 +12,11 @@ using System.Xml;
 
 namespace ACTWebSocket_Plugin
 {
+    using System.Diagnostics;
     using System.Linq;
     using System.Net.Sockets;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using System.Timers;
     using WebSocketSharp;
@@ -62,33 +64,49 @@ namespace ACTWebSocket_Plugin
         private Button copyURL;
         private Label label9;
         private CheckBox randomURL;
+        private TabControl tabControl2;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private TableLayoutPanel tableLayoutPanel5;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Button button1;
+        private Button button2;
+        private ListBox listBox2;
+        private ListBox listBox1;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private Label label11;
+        private Label label12;
+        private Button button3;
+        private Button button4;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Component Designer generated code
+        #region Component Designer generated code
 
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ACTWebSocketMain));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -122,6 +140,22 @@ namespace ACTWebSocket_Plugin
             this.label4 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.randomURL = new System.Windows.Forms.CheckBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -130,6 +164,12 @@ namespace ACTWebSocket_Plugin
             this.tabLogLineRead.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -353,11 +393,126 @@ namespace ACTWebSocket_Plugin
             this.randomURL.Name = "randomURL";
             this.randomURL.UseVisualStyleBackColor = true;
             // 
+            // tabControl2
+            // 
+            resources.ApplyResources(this.tabControl2, "tabControl2");
+            this.tabControl2.Controls.Add(this.tabPage1);
+            this.tabControl2.Controls.Add(this.tabPage2);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage1.Controls.Add(this.groupBox1);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage2.Controls.Add(this.tableLayoutPanel5);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
+            // 
+            // tableLayoutPanel5
+            // 
+            resources.ApplyResources(this.tableLayoutPanel5, "tableLayoutPanel5");
+            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel1, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.listBox2, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.listBox1, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel2, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label11, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.label12, 1, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.button1);
+            this.flowLayoutPanel1.Controls.Add(this.button2);
+            this.flowLayoutPanel1.Controls.Add(this.button4);
+            resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            // 
+            // button1
+            // 
+            resources.ApplyResources(this.button1, "button1");
+            this.button1.Name = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button4
+            // 
+            resources.ApplyResources(this.button4, "button4");
+            this.button4.Name = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // listBox2
+            // 
+            resources.ApplyResources(this.listBox2, "listBox2");
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.Name = "listBox2";
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
+            // 
+            // listBox1
+            // 
+            resources.ApplyResources(this.listBox1, "listBox1");
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Name = "listBox1";
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.checkBox1);
+            this.flowLayoutPanel2.Controls.Add(this.checkBox2);
+            this.flowLayoutPanel2.Controls.Add(this.button3);
+            resources.ApplyResources(this.flowLayoutPanel2, "flowLayoutPanel2");
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            // 
+            // checkBox1
+            // 
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // checkBox2
+            // 
+            resources.ApplyResources(this.checkBox2, "checkBox2");
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // button3
+            // 
+            resources.ApplyResources(this.button3, "button3");
+            this.button3.Name = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // label11
+            // 
+            resources.ApplyResources(this.label11, "label11");
+            this.label11.Name = "label11";
+            // 
+            // label12
+            // 
+            resources.ApplyResources(this.label12, "label12");
+            this.label12.Name = "label12";
+            // 
             // ACTWebSocketMain
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.tabControl2);
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.groupBox1.ResumeLayout(false);
@@ -373,16 +528,25 @@ namespace ACTWebSocket_Plugin
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
-		}
+        }
 
-		#endregion
-		
-		#endregion
-		public ACTWebSocketMain()
-		{
-			InitializeComponent();
+        #endregion
+
+        #endregion
+        public ACTWebSocketMain()
+        {
+            InitializeComponent();
+            ((Control)this.tabPage2).Enabled = false;
         }
 
         ~ACTWebSocketMain()
@@ -390,8 +554,8 @@ namespace ACTWebSocket_Plugin
             SaveSettings();
         }
 
-		Label lblStatus;	// The status label that appears in ACT's Plugin tab
-		string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
+        Label lblStatus;    // The status label that appears in ACT's Plugin tab
+        string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
         SettingsSerializer xmlSettings;
 
         #region IActPluginV1 Members
@@ -407,15 +571,15 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            if(core == null)
+            if (core == null)
             {
                 core = new ACTWebSocketCore();
                 core.pluginDirectory = pluginDirectory;
             }
-            lblStatus = pluginStatusText;	// Hand the status label's reference to our local var
-			pluginScreenSpace.Controls.Add(this);	// Add this UserControl to the tab ACT provides
-			this.Dock = DockStyle.Fill;	// Expand the UserControl to fill the tab's client space
-			xmlSettings = new SettingsSerializer(this);	// Create a new settings serializer and pass it this instance
+            lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
+            pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
+            this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
+            xmlSettings = new SettingsSerializer(this);	// Create a new settings serializer and pass it this instance
             sortType.SelectedIndex = -1;
 
             sortType.DataSource = sortTypeDict;
@@ -435,7 +599,8 @@ namespace ACTWebSocket_Plugin
             {
                 StartServer();
             }
-            else {
+            else
+            {
                 StopServer();
             }
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
@@ -445,26 +610,26 @@ namespace ACTWebSocket_Plugin
             lblStatus.Text = "Plugin Started";
         }
 
-		public void DeInitPlugin()
-		{
+        public void DeInitPlugin()
+        {
             StopServer();
-			// Unsubscribe from any events you listen to when exiting!
+            // Unsubscribe from any events you listen to when exiting!
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
 
             SaveSettings();
-			lblStatus.Text = "Plugin Exited";
-		}
+            lblStatus.Text = "Plugin Exited";
+        }
 
         #endregion
 
         void oFormActMain_AfterCombatAction(bool isImport, CombatActionEventArgs actionInfo)
-		{
-		}
+        {
+        }
 
-		void LoadSettings()
-		{
-			xmlSettings.AddControlSetting(port.Name, port);
+        void LoadSettings()
+        {
+            xmlSettings.AddControlSetting(port.Name, port);
             xmlSettings.AddControlSetting(localhostOnly.Name, localhostOnly);
             xmlSettings.AddControlSetting(autostart.Name, autostart);
             xmlSettings.AddControlSetting(hostname.Name, hostname);
@@ -475,50 +640,51 @@ namespace ACTWebSocket_Plugin
             xmlSettings.AddControlSetting(randomURL.Name, randomURL);
 
             if (File.Exists(settingsFile))
-			{
-				FileStream fs = new FileStream(settingsFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-				XmlTextReader xReader = new XmlTextReader(fs);
+            {
+                FileStream fs = new FileStream(settingsFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                XmlTextReader xReader = new XmlTextReader(fs);
 
-				try
-				{
-					while (xReader.Read())
-					{
-						if (xReader.NodeType == XmlNodeType.Element)
-						{
-							if (xReader.LocalName == "SettingsSerializer")
-							{
-								xmlSettings.ImportFromXml(xReader);
-							}
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					lblStatus.Text = "Error loading settings: " + ex.Message;
-				}
-				xReader.Close();
-			}
+                try
+                {
+                    while (xReader.Read())
+                    {
+                        if (xReader.NodeType == XmlNodeType.Element)
+                        {
+                            if (xReader.LocalName == "SettingsSerializer")
+                            {
+                                xmlSettings.ImportFromXml(xReader);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblStatus.Text = "Error loading settings: " + ex.Message;
+                }
+                xReader.Close();
+            }
         }
         void SaveSettings()
-		{
-			FileStream fs = new FileStream(settingsFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-			XmlTextWriter xWriter = new XmlTextWriter(fs, Encoding.UTF8);
-			xWriter.Formatting = Formatting.Indented;
-			xWriter.Indentation = 1;
-			xWriter.IndentChar = '\t';
-			xWriter.WriteStartDocument(true);
-			xWriter.WriteStartElement("Config");	// <Config>
-			xWriter.WriteStartElement("SettingsSerializer");	// <Config><SettingsSerializer>
-			xmlSettings.ExportToXml(xWriter);	// Fill the SettingsSerializer XML
-			xWriter.WriteEndElement();	// </SettingsSerializer>
-			xWriter.WriteEndElement();	// </Config>
-			xWriter.WriteEndDocument();	// Tie up loose ends (shouldn't be any)
-			xWriter.Flush();	// Flush the file buffer to disk
-			xWriter.Close();
-		}
+        {
+            FileStream fs = new FileStream(settingsFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            XmlTextWriter xWriter = new XmlTextWriter(fs, Encoding.UTF8);
+            xWriter.Formatting = Formatting.Indented;
+            xWriter.Indentation = 1;
+            xWriter.IndentChar = '\t';
+            xWriter.WriteStartDocument(true);
+            xWriter.WriteStartElement("Config");    // <Config>
+            xWriter.WriteStartElement("SettingsSerializer");    // <Config><SettingsSerializer>
+            xmlSettings.ExportToXml(xWriter);   // Fill the SettingsSerializer XML
+            xWriter.WriteEndElement();  // </SettingsSerializer>
+            xWriter.WriteEndElement();  // </Config>
+            xWriter.WriteEndDocument(); // Tie up loose ends (shouldn't be any)
+            xWriter.Flush();    // Flush the file buffer to disk
+            xWriter.Close();
+        }
 
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
+            UpdateList();
         }
 
         private void oFormActMain_BeforeLogLineRead(
@@ -553,6 +719,8 @@ namespace ACTWebSocket_Plugin
             buttonOn.Enabled = false;
             buttonOff.Enabled = true;
             randomURL.Enabled = false;
+            ((Control)this.tabPage2).Enabled = true;
+            //tabPage1
         }
 
         private void StopServer()
@@ -564,6 +732,7 @@ namespace ACTWebSocket_Plugin
             buttonOn.Enabled = true;
             buttonOff.Enabled = false;
             randomURL.Enabled = true;
+            ((Control)this.tabPage2).Enabled = false;
         }
 
         private void buttonOn_Click(object sender, EventArgs e)
@@ -590,7 +759,7 @@ namespace ACTWebSocket_Plugin
                 e.Handled = true;
             }
         }
-        
+
         String pluginDirectory = "";
         public void SetPluginDirectory(string path)
         {
@@ -604,7 +773,7 @@ namespace ACTWebSocket_Plugin
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if(core != null)
+            if (core != null)
             {
                 core.Config.SortKey = MiniParseSortKey.Text.Trim();
             }
@@ -620,7 +789,7 @@ namespace ACTWebSocket_Plugin
 
         private void LogLineReadUse_CheckedChanged(object sender, EventArgs e)
         {
-            if(core != null)
+            if (core != null)
             {
                 core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
             }
@@ -658,6 +827,372 @@ namespace ACTWebSocket_Plugin
                 url += core.randomDir + "/";
             }
             Clipboard.SetText(url);
+        }
+        string GetRelativePath(string filespec, string folder)
+        {
+            Uri pathUri = new Uri(filespec);
+            // Folders must end in a slash
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                folder += Path.DirectorySeparatorChar;
+            }
+            Uri folderUri = new Uri(folder);
+            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
+        }
+
+        public static List<String> SearchForWindow(string title)
+        {
+            SearchData sd = new SearchData { TitleKeyword = title };
+            EnumWindows(new EnumWindowsProc(EnumProc), ref sd);
+            return sd.overlayWindowTitles;
+        }
+
+        public static bool EnumProc(IntPtr hWnd, ref SearchData data)
+        {
+            // Check classname and title 
+            // This is different from FindWindow() in that the code below allows partial matches
+            StringBuilder sb = new StringBuilder(1024);
+            GetWindowText(hWnd, sb, sb.Capacity);
+            if (sb.ToString().StartsWith(data.TitleKeyword))
+            {
+                data.overlayWindowTitles.Add(sb.ToString());
+            }
+            return true;
+        }
+
+        public class SearchData
+        {
+            public String TitleKeyword = "";
+            public List<String> overlayWindowTitles = new List<String>();
+        }
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, ref SearchData data);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        public void UpdateList()
+        {
+            this.listBox1.Items.Clear();
+            foreach (string file in Directory.EnumerateFiles(pluginDirectory, "*.html", SearchOption.AllDirectories))
+            {
+                this.listBox1.Items.Add(GetRelativePath(file, pluginDirectory));
+            }
+            List<String> titles = SearchForWindow("overlay_");
+            this.listBox2.Items.Clear();
+            this.listBox2.Sorted = true;
+            foreach (string title in titles)
+            {
+                this.listBox2.Items.Add(title);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UpdateList();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            String overlayPath = pluginDirectory + "/overlay/overlaydemo.exe";
+            if (File.Exists(overlayPath) && this.listBox1.SelectedIndex >= 0)
+            {
+                String url = "";
+                if (localhostOnly.Checked)
+                {
+                    url = "http://localhost:" + port.Text + "/";
+                }
+                else
+                {
+                    url = "http://" + hostname.Text + ":" + port.Text + "/";
+                }
+                if (core.randomDir != null)
+                {
+                    url += core.randomDir + "/";
+                }
+                String param = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                param = param.Replace("%5C", "/");
+                String title = "overlay_" + Guid.NewGuid().ToString();
+                this.listBox2.Items.Add(title);
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = overlayPath;
+                startInfo.Arguments = param + " " + title;
+                Process.Start(startInfo);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (this.listBox1.SelectedIndex >= 0)
+            {
+                String url = "";
+                if (localhostOnly.Checked)
+                {
+                    url = "http://localhost:" + port.Text + "/";
+                }
+                else
+                {
+                    url = "http://" + hostname.Text + ":" + port.Text + "/";
+                }
+                if (core.randomDir != null)
+                {
+                    url += core.randomDir + "/";
+                }
+                String param = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                param = param.Replace("%5C", "/");
+                Clipboard.SetText(param);
+            }
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+            UpdateList();
+        }
+
+        private static int ToIntPtr32(IntPtr intPtr)
+        {
+            return unchecked((int)intPtr.ToInt64());
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool CloseWindow(IntPtr hWnd);
+
+        [DllImport("kernel32.dll", EntryPoint = "SetLastError")]
+        public static extern void SetLastError(int dwErrorCode);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
+        public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", SetLastError = true)]
+        public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+        public const int WS_EX_NOACTIVATE  = 0x08000000;
+
+        public static IntPtr GetWindowLongFlag(IntPtr hWnd, IntPtr value)
+        {
+            int nIndex = GWL_EXSTYLE;
+            int error = 0;
+            IntPtr result = IntPtr.Zero;
+
+            SetLastError(0);
+
+            if (IntPtr.Size == 4)
+            {
+                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+                result = new IntPtr(result32);
+            }
+            else
+            {
+                result = GetWindowLongPtr(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+            }
+
+            if ((result == IntPtr.Zero) && (error != 0))
+            {
+                throw new System.ComponentModel.Win32Exception(error);
+            }
+
+            result = new IntPtr(result.ToInt64() & value.ToInt64());
+
+            return result;
+        }
+
+        public static IntPtr SetWindowLongFlag(IntPtr hWnd, IntPtr value)
+        {
+            int nIndex = GWL_EXSTYLE;
+            int error = 0;
+            IntPtr result = IntPtr.Zero;
+
+            SetLastError(0);
+
+            if (IntPtr.Size == 4)
+            {
+                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+                result = new IntPtr(result32);
+            }
+            else
+            {
+                result = GetWindowLongPtr(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+            }
+
+            if ((result == IntPtr.Zero) && (error != 0))
+            {
+                throw new System.ComponentModel.Win32Exception(error);
+            }
+
+            result = new IntPtr(result.ToInt64() | value.ToInt64());
+
+            if (IntPtr.Size == 4)
+            {
+                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
+                error = Marshal.GetLastWin32Error();
+                result = new IntPtr(result32);
+            }
+            else
+            {
+                result = SetWindowLongPtr(hWnd, nIndex, result);
+                error = Marshal.GetLastWin32Error();
+            }
+
+            if ((result == IntPtr.Zero) && (error != 0))
+            {
+                throw new System.ComponentModel.Win32Exception(error);
+            }
+
+            return result;
+        }
+
+        public static IntPtr UnsetWindowLongFlag(IntPtr hWnd, IntPtr value)
+        {
+            int nIndex = GWL_EXSTYLE;
+            int error = 0;
+            IntPtr result = IntPtr.Zero;
+
+            SetLastError(0);
+
+            if (IntPtr.Size == 4)
+            {
+                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+                result = new IntPtr(result32);
+            }
+            else
+            {
+                result = GetWindowLongPtr(hWnd, nIndex);
+                error = Marshal.GetLastWin32Error();
+            }
+
+            if ((result == IntPtr.Zero) && (error != 0))
+            {
+                throw new System.ComponentModel.Win32Exception(error);
+            }
+
+            result = new IntPtr(result.ToInt64() & ~value.ToInt64());
+
+            if (IntPtr.Size == 4)
+            {
+                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
+                error = Marshal.GetLastWin32Error();
+                result = new IntPtr(result32);
+            }
+            else
+            {
+                result = SetWindowLongPtr(hWnd, nIndex, result);
+                error = Marshal.GetLastWin32Error();
+            }
+
+            if ((result == IntPtr.Zero) && (error != 0))
+            {
+                throw new System.ComponentModel.Win32Exception(error);
+            }
+
+            return result;
+        }
+        
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = FindWindow(null, title);
+                if (hwnd == null || hwnd.ToInt64() == 0)
+                {
+                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                    UpdateList();
+                }
+                else
+                {
+                    if (checkBox1.Checked)
+                        SetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT));
+                    else
+                        UnsetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT));
+                }
+            }
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = FindWindow(null, title);
+                if (hwnd == null || hwnd.ToInt64() == 0)
+                {
+                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                    UpdateList();
+                }
+                else
+                {
+                    if (checkBox2.Checked)
+                        SetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE));
+                    else
+                        UnsetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE));
+                }
+            }
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = FindWindow(null, title);
+                if (hwnd == null || hwnd.ToInt64() == 0)
+                {
+                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                    UpdateList();
+                }
+                else
+                {
+                    checkBox1.Checked = (GetWindowLongFlag(hwnd, new IntPtr(WS_EX_TRANSPARENT)).ToInt64() > 0);
+                    checkBox2.Checked = (GetWindowLongFlag(hwnd, new IntPtr(WS_EX_NOACTIVATE)).ToInt64() > 0);
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = FindWindow(null, title);
+                if (hwnd == null || hwnd.ToInt64() == 0)
+                {
+                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                    UpdateList();
+                }
+                else
+                {
+                    SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
+                    CloseWindow(hwnd);
+                    this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                }
+            }
         }
     }
 }
