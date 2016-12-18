@@ -32,54 +32,38 @@ namespace ACTWebSocket_Plugin
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
         private ACTWebSocketCore core;
-        private GroupBox groupBox1;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Label label2;
         private TextBox port;
-        private Label label3;
         private CheckBox autostart;
-        private TabControl tabControl1;
-        private TabPage tabMiniParse;
-        private TableLayoutPanel tableLayoutPanel3;
         private CheckBox MiniParseUse;
-        private Label label7;
-        private Label label5;
-        private Label label6;
         private TextBox MiniParseSortKey;
         private ComboBox sortType;
-        private TabPage tabLogLineRead;
-        private TableLayoutPanel tableLayoutPanel4;
         private CheckBox BeforeLogLineReadUse;
-        private Label label8;
-        private Label label1;
         private CheckBox localhostOnly;
         private TextBox hostname;
-        private Label label4;
         private CheckBox OnLogLineReadUse;
-        private Label label10;
-        private Label server;
-        private TableLayoutPanel tableLayoutPanel2;
         private Button buttonOff;
         private Button buttonOn;
         private Button copyURL;
-        private Label label9;
         private CheckBox randomURL;
-        private TabControl tabControl2;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
-        private TableLayoutPanel tableLayoutPanel5;
-        private FlowLayoutPanel flowLayoutPanel1;
         private Button button1;
         private Button button2;
         private ListBox listBox2;
         private ListBox listBox1;
-        private FlowLayoutPanel flowLayoutPanel2;
         private CheckBox checkBox1;
         private CheckBox checkBox2;
-        private Label label11;
-        private Label label12;
         private Button button3;
-        private Button button4;
+        private Label label13;
+        private GroupBox startoption;
+        private GroupBox hostdata;
+        private Label label15;
+        private Label label14;
+        private GroupBox miniparse;
+        private Label label17;
+        private Label label16;
+        private GroupBox othersets;
+        private GroupBox serverStatus;
+        private GroupBox groupBox1;
+        private SplitContainer splitContainer1;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
         /// Required designer variable.
@@ -108,146 +92,61 @@ namespace ACTWebSocket_Plugin
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ACTWebSocketMain));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
             this.port = new System.Windows.Forms.TextBox();
-            this.server = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.autostart = new System.Windows.Forms.CheckBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabMiniParse = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.MiniParseUse = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.MiniParseSortKey = new System.Windows.Forms.TextBox();
             this.sortType = new System.Windows.Forms.ComboBox();
-            this.tabLogLineRead = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.BeforeLogLineReadUse = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.OnLogLineReadUse = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.buttonOff = new System.Windows.Forms.Button();
             this.buttonOn = new System.Windows.Forms.Button();
             this.copyURL = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.localhostOnly = new System.Windows.Forms.CheckBox();
             this.hostname = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.randomURL = new System.Windows.Forms.CheckBox();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.button3 = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.startoption = new System.Windows.Forms.GroupBox();
+            this.hostdata = new System.Windows.Forms.GroupBox();
+            this.miniparse = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.othersets = new System.Windows.Forms.GroupBox();
+            this.serverStatus = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.startoption.SuspendLayout();
+            this.hostdata.SuspendLayout();
+            this.miniparse.SuspendLayout();
+            this.othersets.SuspendLayout();
+            this.serverStatus.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabMiniParse.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.tabLogLineRead.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tabControl2.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
-            // 
-            // tableLayoutPanel1
-            // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.port, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.server, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.autostart, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tabControl1, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.localhostOnly, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.hostname, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.randomURL, 1, 2);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
             // 
             // port
             // 
             resources.ApplyResources(this.port, "port");
             this.port.Name = "port";
             // 
-            // server
-            // 
-            resources.ApplyResources(this.server, "server");
-            this.server.Name = "server";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
-            // 
             // autostart
             // 
             resources.ApplyResources(this.autostart, "autostart");
+            this.autostart.BackColor = System.Drawing.Color.Transparent;
             this.autostart.Name = "autostart";
-            this.autostart.UseVisualStyleBackColor = true;
-            // 
-            // tabControl1
-            // 
-            resources.ApplyResources(this.tabControl1, "tabControl1");
-            this.tabControl1.Controls.Add(this.tabMiniParse);
-            this.tabControl1.Controls.Add(this.tabLogLineRead);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            // 
-            // tabMiniParse
-            // 
-            this.tabMiniParse.Controls.Add(this.tableLayoutPanel3);
-            resources.ApplyResources(this.tabMiniParse, "tabMiniParse");
-            this.tabMiniParse.Name = "tabMiniParse";
-            this.tabMiniParse.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel3
-            // 
-            resources.ApplyResources(this.tableLayoutPanel3, "tableLayoutPanel3");
-            this.tableLayoutPanel3.Controls.Add(this.MiniParseUse, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label7, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label5, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label6, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.MiniParseSortKey, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.sortType, 1, 2);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.autostart.UseVisualStyleBackColor = false;
             // 
             // MiniParseUse
             // 
@@ -257,21 +156,6 @@ namespace ACTWebSocket_Plugin
             this.MiniParseUse.Name = "MiniParseUse";
             this.MiniParseUse.UseVisualStyleBackColor = true;
             this.MiniParseUse.CheckedChanged += new System.EventHandler(this.MiniParseUse_CheckedChanged);
-            // 
-            // label7
-            // 
-            resources.ApplyResources(this.label7, "label7");
-            this.label7.Name = "label7";
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
-            // 
-            // label6
-            // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.Name = "label6";
             // 
             // MiniParseSortKey
             // 
@@ -290,22 +174,6 @@ namespace ACTWebSocket_Plugin
             this.sortType.ValueMember = "Value";
             this.sortType.SelectedIndexChanged += new System.EventHandler(this.MiniParseSortType_SelectedIndexChanged);
             // 
-            // tabLogLineRead
-            // 
-            this.tabLogLineRead.Controls.Add(this.tableLayoutPanel4);
-            resources.ApplyResources(this.tabLogLineRead, "tabLogLineRead");
-            this.tabLogLineRead.Name = "tabLogLineRead";
-            this.tabLogLineRead.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel4
-            // 
-            resources.ApplyResources(this.tableLayoutPanel4, "tableLayoutPanel4");
-            this.tableLayoutPanel4.Controls.Add(this.BeforeLogLineReadUse, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.label8, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.OnLogLineReadUse, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.label10, 0, 1);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            // 
             // BeforeLogLineReadUse
             // 
             resources.ApplyResources(this.BeforeLogLineReadUse, "BeforeLogLineReadUse");
@@ -313,30 +181,12 @@ namespace ACTWebSocket_Plugin
             this.BeforeLogLineReadUse.UseVisualStyleBackColor = true;
             this.BeforeLogLineReadUse.CheckedChanged += new System.EventHandler(this.LogLineReadUse_CheckedChanged);
             // 
-            // label8
-            // 
-            resources.ApplyResources(this.label8, "label8");
-            this.label8.Name = "label8";
-            // 
             // OnLogLineReadUse
             // 
             resources.ApplyResources(this.OnLogLineReadUse, "OnLogLineReadUse");
             this.OnLogLineReadUse.Name = "OnLogLineReadUse";
             this.OnLogLineReadUse.UseVisualStyleBackColor = true;
             this.OnLogLineReadUse.CheckedChanged += new System.EventHandler(this.OnLogLineReadUse_CheckedChanged);
-            // 
-            // label10
-            // 
-            resources.ApplyResources(this.label10, "label10");
-            this.label10.Name = "label10";
-            // 
-            // tableLayoutPanel2
-            // 
-            resources.ApplyResources(this.tableLayoutPanel2, "tableLayoutPanel2");
-            this.tableLayoutPanel2.Controls.Add(this.buttonOff, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonOn, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.copyURL, 2, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             // 
             // buttonOff
             // 
@@ -359,11 +209,6 @@ namespace ACTWebSocket_Plugin
             this.copyURL.UseVisualStyleBackColor = true;
             this.copyURL.Click += new System.EventHandler(this.copyURL_Click);
             // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
             // localhostOnly
             // 
             resources.ApplyResources(this.localhostOnly, "localhostOnly");
@@ -377,63 +222,11 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.hostname, "hostname");
             this.hostname.Name = "hostname";
             // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
-            // 
-            // label9
-            // 
-            resources.ApplyResources(this.label9, "label9");
-            this.label9.Name = "label9";
-            // 
             // randomURL
             // 
             resources.ApplyResources(this.randomURL, "randomURL");
             this.randomURL.Name = "randomURL";
             this.randomURL.UseVisualStyleBackColor = true;
-            // 
-            // tabControl2
-            // 
-            resources.ApplyResources(this.tabControl2, "tabControl2");
-            this.tabControl2.Controls.Add(this.tabPage1);
-            this.tabControl2.Controls.Add(this.tabPage2);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage1.Controls.Add(this.groupBox1);
-            resources.ApplyResources(this.tabPage1, "tabPage1");
-            this.tabPage1.Name = "tabPage1";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage2.Controls.Add(this.tableLayoutPanel5);
-            resources.ApplyResources(this.tabPage2, "tabPage2");
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
-            // 
-            // tableLayoutPanel5
-            // 
-            resources.ApplyResources(this.tableLayoutPanel5, "tableLayoutPanel5");
-            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel1, 0, 2);
-            this.tableLayoutPanel5.Controls.Add(this.listBox2, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.listBox1, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel2, 1, 2);
-            this.tableLayoutPanel5.Controls.Add(this.label11, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.label12, 1, 0);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.button1);
-            this.flowLayoutPanel1.Controls.Add(this.button2);
-            this.flowLayoutPanel1.Controls.Add(this.button4);
-            resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
             // button1
             // 
@@ -449,13 +242,6 @@ namespace ACTWebSocket_Plugin
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button4
-            // 
-            resources.ApplyResources(this.button4, "button4");
-            this.button4.Name = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // listBox2
             // 
             resources.ApplyResources(this.listBox2, "listBox2");
@@ -468,14 +254,6 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.listBox1, "listBox1");
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Name = "listBox1";
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.checkBox1);
-            this.flowLayoutPanel2.Controls.Add(this.checkBox2);
-            this.flowLayoutPanel2.Controls.Add(this.button3);
-            resources.ApplyResources(this.flowLayoutPanel2, "flowLayoutPanel2");
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             // 
             // checkBox1
             // 
@@ -498,44 +276,133 @@ namespace ACTWebSocket_Plugin
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // label11
+            // label13
             // 
-            resources.ApplyResources(this.label11, "label11");
-            this.label11.Name = "label11";
+            this.label13.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.Name = "label13";
             // 
-            // label12
+            // startoption
             // 
-            resources.ApplyResources(this.label12, "label12");
-            this.label12.Name = "label12";
+            this.startoption.Controls.Add(this.localhostOnly);
+            this.startoption.Controls.Add(this.randomURL);
+            this.startoption.Controls.Add(this.autostart);
+            resources.ApplyResources(this.startoption, "startoption");
+            this.startoption.Name = "startoption";
+            this.startoption.TabStop = false;
+            // 
+            // hostdata
+            // 
+            this.hostdata.Controls.Add(this.label15);
+            this.hostdata.Controls.Add(this.label14);
+            this.hostdata.Controls.Add(this.hostname);
+            this.hostdata.Controls.Add(this.port);
+            resources.ApplyResources(this.hostdata, "hostdata");
+            this.hostdata.Name = "hostdata";
+            this.hostdata.TabStop = false;
+            // 
+            // miniparse
+            // 
+            this.miniparse.Controls.Add(this.label17);
+            this.miniparse.Controls.Add(this.label16);
+            this.miniparse.Controls.Add(this.MiniParseUse);
+            this.miniparse.Controls.Add(this.sortType);
+            this.miniparse.Controls.Add(this.MiniParseSortKey);
+            resources.ApplyResources(this.miniparse, "miniparse");
+            this.miniparse.Name = "miniparse";
+            this.miniparse.TabStop = false;
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.Name = "label14";
+            // 
+            // label15
+            // 
+            resources.ApplyResources(this.label15, "label15");
+            this.label15.Name = "label15";
+            // 
+            // label16
+            // 
+            resources.ApplyResources(this.label16, "label16");
+            this.label16.Name = "label16";
+            // 
+            // label17
+            // 
+            resources.ApplyResources(this.label17, "label17");
+            this.label17.Name = "label17";
+            // 
+            // othersets
+            // 
+            this.othersets.Controls.Add(this.BeforeLogLineReadUse);
+            this.othersets.Controls.Add(this.OnLogLineReadUse);
+            resources.ApplyResources(this.othersets, "othersets");
+            this.othersets.Name = "othersets";
+            this.othersets.TabStop = false;
+            // 
+            // serverStatus
+            // 
+            this.serverStatus.Controls.Add(this.buttonOn);
+            this.serverStatus.Controls.Add(this.buttonOff);
+            this.serverStatus.Controls.Add(this.copyURL);
+            resources.ApplyResources(this.serverStatus, "serverStatus");
+            this.serverStatus.Name = "serverStatus";
+            this.serverStatus.TabStop = false;
+            // 
+            // groupBox1
+            // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.splitContainer1);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // splitContainer1
+            // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.listBox2);
+            this.splitContainer1.Panel1.Controls.Add(this.button2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.listBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.button3);
+            this.splitContainer1.Panel2.Controls.Add(this.checkBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.checkBox2);
             // 
             // ACTWebSocketMain
             // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.serverStatus);
+            this.Controls.Add(this.othersets);
+            this.Controls.Add(this.miniparse);
+            this.Controls.Add(this.hostdata);
+            this.Controls.Add(this.startoption);
+            this.Controls.Add(this.label13);
             resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tabControl2);
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
+            this.startoption.ResumeLayout(false);
+            this.startoption.PerformLayout();
+            this.hostdata.ResumeLayout(false);
+            this.hostdata.PerformLayout();
+            this.miniparse.ResumeLayout(false);
+            this.miniparse.PerformLayout();
+            this.othersets.ResumeLayout(false);
+            this.othersets.PerformLayout();
+            this.serverStatus.ResumeLayout(false);
+            this.serverStatus.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabMiniParse.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            this.tabLogLineRead.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.tabControl2.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
