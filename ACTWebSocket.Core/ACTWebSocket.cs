@@ -15,6 +15,7 @@ namespace ACTWebSocket_Plugin
     using ACTWebSocket.Core;
     using Newtonsoft.Json.Linq;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Sockets;
@@ -124,6 +125,17 @@ namespace ACTWebSocket_Plugin
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ACTWebSocketMain));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.copyURL = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.port = new System.Windows.Forms.TextBox();
             this.autostart = new System.Windows.Forms.CheckBox();
             this.MiniParseUse = new System.Windows.Forms.CheckBox();
@@ -133,14 +145,9 @@ namespace ACTWebSocket_Plugin
             this.OnLogLineReadUse = new System.Windows.Forms.CheckBox();
             this.buttonOff = new System.Windows.Forms.Button();
             this.buttonOn = new System.Windows.Forms.Button();
-            this.copyURL = new System.Windows.Forms.Button();
             this.localhostOnly = new System.Windows.Forms.CheckBox();
             this.hostname = new System.Windows.Forms.TextBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.listBox2 = new System.Windows.Forms.ListBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.close = new System.Windows.Forms.Button();
@@ -155,13 +162,15 @@ namespace ACTWebSocket_Plugin
             this.othersets = new System.Windows.Forms.GroupBox();
             this.serverStatus = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.height = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.width = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.y = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.x = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.fps = new System.Windows.Forms.TrackBar();
             this.label7 = new System.Windows.Forms.Label();
             this.zoom = new System.Windows.Forms.TrackBar();
@@ -177,31 +186,109 @@ namespace ACTWebSocket_Plugin
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.x = new System.Windows.Forms.TextBox();
-            this.y = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.width = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.height = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.startoption.SuspendLayout();
-            this.hostdata.SuspendLayout();
-            this.miniparse.SuspendLayout();
-            this.othersets.SuspendLayout();
-            this.serverStatus.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.startoption.SuspendLayout();
+            this.hostdata.SuspendLayout();
+            this.miniparse.SuspendLayout();
+            this.othersets.SuspendLayout();
+            this.serverStatus.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fps)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacity)).BeginInit();
             this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
+            this.splitContainer1.Panel2.Controls.Add(this.listBox2);
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            // 
+            // panel1
+            // 
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Controls.Add(this.listBox1);
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Name = "panel1";
+            // 
+            // listBox1
+            // 
+            resources.ApplyResources(this.listBox1, "listBox1");
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Name = "listBox1";
+            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            // 
+            // panel2
+            // 
+            resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.copyURL);
+            this.panel2.Controls.Add(this.button4);
+            this.panel2.Name = "panel2";
+            // 
+            // button2
+            // 
+            resources.ApplyResources(this.button2, "button2");
+            this.button2.Name = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            resources.ApplyResources(this.button1, "button1");
+            this.button1.Name = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // copyURL
+            // 
+            resources.ApplyResources(this.copyURL, "copyURL");
+            this.copyURL.Name = "copyURL";
+            this.copyURL.UseVisualStyleBackColor = true;
+            this.copyURL.Click += new System.EventHandler(this.copyURL_Click);
+            // 
+            // button4
+            // 
+            resources.ApplyResources(this.button4, "button4");
+            this.button4.Name = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Name = "label1";
+            // 
+            // listBox2
+            // 
+            resources.ApplyResources(this.listBox2, "listBox2");
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.Name = "listBox2";
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.BackColor = System.Drawing.Color.White;
+            this.label2.Name = "label2";
             // 
             // port
             // 
@@ -218,10 +305,11 @@ namespace ACTWebSocket_Plugin
             // MiniParseUse
             // 
             resources.ApplyResources(this.MiniParseUse, "MiniParseUse");
+            this.MiniParseUse.BackColor = System.Drawing.Color.Transparent;
             this.MiniParseUse.Checked = true;
             this.MiniParseUse.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MiniParseUse.Name = "MiniParseUse";
-            this.MiniParseUse.UseVisualStyleBackColor = true;
+            this.MiniParseUse.UseVisualStyleBackColor = false;
             this.MiniParseUse.CheckedChanged += new System.EventHandler(this.MiniParseUse_CheckedChanged);
             // 
             // MiniParseSortKey
@@ -244,15 +332,17 @@ namespace ACTWebSocket_Plugin
             // BeforeLogLineReadUse
             // 
             resources.ApplyResources(this.BeforeLogLineReadUse, "BeforeLogLineReadUse");
+            this.BeforeLogLineReadUse.BackColor = System.Drawing.Color.Transparent;
             this.BeforeLogLineReadUse.Name = "BeforeLogLineReadUse";
-            this.BeforeLogLineReadUse.UseVisualStyleBackColor = true;
+            this.BeforeLogLineReadUse.UseVisualStyleBackColor = false;
             this.BeforeLogLineReadUse.CheckedChanged += new System.EventHandler(this.LogLineReadUse_CheckedChanged);
             // 
             // OnLogLineReadUse
             // 
             resources.ApplyResources(this.OnLogLineReadUse, "OnLogLineReadUse");
+            this.OnLogLineReadUse.BackColor = System.Drawing.Color.Transparent;
             this.OnLogLineReadUse.Name = "OnLogLineReadUse";
-            this.OnLogLineReadUse.UseVisualStyleBackColor = true;
+            this.OnLogLineReadUse.UseVisualStyleBackColor = false;
             this.OnLogLineReadUse.CheckedChanged += new System.EventHandler(this.OnLogLineReadUse_CheckedChanged);
             // 
             // buttonOff
@@ -269,20 +359,14 @@ namespace ACTWebSocket_Plugin
             this.buttonOn.UseVisualStyleBackColor = true;
             this.buttonOn.Click += new System.EventHandler(this.buttonOn_Click);
             // 
-            // copyURL
-            // 
-            resources.ApplyResources(this.copyURL, "copyURL");
-            this.copyURL.Name = "copyURL";
-            this.copyURL.UseVisualStyleBackColor = true;
-            this.copyURL.Click += new System.EventHandler(this.copyURL_Click);
-            // 
             // localhostOnly
             // 
             resources.ApplyResources(this.localhostOnly, "localhostOnly");
+            this.localhostOnly.BackColor = System.Drawing.Color.Transparent;
             this.localhostOnly.Checked = true;
             this.localhostOnly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.localhostOnly.Name = "localhostOnly";
-            this.localhostOnly.UseVisualStyleBackColor = true;
+            this.localhostOnly.UseVisualStyleBackColor = false;
             // 
             // hostname
             // 
@@ -292,49 +376,24 @@ namespace ACTWebSocket_Plugin
             // randomURL
             // 
             resources.ApplyResources(this.randomURL, "randomURL");
+            this.randomURL.BackColor = System.Drawing.Color.Transparent;
             this.randomURL.Name = "randomURL";
-            this.randomURL.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            resources.ApplyResources(this.button2, "button2");
-            this.button2.Name = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // listBox2
-            // 
-            resources.ApplyResources(this.listBox2, "listBox2");
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Name = "listBox2";
-            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
-            // 
-            // listBox1
-            // 
-            resources.ApplyResources(this.listBox1, "listBox1");
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Name = "listBox1";
-            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            this.randomURL.UseVisualStyleBackColor = false;
             // 
             // checkBox1
             // 
             resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.BackColor = System.Drawing.Color.Transparent;
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.UseVisualStyleBackColor = false;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
             // 
             // checkBox2
             // 
             resources.ApplyResources(this.checkBox2, "checkBox2");
+            this.checkBox2.BackColor = System.Drawing.Color.Transparent;
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.UseVisualStyleBackColor = false;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
             // 
             // close
@@ -346,134 +405,96 @@ namespace ACTWebSocket_Plugin
             // 
             // label13
             // 
-            this.label13.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.label13, "label13");
+            this.label13.BackColor = System.Drawing.Color.White;
             this.label13.Name = "label13";
             // 
             // startoption
             // 
+            resources.ApplyResources(this.startoption, "startoption");
+            this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.localhostOnly);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
             // hostdata
             // 
+            resources.ApplyResources(this.hostdata, "hostdata");
+            this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.hostname);
             this.hostdata.Controls.Add(this.port);
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // label15
             // 
             resources.ApplyResources(this.label15, "label15");
+            this.label15.BackColor = System.Drawing.Color.Transparent;
             this.label15.Name = "label15";
             // 
             // label14
             // 
             resources.ApplyResources(this.label14, "label14");
+            this.label14.BackColor = System.Drawing.Color.Transparent;
             this.label14.Name = "label14";
             // 
             // miniparse
             // 
+            resources.ApplyResources(this.miniparse, "miniparse");
+            this.miniparse.BackColor = System.Drawing.Color.Transparent;
             this.miniparse.Controls.Add(this.label17);
             this.miniparse.Controls.Add(this.label16);
             this.miniparse.Controls.Add(this.MiniParseUse);
             this.miniparse.Controls.Add(this.sortType);
             this.miniparse.Controls.Add(this.MiniParseSortKey);
-            resources.ApplyResources(this.miniparse, "miniparse");
             this.miniparse.Name = "miniparse";
             this.miniparse.TabStop = false;
             // 
             // label17
             // 
             resources.ApplyResources(this.label17, "label17");
+            this.label17.BackColor = System.Drawing.Color.Transparent;
             this.label17.Name = "label17";
             // 
             // label16
             // 
             resources.ApplyResources(this.label16, "label16");
+            this.label16.BackColor = System.Drawing.Color.Transparent;
             this.label16.Name = "label16";
             // 
             // othersets
             // 
+            resources.ApplyResources(this.othersets, "othersets");
+            this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
             // serverStatus
             // 
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
             this.groupBox1.Controls.Add(this.splitContainer1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // splitContainer1
-            // 
-            resources.ApplyResources(this.splitContainer1, "splitContainer1");
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.listBox2);
-            this.splitContainer1.Panel2.Controls.Add(this.label2);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.listBox1);
-            this.panel1.Controls.Add(this.panel2);
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.copyURL);
-            this.panel2.Controls.Add(this.button4);
-            resources.ApplyResources(this.panel2, "panel2");
-            this.panel2.Name = "panel2";
-            // 
-            // button4
-            // 
-            resources.ApplyResources(this.button4, "button4");
-            this.button4.Name = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.Color.White;
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // label2
-            // 
-            this.label2.BackColor = System.Drawing.Color.White;
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
-            // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.BackColor = System.Drawing.Color.Transparent;
             this.groupBox2.Controls.Add(this.height);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.width);
@@ -500,9 +521,64 @@ namespace ACTWebSocket_Plugin
             this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Controls.Add(this.checkBox2);
             this.groupBox2.Controls.Add(this.close);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // height
+            // 
+            resources.ApplyResources(this.height, "height");
+            this.height.Name = "height";
+            this.height.TextChanged += new System.EventHandler(this.update_overlayWindowPosition);
+            this.height.Enter += new System.EventHandler(this.x_Enter);
+            this.height.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.digitOnly_KeyPress);
+            // 
+            // label11
+            // 
+            resources.ApplyResources(this.label11, "label11");
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Name = "label11";
+            // 
+            // width
+            // 
+            resources.ApplyResources(this.width, "width");
+            this.width.Name = "width";
+            this.width.TextChanged += new System.EventHandler(this.update_overlayWindowPosition);
+            this.width.Enter += new System.EventHandler(this.x_Enter);
+            this.width.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.digitOnly_KeyPress);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.BackColor = System.Drawing.Color.Transparent;
+            this.label10.Name = "label10";
+            // 
+            // y
+            // 
+            resources.ApplyResources(this.y, "y");
+            this.y.Name = "y";
+            this.y.TextChanged += new System.EventHandler(this.update_overlayWindowPosition);
+            this.y.Enter += new System.EventHandler(this.x_Enter);
+            this.y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.digitOnly_KeyPress);
+            // 
+            // label9
+            // 
+            resources.ApplyResources(this.label9, "label9");
+            this.label9.BackColor = System.Drawing.Color.Transparent;
+            this.label9.Name = "label9";
+            // 
+            // x
+            // 
+            resources.ApplyResources(this.x, "x");
+            this.x.Name = "x";
+            this.x.TextChanged += new System.EventHandler(this.update_overlayWindowPosition);
+            this.x.Enter += new System.EventHandler(this.x_Enter);
+            this.x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.digitOnly_KeyPress);
+            // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Name = "label8";
             // 
             // fps
             // 
@@ -516,12 +592,13 @@ namespace ACTWebSocket_Plugin
             // label7
             // 
             resources.ApplyResources(this.label7, "label7");
+            this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Name = "label7";
             // 
             // zoom
             // 
-            this.zoom.LargeChange = 25;
             resources.ApplyResources(this.zoom, "zoom");
+            this.zoom.LargeChange = 25;
             this.zoom.Maximum = 500;
             this.zoom.Minimum = 25;
             this.zoom.Name = "zoom";
@@ -531,6 +608,7 @@ namespace ACTWebSocket_Plugin
             // label6
             // 
             resources.ApplyResources(this.label6, "label6");
+            this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Name = "label6";
             // 
             // button5
@@ -544,15 +622,19 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.url, "url");
             this.url.Name = "url";
+            this.url.TextChanged += new System.EventHandler(this.url_TextChanged);
             // 
             // label5
             // 
             resources.ApplyResources(this.label5, "label5");
+            this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Name = "label5";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // label4
             // 
             resources.ApplyResources(this.label4, "label4");
+            this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Name = "label4";
             // 
             // opacity
@@ -567,98 +649,56 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.overlayTitle, "overlayTitle");
             this.overlayTitle.Name = "overlayTitle";
-            this.overlayTitle.TextChanged += new System.EventHandler(this.overlayTitle_TextChanged);
+            this.overlayTitle.KeyUp += new System.Windows.Forms.KeyEventHandler(this.overlayTitle_KeyUp);
             this.overlayTitle.Leave += new System.EventHandler(this.overlayTitle_Leave);
             // 
             // label3
             // 
             resources.ApplyResources(this.label3, "label3");
+            this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Name = "label3";
             // 
             // checkBox6
             // 
             resources.ApplyResources(this.checkBox6, "checkBox6");
+            this.checkBox6.BackColor = System.Drawing.Color.Transparent;
             this.checkBox6.Checked = true;
             this.checkBox6.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox6.Name = "checkBox6";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.checkBox6.UseVisualStyleBackColor = false;
             this.checkBox6.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
             // 
             // checkBox5
             // 
             resources.ApplyResources(this.checkBox5, "checkBox5");
+            this.checkBox5.BackColor = System.Drawing.Color.Transparent;
             this.checkBox5.Checked = true;
             this.checkBox5.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox5.Name = "checkBox5";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.UseVisualStyleBackColor = false;
             this.checkBox5.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
             // 
             // checkBox4
             // 
             resources.ApplyResources(this.checkBox4, "checkBox4");
+            this.checkBox4.BackColor = System.Drawing.Color.Transparent;
             this.checkBox4.Checked = true;
             this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox4.Name = "checkBox4";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.checkBox4.UseVisualStyleBackColor = false;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
             // 
             // checkBox3
             // 
             resources.ApplyResources(this.checkBox3, "checkBox3");
+            this.checkBox3.BackColor = System.Drawing.Color.Transparent;
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.UseVisualStyleBackColor = false;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.update_overlayWindow);
-            // 
-            // label8
-            // 
-            resources.ApplyResources(this.label8, "label8");
-            this.label8.Name = "label8";
-            // 
-            // x
-            // 
-            resources.ApplyResources(this.x, "x");
-            this.x.Name = "x";
-            this.x.TextChanged += new System.EventHandler(this.update_overlayWindow);
-            this.x.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // y
-            // 
-            resources.ApplyResources(this.y, "y");
-            this.y.Name = "y";
-            this.y.TextChanged += new System.EventHandler(this.update_overlayWindow);
-            this.y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // label9
-            // 
-            resources.ApplyResources(this.label9, "label9");
-            this.label9.Name = "label9";
-            // 
-            // width
-            // 
-            resources.ApplyResources(this.width, "width");
-            this.width.Name = "width";
-            this.width.TextChanged += new System.EventHandler(this.update_overlayWindow);
-            this.width.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // label10
-            // 
-            resources.ApplyResources(this.label10, "label10");
-            this.label10.Name = "label10";
-            // 
-            // height
-            // 
-            resources.ApplyResources(this.height, "height");
-            this.height.Name = "height";
-            this.height.TextChanged += new System.EventHandler(this.update_overlayWindow);
-            this.height.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // label11
-            // 
-            resources.ApplyResources(this.label11, "label11");
-            this.label11.Name = "label11";
             // 
             // ACTWebSocketMain
             // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.serverStatus);
@@ -668,9 +708,14 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
             this.Controls.Add(this.label13);
-            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.startoption.ResumeLayout(false);
             this.startoption.PerformLayout();
             this.hostdata.ResumeLayout(false);
@@ -682,12 +727,6 @@ namespace ACTWebSocket_Plugin
             this.serverStatus.ResumeLayout(false);
             this.serverStatus.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fps)).EndInit();
@@ -719,7 +758,7 @@ namespace ACTWebSocket_Plugin
 
         #region IActPluginV1 Members
 
-        static readonly List<KeyValuePair<string, MiniParseSortType>> sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
+        static List<KeyValuePair<string, MiniParseSortType>> sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
         {
             new KeyValuePair<string, MiniParseSortType>("DoNotSort", MiniParseSortType.None),
             new KeyValuePair<string, MiniParseSortType>("SortStringAscending", MiniParseSortType.StringAscending),
@@ -732,6 +771,31 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+            CultureInfo ci = CultureInfo.InstalledUICulture;
+            string specName = "(none)";
+            try { specName = CultureInfo.CreateSpecificCulture(ci.Name).Name; } catch { }
+            if(specName == "ko-KR")
+            {
+                sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
+                {
+                    new KeyValuePair<string, MiniParseSortType>("정렬 안함", MiniParseSortType.None),
+                    new KeyValuePair<string, MiniParseSortType>("문자열 올림차순 정렬", MiniParseSortType.StringAscending),
+                    new KeyValuePair<string, MiniParseSortType>("문자열 내림차순 정렬", MiniParseSortType.StringDescending),
+                    new KeyValuePair<string, MiniParseSortType>("숫자 올림차순 정렬", MiniParseSortType.NumericAscending),
+                    new KeyValuePair<string, MiniParseSortType>("숫자 내림차순 정렬", MiniParseSortType.NumericDescending)
+                };
+            }
+            else
+            {
+                sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
+                {
+                    new KeyValuePair<string, MiniParseSortType>("DoNotSort", MiniParseSortType.None),
+                    new KeyValuePair<string, MiniParseSortType>("SortStringAscending", MiniParseSortType.StringAscending),
+                    new KeyValuePair<string, MiniParseSortType>("SortStringDescending", MiniParseSortType.StringDescending),
+                    new KeyValuePair<string, MiniParseSortType>("SortNumberAscending", MiniParseSortType.NumericAscending),
+                    new KeyValuePair<string, MiniParseSortType>("SortNumberDescending", MiniParseSortType.NumericDescending)
+                };
+            }
             if (core == null)
             {
                 core = new ACTWebSocketCore();
@@ -863,7 +927,7 @@ namespace ACTWebSocket_Plugin
                         {
                             o["opacity"] = 1.0;
                         }
-                        if (title == "FullScreen_Overlay")
+                        if (title == overlayFullscreenName)
                         {
                             using (var client = new HttpClient())
                             {
@@ -894,7 +958,7 @@ namespace ACTWebSocket_Plugin
                     }
                     foreach (String title in keysLoaded)
                     {
-                        if (title == "FullScreen_Overlay")
+                        if (title == overlayFullscreenName)
                         {
                             continue;
                         }
@@ -1222,6 +1286,8 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        static public string overlayFullscreenName = "FullScreen_Overlay";
+
         public void UpdateList(bool updateInfo = true)
         {
             this.listBox1.Items.Clear();
@@ -1233,7 +1299,8 @@ namespace ACTWebSocket_Plugin
             this.listBox2.Items.Clear();
             this.listBox2.Sorted = true;
 
-            titles.Add(overlayWindowPrefix+"FullScreen_Overlay");
+            // Fullscreen Overlay..
+            //titles.Add(overlayWindowPrefix+overlayFullscreenName);
             foreach (string fulltitle in titles)
             {
                 String title = fulltitle.Substring(overlayWindowPrefix.Length);
@@ -1285,24 +1352,6 @@ namespace ACTWebSocket_Plugin
         private void button1_Click(object sender, EventArgs e)
         {
             UpdateList();
-        }
-
-        public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
-        {
-            if (oEncoding == null)
-                oEncoding = System.Text.Encoding.UTF8;
-
-            byte[] arr = oEncoding.GetBytes(EncodingText);
-            return System.Convert.ToBase64String(arr);
-        }
-
-        public static string Base64Decoding(string DecodingText, System.Text.Encoding oEncoding = null)
-        {
-            if (oEncoding == null)
-                oEncoding = System.Text.Encoding.UTF8;
-
-            byte[] arr = System.Convert.FromBase64String(DecodingText);
-            return oEncoding.GetString(arr);
         }
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1359,30 +1408,29 @@ namespace ACTWebSocket_Plugin
         }
         private bool NewOverlayWindow(String url, String title)
         {
-            String overlayPath = pluginDirectory + "/overlay/overlaydemo.exe";
+            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
             if (File.Exists(overlayPath) && this.listBox1.SelectedIndex >= 0)
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = overlayPath;
                 JObject o = new JObject();
-                o["Transparent"] = checkBox1.Checked;
-                o["NoActivate"] = checkBox2.Checked;
-                o["hide"] = checkBox3.Checked;
-                o["useDragFilter"] = checkBox4.Checked;
-                o["useDragMove"] = checkBox4.Checked && checkBox5.Checked;
-                o["useResizeGrip"] = checkBox6.Checked;
-                o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
+                o["Transparent"] = false;
+                o["NoActivate"] = false;
+                o["hide"] = false;
+                o["useDragFilter"] = true;
+                o["useDragMove"] = true;
+                o["useResizeGrip"] = true;
+                o["opacity"] = 1.0;
+                o["zoom"] = 1.0;
                 o["url"] = url;
                 o["title"] = title;
-                o["zoom"] = 1.0;
+                o["fps"] = 30.0;
                 //o["x"] = Convert.ToInt32(x.Text);
                 //o["y"] = Convert.ToInt32(y.Text);
                 //o["width"] = Convert.ToInt32(width.Text) <= 0 ? 1 : Convert.ToInt32(width.Text);
                 //o["height"] = Convert.ToInt32(height.Text) <= 0 ? 1 : Convert.ToInt32(height.Text);
                 //o["width"] = 100;
                 //o["height"] = 100;
-                //o["x"] = 0;
-                //o["y"] = 0;
 
                 return NewOverlayWindow(o);
             }
@@ -1391,7 +1439,7 @@ namespace ACTWebSocket_Plugin
 
         private bool NewOverlayWindow(JObject obj)
         {
-            String overlayPath = pluginDirectory + "/overlay/overlaydemo.exe";
+            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
             if (File.Exists(overlayPath))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -1404,7 +1452,7 @@ namespace ACTWebSocket_Plugin
                     overlayWindows[title] = obj;
 
                 String json = json = o.ToString();
-                startInfo.Arguments = Base64Encoding(json);
+                startInfo.Arguments = Utility.Base64Encoding(json);
                 Process.Start(startInfo);
                 return true;
             }
@@ -1450,7 +1498,7 @@ namespace ACTWebSocket_Plugin
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
-                if ((hwnd == null || hwnd.ToInt64() == 0) && title != "FullScreen_Overlay")
+                if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
                     UpdateList();
                 }
@@ -1465,36 +1513,9 @@ namespace ACTWebSocket_Plugin
                     o["useResizeGrip"] = checkBox6.Checked;
                     o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
                     o["zoom"] = (double)zoom.Value / (double)100.0;
-                    try
-                    {
-                        o["x"] = Convert.ToInt32(x.Text);
-                    }
-                    catch(Exception e2)
-                    {
-                    }
-                    try
-                    {
-                        o["y"] = Convert.ToInt32(y.Text);
-                    }
-                    catch (Exception e2)
-                    {
-                    }
-                    try
-                    {
-                        o["width"] = Convert.ToInt32(width.Text);
-                    }
-                    catch (Exception e2)
-                    {
-                    }
-                    try
-                    {
-                        o["height"] = Convert.ToInt32(height.Text);
-                    }
-                    catch (Exception e2)
-                    {
-                    }
+                    o["fps"] = (double)fps.Value;
                     String json = o.ToString();
-                    if (title == "FullScreen_Overlay")
+                    if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
                         {
@@ -1524,34 +1545,104 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        private async void update_overlayWindowPosition(object sender, EventArgs e)
+        {
+            checkBox5.Enabled = checkBox4.Checked;
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+                if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
+                {
+                    UpdateList();
+                }
+                else
+                {
+                    JObject o = new JObject();
+                    try
+                    {
+                        o["x"] = Convert.ToInt32(x.Text);
+                    }
+                    catch (Exception e2)
+                    {
+                    }
+                    try
+                    {
+                        o["y"] = Convert.ToInt32(y.Text);
+                    }
+                    catch (Exception e2)
+                    {
+                    }
+                    try
+                    {
+                        o["width"] = Convert.ToInt32(width.Text);
+                    }
+                    catch (Exception e2)
+                    {
+                    }
+                    try
+                    {
+                        o["height"] = Convert.ToInt32(height.Text);
+                    }
+                    catch (Exception e2)
+                    {
+                    }
+                    String json = o.ToString();
+                    if (title == overlayFullscreenName)
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            try
+                            {
+                                var content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(json));
+                                var response = await client.PostAsync("http://localhost:5088/req", content);
+                                var responseString = await response.Content.ReadAsStringAsync();
+                            }
+                            catch (Exception e2)
+                            {
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Native.SendMessageToWindow(hwnd, 1, json);
+                    }
+
+                    IList<string> keys = o.Properties().Select(p => p.Name).ToList();
+                    foreach (String key in keys)
+                    {
+                        overlayWindows[title][key] = o[key].DeepClone();
+                    }
+                }
+            }
+        }
+
         private async void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
-                if ((hwnd == null || hwnd.ToInt64() == 0) && title != "FullScreen_Overlay")
+                if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
                     //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
                     UpdateList();
                 }
                 else
                 {
-                    overlayTitle.Enabled = title != "FullScreen_Overlay";
-                    close.Enabled = title != "FullScreen_Overlay";
+                    overlayTitle.Enabled = title != overlayFullscreenName;
+                    close.Enabled = title != overlayFullscreenName;
 
                     overlayTitle.Text = title;
                     IList<string> keys = overlayWindows.Properties().Select(p => p.Name).ToList();
-                    if (title == "FullScreen_Overlay")
+                    if (title == overlayFullscreenName)
                     {
-                        JObject o = (JObject)overlayWindows[title];
-                        o["hide"] = true;
-
                         using (var client = new HttpClient())
                         {
-                            var response = await client.GetAsync("http://localhost:5088/res");
                             try
                             {
+                                var response = await client.GetAsync("http://localhost:5088/res");
                                 var responseString = await response.Content.ReadAsStringAsync();
                                 JObject o2 = JObject.Parse(responseString);
                                 overlayWindows[title] = o2;
@@ -1571,16 +1662,40 @@ namespace ACTWebSocket_Plugin
                         checkBox4.Checked = overlayWindows[title].Value<Boolean>("useDragFilter");
                         checkBox5.Checked = overlayWindows[title].Value<Boolean>("useDragMove");
                         checkBox6.Checked = overlayWindows[title].Value<Boolean>("useResizeGrip");
-                        opacity.Value = (int)(overlayWindows[title].Value<double>("opacity") * (double)opacity.Maximum);
-                        zoom.Value = (int)(overlayWindows[title].Value<double>("zoom") * (double)100);
                         url.Text = overlayWindows[title].Value<String>("url");
+                        try
+                        {
+                            opacity.Value = (int)(overlayWindows[title].Value<double>("opacity") * (double)opacity.Maximum);
+                        }
+                        catch (Exception e2) { }
+                        finally { }
+                        try
+                        {
+                            zoom.Value = (int)(overlayWindows[title].Value<double>("zoom") * (double)100);
+                        }
+                        catch (Exception e2) { }
+                        finally { }
+                        try
+                        {
+                            fps.Value = (int)overlayWindows[title].Value<double>("fps");
+                        }
+                        catch (Exception e2) { }
+                        finally { }
 
-                        x.Text = overlayWindows[title].Value<Int32>("x").ToString();
-                        y.Text = overlayWindows[title].Value<Int32>("y").ToString();
-                        width.Text = overlayWindows[title].Value<Int32>("width").ToString();
-                        height.Text = overlayWindows[title].Value<Int32>("height").ToString();
+                        Native.RECT rect = new Native.RECT();
+                        Native.GetWindowRect(hwnd, out rect);
 
-                        if (title == "FullScreen_Overlay")
+                        x.Text = rect.Left.ToString();
+                        y.Text = rect.Top.ToString();
+                        width.Text = (rect.Right - rect.Left).ToString();
+                        height.Text = (rect.Bottom - rect.Top).ToString();
+
+                        //x.Text = overlayWindows[title].Value<Int32>("x").ToString();
+                        //y.Text = overlayWindows[title].Value<Int32>("y").ToString();
+                        //width.Text = overlayWindows[title].Value<Int32>("width").ToString();
+                        //height.Text = overlayWindows[title].Value<Int32>("height").ToString();
+
+                        if (title == overlayFullscreenName)
                         {
                         }
                         else
@@ -1614,38 +1729,38 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private void overlayTitle_TextChanged(object sender, EventArgs e)
+        private void overlayTitle_KeyUp(object sender, KeyEventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
+            if(e.KeyCode == Keys.Enter)
             {
+                if (this.listBox2.SelectedIndex >= 0)
+                {
+                    String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                    IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+                    if (hwnd == null || hwnd.ToInt64() == 0)
+                    {
+                        UpdateList();
+                    }
+                    else
+                    {
+                        if (title.CompareTo(overlayTitle.Text) != 0)
+                        {
+                            JObject o = new JObject();
+                            o["title"] = overlayWindowPrefix + overlayTitle.Text;
+                            String json = o.ToString();
+                            Native.SendMessageToWindow(hwnd, 1, json);
+                            overlayWindows[overlayTitle.Text] = overlayWindows[title].DeepClone();
+                            overlayWindows[overlayTitle.Text]["title"] = overlayTitle.Text;
+                            overlayWindows.Remove(title);
+                            UpdateList();
+                        }
+                    }
+                }
             }
         }
 
         private void overlayTitle_Leave(object sender, EventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
-            {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
-                if (hwnd == null || hwnd.ToInt64() == 0)
-                {
-                    UpdateList();
-                }
-                else
-                {
-                    if (title.CompareTo(overlayTitle.Text) != 0)
-                    {
-                        JObject o = new JObject();
-                        o["title"] = overlayWindowPrefix + overlayTitle.Text;
-                        String json = o.ToString();
-                        Native.SendMessageToWindow(hwnd, 1, json);
-                        overlayWindows[overlayTitle.Text] = overlayWindows[title].DeepClone();
-                        overlayWindows[overlayTitle.Text]["title"] = overlayTitle.Text;
-                        overlayWindows.Remove(title);
-                        UpdateList();
-                    }
-                }
-            }
         }
 
         private async void button5_Click(object sender, EventArgs e)
@@ -1654,7 +1769,7 @@ namespace ACTWebSocket_Plugin
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
-                if ((hwnd == null || hwnd.ToInt64() == 0) && title != "FullScreen_Overlay")
+                if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
                     UpdateList();
                 }
@@ -1663,7 +1778,7 @@ namespace ACTWebSocket_Plugin
                     JObject o = new JObject();
                     o["url"] = url.Text;
                     String json = o.ToString();
-                    if (title == "FullScreen_Overlay")
+                    if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
                         {
@@ -1686,9 +1801,84 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void digitOnly_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private async void x_Enter(object sender, EventArgs e)
+        {
+
+            if (this.listBox2.SelectedIndex >= 0)
+            {
+                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+                if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
+                {
+                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                    UpdateList();
+                }
+                else
+                {
+                    overlayTitle.Enabled = title != overlayFullscreenName;
+                    close.Enabled = title != overlayFullscreenName;
+
+                    overlayTitle.Text = title;
+                    IList<string> keys = overlayWindows.Properties().Select(p => p.Name).ToList();
+                    if (title == overlayFullscreenName)
+                    {
+                        JObject o = (JObject)overlayWindows[title];
+                        using (var client = new HttpClient())
+                        {
+                            try
+                            {
+                                var response = await client.GetAsync("http://localhost:5088/res");
+                                var responseString = await response.Content.ReadAsStringAsync();
+                                JObject o2 = JObject.Parse(responseString);
+                                overlayWindows[title] = o2;
+                            }
+                            catch (Exception e2)
+                            {
+                                return;
+                            }
+                        }
+                    }
+
+                    if (keys.Contains(title))
+                    {
+                        Native.RECT rect = new Native.RECT();
+                        Native.GetWindowRect(hwnd, out rect);
+
+                        x.Text = rect.Left.ToString();
+                        y.Text = rect.Top.ToString();
+                        width.Text = (rect.Right - rect.Left).ToString();
+                        height.Text = (rect.Bottom - rect.Top).ToString();
+
+                        //x.Text = overlayWindows[title].Value<Int32>("x").ToString();
+                        //y.Text = overlayWindows[title].Value<Int32>("y").ToString();
+                        //width.Text = overlayWindows[title].Value<Int32>("width").ToString();
+                        //height.Text = overlayWindows[title].Value<Int32>("height").ToString();
+
+                        if (title == overlayFullscreenName)
+                        {
+                        }
+                        else
+                        {
+                            // get windows rect
+                        }
+                    }
+                }
+            }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void url_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

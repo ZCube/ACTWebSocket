@@ -231,7 +231,7 @@ namespace ACTWebSocket.Core
         public static void SendMessageToWindow(IntPtr hwnd, uint i, string str)
         {
             //byte[] buff = System.Text.Encoding.UTF8.GetBytes(str);
-            String bs = Base64Encoding(str) + "\0";
+            String bs = Utility.Base64Encoding(str) + "\0";
             COPYDATASTRUCT cds = new COPYDATASTRUCT();
             cds.dwData = IntPtr.Zero;
             cds.cbData = bs.Length + 1;
