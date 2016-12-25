@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>스킨 리스트</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>오버레이 윈도우 리스트</value>
+  </data>
   <data name="button2.Text" xml:space="preserve">
     <value>새 오버레이 윈도우 열기</value>
   </data>
@@ -128,12 +134,6 @@
   </data>
   <data name="button4.Text" xml:space="preserve">
     <value>URL로 새 오버레이 윈도우 열기</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>스킨 리스트</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>오버레이 윈도우 리스트</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="autostart.Size" type="System.Drawing.Size, System.Drawing">
@@ -196,6 +196,9 @@
   <data name="startoption.Text" xml:space="preserve">
     <value>시작 옵션</value>
   </data>
+  <data name="hostdata.Text" xml:space="preserve">
+    <value>서버 설정</value>
+  </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 12</value>
   </data>
@@ -207,9 +210,6 @@
   </data>
   <data name="label14.Text" xml:space="preserve">
     <value>포트</value>
-  </data>
-  <data name="hostdata.Text" xml:space="preserve">
-    <value>서버 설정</value>
   </data>
   <data name="label17.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 12</value>
@@ -225,6 +225,9 @@
   </data>
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>오버레이 속성</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 12</value>
@@ -291,8 +294,5 @@
   </data>
   <data name="checkBox3.Text" xml:space="preserve">
     <value>숨기기</value>
-  </data>
-  <data name="groupBox2.Text" xml:space="preserve">
-    <value>오버레이 속성</value>
   </data>
 </root>

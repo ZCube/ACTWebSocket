@@ -1514,6 +1514,7 @@ namespace ACTWebSocket_Plugin
                     o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
                     o["zoom"] = (double)zoom.Value / (double)100.0;
                     o["fps"] = (double)fps.Value;
+                    checkBox5.Enabled = checkBox4.Checked;
                     String json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
@@ -1547,7 +1548,8 @@ namespace ACTWebSocket_Plugin
 
         private async void update_overlayWindowPosition(object sender, EventArgs e)
         {
-            checkBox5.Enabled = checkBox4.Checked;
+            if (updateUIWithoutMove)
+                return;
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
@@ -1618,6 +1620,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        Boolean updateUIWithoutMove = false;
         private async void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.listBox2.SelectedIndex >= 0)
@@ -1685,10 +1688,12 @@ namespace ACTWebSocket_Plugin
                         Native.RECT rect = new Native.RECT();
                         Native.GetWindowRect(hwnd, out rect);
 
+                        updateUIWithoutMove = true;
                         x.Text = rect.Left.ToString();
                         y.Text = rect.Top.ToString();
                         width.Text = (rect.Right - rect.Left).ToString();
                         height.Text = (rect.Bottom - rect.Top).ToString();
+                        updateUIWithoutMove = false;
 
                         //x.Text = overlayWindows[title].Value<Int32>("x").ToString();
                         //y.Text = overlayWindows[title].Value<Int32>("y").ToString();
@@ -1808,7 +1813,6 @@ namespace ACTWebSocket_Plugin
 
         private async void x_Enter(object sender, EventArgs e)
         {
-
             if (this.listBox2.SelectedIndex >= 0)
             {
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
@@ -1849,10 +1853,12 @@ namespace ACTWebSocket_Plugin
                         Native.RECT rect = new Native.RECT();
                         Native.GetWindowRect(hwnd, out rect);
 
+                        updateUIWithoutMove = true;
                         x.Text = rect.Left.ToString();
                         y.Text = rect.Top.ToString();
                         width.Text = (rect.Right - rect.Left).ToString();
                         height.Text = (rect.Bottom - rect.Top).ToString();
+                        updateUIWithoutMove = false;
 
                         //x.Text = overlayWindows[title].Value<Int32>("x").ToString();
                         //y.Text = overlayWindows[title].Value<Int32>("y").ToString();
