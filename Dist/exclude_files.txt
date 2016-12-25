@@ -1,0 +1,5 @@
+.7z\
+.lib\
+.pdb\
+.obj\
+.exp\
