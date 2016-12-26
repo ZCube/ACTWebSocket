@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="js/app.js"></script>
+		<link rel="stylesheet" href="css/default.css" />
+	</head>
+	<body>
+		<div class="newwindow" style="display:none;">
+			<div class="url">
+				<div class="label" data-id="new-url">URL or File</div>
+				<div class="inputcase" style="right:75px;">
+					<input type="text" value="about:blank" data-flag="new-url">
+				</div>
+				<button style="right:8px; width:55px;" data-id="new-add" data-flag="new-add">Add</button>
+			</div>
+			<div class="lists" data-parent="file://c:/Advanced Combat Tracker" data-net-parent="http://{servurl}:{servport}">
+				<!--
+				<div data-url="">/HAERUSKIN REBOOT/HaeruSkin.html<div class="link"></div><div class="select"></div></div>
+				<div data-url="">/FFXIV_Fancy_Detail_DPSMeter/index.html<div class="link"></div><div class="select"></div></div>
+				-->
+			</div>
+		</div>
+		<div class="disableall" style="display:none;" onclick="$(this).hide(); $('.newwindow').hide();"></div>
+		<div class="left">
+			<div class="serverset">
+				<div class="title" data-id="start-option">Start Option</div>
+				<div class="startoption">
+					<div data-id="autorun" data-flag="autorun" data-checked="false">Auto Running With ACT</div>
+					<div data-id="localhost" data-flag="localhost" data-checked="true">Localhost Only</div>
+					<div data-id="randurl" data-flag="randurl" data-checked="false">Random URL</div>
+				</div>
+				<div class="title" data-id="server-status">Server Option</div>
+				<div class="startoption">
+					<div data-id="miniparse" data-flag="miniparse" data-checked="true">Use Mini Parse</div>
+					<div data-id="onloglineread" data-flag="onloglineread" data-checked="false">Use OnLogLineRead</div>
+					<div data-id="beforeloglineread" data-flag="beforeloglineread" data-checked="false">Use BeforeLogLineRead</div>
+				</div>
+				<div class="title" data-id="server-status">Mini Parse Setting</div>
+				<div class="startoption">
+					<div>
+						<div class="label" data-id="miniparseSortkey">Sort Key</div>
+						<input class="input" data-flag="miniparseSortkey" value="encdps"/>
+					</div>
+					<div>
+						<div class="label" data-id="miniparseSorttype">Sort Type</div>
+						<select data-flag="miniparseSorttype">
+							<option value="None" data-id="opt-none">None</div>
+							<option value="StringAscending" data-id="opt-sa">StringAscending</div>
+							<option value="StringDescending" data-id="opt-sd">StringDescending</div>
+							<option value="NumericAscending" data-id="opt-na">NumericAscending</div>
+							<option value="NumericDescending" data-id="opt-nd">NumericDescending</div>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="rightbar">
+				<div class="top"></div>
+				<div class="center"></div>
+				<div class="bottom"></div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="top" data-flag="serverstatus" 
+			data-status-off="Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>" 
+			data-status-off-css="{'background-color':'#744'}" 
+			data-status-on="Server Status : Running <span style='color:rgba(255,255,255,.5);'> (Stop at Click)</span>"
+			data-status-on-css="{'background-color':'#474'}" 
+			data-disableobject="{'objects':['localhost', 'randurl', 'miniparse', 'onloglineread', 'beforeloglineread', 'miniparseSortkey', 'miniparseSorttype']}"
+			data-checked="false">
+				Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>
+			</div>
+			<div class="center">
+				<div class="listhead" data-id="overlays">
+					<span data-id="overlays">Overlays</span>
+					<svg class="newbtn" viewbox="0 0 24 24">
+   						<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+					</svg>
+				</div>
+				<div class="list" data-selected-index="-1">
+					<!-- EXAMPLE
+					<div data-url="http://overlay.project.so/testurl.html" data-opacity="100" data-zoom="100" data-fps="30" data-x="0" data-y="0" data-width="300" data-height="300" data-clickthru="false" data-nonfocus="false" data-dragging="false" data-dragndrop="true" data-hide="false" data-resize="true"><span>Laiglinne's Fancy Detail Overlay</span></div>
+					-->
+				</div>
+				<div class="setting">
+					<div>
+						<div class="label" data-id="overlay-title">Title</div>
+						<div class="inputcase">
+							<input type="text" data-flag="overlay-title">
+						</div>
+					</div>
+					<div>
+						<div class="label" data-id="overlay-url">URL</div>
+						<div class="inputcase" style="right:70px;">
+							<input type="text" value="about:blank" data-flag="overlay-url">
+						</div>
+						<button style="right:5px; width:55px;" data-id="overlay-open" data-flag="overlay-open">Open</button>
+					</div>
+					<div>
+						<div class="label" data-id="overlay-opacity">Opacity</div>
+						<div class="inputcase" style="right:70px;">
+							<input type="range" min="0" max="100" data-str="%" value="100" data-flag="overlay-opacity">
+						</div>
+						<div class="valueview">100%</div>
+					</div>
+					<div>
+						<div class="label" data-id="overlay-zoom">Zoom</div>
+						<div class="inputcase" style="right:70px;">
+							<input type="range" min="50" max="200" data-str="%" value="100" data-flag="overlay-zoom">
+						</div>
+						<div class="valueview">100%</div>
+					</div>
+					<div>
+						<div class="label" data-id="overlay-fps">FPS</div>
+						<div class="inputcase" style="right:70px;">
+							<input type="range" min="0" max="60" data-str=" FPS" value="30" data-flag="overlay-fps">
+						</div>
+						<div class="valueview">30 FPS</div>
+					</div>
+					<div data-checked="false" data-flag="overlay-clickthru" data-id="overlay-clickthru">Enable ClickThru</div>
+					<div data-checked="false" data-flag="overlay-nonfocus" data-id="overlay-nonfocus">Enable Non focusing</div>
+					<div data-checked="false" data-flag="overlay-dragging" data-id="overlay-dragging">Enable Dragging</div>
+					<div data-checked="false" data-flag="overlay-dragndrop" data-id="overlay-dragndrop">Enable Drag &amp; Drop</div>
+					<div data-checked="false" data-flag="overlay-hide" data-id="overlay-hide">Hide Overlay</div>
+					<div data-checked="false" data-flag="overlay-resize" data-id="overlay-resize">Enable Resize</div>
+					<div>
+						<div class="label" data-id="overlay-x">pos X</div>
+						<div class="inputcase" style="right:auto; width:80px;">
+							<input type="number" value="0" data-flag="overlay-x">
+						</div>
+					</div>
+					<div style="margin-top:-30px; margin-left:50%;">
+						<div class="label" data-id="overlay-y">pos Y</div>
+						<div class="inputcase" style="right:auto; width:80px;">
+							<input type="number" value="0" data-flag="overlay-y">
+						</div>
+					</div>
+					<div>
+						<div class="label" data-id="overlay-width">Width</div>
+						<div class="inputcase" style="right:auto; width:80px;">
+							<input type="number" value="0" min="0" data-flag="overlay-width">
+						</div>
+					</div>
+					<div style="margin-top:-30px; margin-left:50%;">
+						<div class="label" data-id="overlay-height">Height</div>
+						<div class="inputcase" style="right:auto; width:80px;">
+							<input type="number" value="0" min="0" data-flag="overlay-height">
+						</div>
+					</div>
+					<div>
+						<button style="right:5px; width:60px;" data-id="overlay-save" data-flag="overlay-save">Save</button>
+					</div>
+					<div style="margin-top:-30px;">
+						<button style="right:70px; width:60px;" data-id="overlay-delete" data-flag="overlay-delete">Delete</button>
+					</div>
+					<div style="margin-top:-30px;">
+						<button style="right:135px; width:60px;" data-id="overlay-reload" data-flag="overlay-reload">Reload</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
