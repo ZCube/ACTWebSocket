@@ -4,11 +4,10 @@
 * [data-checked] {cursor:pointer;}
 * [disabled] {cursor:default; color:#AAA;}
 html, body{padding:0px; margin:0px; font-size:12px;}
-.disableall {z-index:9999; position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:rgba(192, 192, 192, .5);}
-.left {position:fixed; left:0px; top:0px; bottom:0px; width:260px; padding-top:20px;}
-.left>.rightbar>.top{width:1px; height:12px; position:absolute; right:-1px; top:19px; background:linear-gradient(to bottom, #FFF 0%, #E5E5E5 100%);}	
-.left>.rightbar>.center{width:1px; position:absolute; right:-1px; top:31px; bottom:31px; background:#E5E5E5;}	
-.left>.rightbar>.bottom{width:1px; height:12px; position:absolute; right:-1px; bottom:19px; background:linear-gradient(to top, #FFF 0%, #E5E5E5 100%);}
+.disableall, .disablemenu {z-index:9999; position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:rgba(192, 192, 192, .5);}
+.wideswap {position:absolute; left:8px; top:8px; height:24px; width:24px; -webkit-mask-image:url(../img/wide.svg); background-color:#4D89C1; cursor:pointer; z-index:10001;}
+.wideswap[data-checked=true] {-webkit-mask-image:url(../img/gear.svg);}
+.left {position:fixed; left:-261px; top:0px; bottom:0px; width:260px; padding-top:20px; z-index:99; background:#FFF;  z-index:10000;}
 
 .left>.serverset {position:absolute; width:260px; height:80px;}
 .left>.serverset>.title {font-size:16px; font-weight:bold; text-align:center; margin-top:5px; margin-bottom:5px;}
@@ -22,9 +21,7 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .left>.serverset>.startoption>div>input {float:left; width:156px; padding:2px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:16px; font-size:12px;}
 .left>.serverset>.startoption>div>select {float:left; width:162px; padding:0px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:22px; font-size:12px;}
 
-.body {position:fixed; left:261px; top:0px; bottom:0px; right:0px; background:#FFF;}
-.body>.wideswap {position:absolute; left:8px; top:8px; height:20px; width:20px; -webkit-mask-image:url(../img/wide.svg); background-color:#4D89C1; cursor:pointer;}
-.body>.wideswap[data-checked=true] {-webkit-mask-image:url(../img/detail.svg);}
+.body {position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:#FFF;}
 
 .body>.console {bottom:0px; left:0px; right:0px; top:90px; border-top:1px solid #E5E5E5; position:absolute; display:none;}
 
@@ -50,7 +47,7 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .body>.center>.list>div:active::after {background-color:#FFF;}
 .body>.center>.list>div.selected::after {background-color:#FFF;}
 
-.body>.center>.setting {position:absolute; overflow:auto; left:280px; top:0px; right:0px; bottom:0px; border-left:1px solid #E5E5E5; padding-top:20px; padding-right:10px;}
+.body>.center>.setting {position:absolute; overflow:auto; left:280px; top:0px; right:0px; bottom:0px; border-left:1px solid #E5E5E5; padding-top:37px; padding-right:10px;}
 .body>.center>.setting>div {height:30px; line-height:30px; padding-left:12px; position:relative;}
 .body>.center>.setting>div[data-checked] {padding-left:55px;}
 .body>.center>.setting>div[data-checked=true][disabled]:after {background:#AAA;}
@@ -68,10 +65,8 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .body>.center>.setting>div>button:active {background:#E5E5E5;}
 .body>.center>.setting>div>.valueview {position:absolute; border:1px solid #E5E5E5; background:transparent; right:5px; width:53px; height:20px; top:4px; font-size:12px; line-height:22px; border-radius:4px; text-align:center;}
 
-.newwindow {position:fixed; z-index:10000; left:140px; top:130px; width:400px; min-height:70px; max-height:600px; background:#FFF; border-radius:2px; -webkit-filter:drop-shadow(0px 0px 2px rgba(0,0,0,0.5));}
-.newwindow::after {position:absolute; right:16px; width:15px; height:15px; transform:rotate(45deg); content:" "; background:#FFF; top:-3px;}
-.newwindow.closed {left:10px;}
-.newwindow.closed::after {right:146px;}
+.newwindow {position:fixed; z-index:10000; left:10px; top:130px; width:400px; min-height:70px; max-height:600px; background:#FFF; border-radius:2px; -webkit-filter:drop-shadow(0px 0px 2px rgba(0,0,0,0.5));}
+.newwindow::after {position:absolute; right:146px; width:15px; height:15px; transform:rotate(45deg); content:" "; background:#FFF; top:-3px;}
 .newwindow>.url {height:40px; border-bottom:1px solid #E5E5E5; line-height:40px;}
 .newwindow>.url>.label {float:left; width:80px; text-align:right;}
 .newwindow>.url>.inputcase {position:absolute; left:90px; right:10px; z-index:99;}

@@ -60,20 +60,48 @@ var language = {
 	}
 };
 
-$(document).ready(function(){
-	if(localStorage.getItem("mordernizer_collapse") == "true")
-	{
-		$(".wideswap").attr("data-checked", "true");
-		$(".body").css({"left":"0px", "box-shadow":"0px 0px 3px #000"});
-		$(".newwindow").addClass("closed");
-	}
-	else
-	{
-		$(".newwindow").removeClass("closed");
-		$(".body").css({"left":"261px", "box-shadow":"0px 0px 0px transparent"});
-	}
+function closeMenu()
+{
+	$(".wideswap").attr("data-checked", "true");
+	$(".left").css({"left":"-261px", "box-shadow":"0px 0px 0px transparent"});
+	$(".wideswap").css({"left":"8px"});
+}
 
-	setTimeout(function(){$(".body").css("transition", ".2s");},1000)
+function saveOption()
+{
+	var savedvar = [
+		"url",
+		"opacity",
+		"zoom",
+		"fps",
+		"clickthru",
+		"nonfocus",
+		"dragging",
+		"dragndrop",
+		"hide",
+		"resize",
+		"x",
+		"y",
+		"width",
+		"height"
+	];
+	var index = parseInt($(".list").attr("data-selected-index"));
+	$($(".list div")[index]).find("span").html($("*[data-flag=overlay-title]").val());
+	for(var i in savedvar)
+	{
+		if($("*[data-flag=overlay-"+savedvar[i]+"]").is("[data-checked]"))
+		{
+			$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+		}
+		else
+		{
+			$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+		}
+	}
+}
+$(document).ready(function(){
+
+	setTimeout(function(){$(".left").css("transition", ".2s"); $(".wideswap").css("transition", ".2s");},1000)
 	
 	// 초기 로드 시 선택된 Overlay가 없으므로 disable 시킨다.
 	$(".setting *[data-flag]").attr("disabled", "disabled");
@@ -121,36 +149,8 @@ $(document).ready(function(){
 		$(".list").attr("data-selected-index", "-1");
 	});
 
-	$("*[data-flag=overlay-save]").click(function(){
-		var savedvar = [
-			"url",
-			"opacity",
-			"zoom",
-			"fps",
-			"clickthru",
-			"nonfocus",
-			"dragging",
-			"dragndrop",
-			"hide",
-			"resize",
-			"x",
-			"y",
-			"width",
-			"height"
-		];
-		var index = parseInt($(".list").attr("data-selected-index"));
-		$($(".list div")[index]).find("span").html($("*[data-flag=overlay-title]").val());
-		for(var i in savedvar)
-		{
-			if($("*[data-flag=overlay-"+savedvar[i]+"]").is("[data-checked]"))
-			{
-				$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
-			}
-			else
-			{
-				$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
-			}
-		}
+	$("*[data-flag]").change(function(){
+		saveOption();
 	});
 
 	$("*[data-checked]").click(function(){
@@ -196,6 +196,11 @@ $(document).ready(function(){
 				}
 			}
 		}
+
+		if($(this).parent().hasClass("setting"))
+		{
+			saveOption();
+		}
 	});
 
 	$("input[type=range]").change(function(){
@@ -230,13 +235,15 @@ $(document).ready(function(){
 	$(".wideswap").click(function(){
 		if($(this).attr("data-checked") == "true")
 		{
-			$(".body").css({"left":"0px", "box-shadow":"0px 0px 3px #000"});
-			$(".newwindow").addClass("closed");
+			$(".left").css({"left":"-261px", "box-shadow":"0px 0px 0px transparent"});
+			$(".wideswap").css({"left":"8px"});
+			$(".disablemenu").hide();
 		}
 		else
 		{
-			$(".body").css({"left":"261px", "box-shadow":"0px 0px 0px transparent"});
-			$(".newwindow").removeClass("closed");
+			$(".left").css({"left":"0px", "box-shadow":"0px 0px 10px rgba(0,0,0,0.5)"});
+			$(".wideswap").css({"left":"228px"});
+			$(".disablemenu").show();
 		}
 		localStorage.setItem("mordernizer_collapse", $(this).attr("data-checked"));
 	});
