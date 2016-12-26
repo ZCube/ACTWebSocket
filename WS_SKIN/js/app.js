@@ -1,3 +1,64 @@
+var language = {
+	"new-url":{"ko":"주소 또는 파일", "ja-JP":"", "en":"URL or File"},
+	"new-add":{"ko":"추가", "ja-JP":"", "en":"Add"},
+	"start-option":{"ko":"시작 설정", "ja-JP":"", "en":"Start Option"},
+	"autorun":{"ko":"ACT와 함께 시작", "ja-JP":"", "en":"Auto Running With ACT"},
+	"localhost":{"ko":"이 PC만 사용", "ja-JP":"", "en":"Localhost Only"},
+	"randurl":{"ko":"무작위 주소 사용", "ja-JP":"", "en":"Random URL"},
+	"url":{"ko":"IP 주소", "ja-JP":"", "en":"URL"},
+	"port":{"ko":"포트", "ja-JP":"", "en":"Port"},
+	"server-status":{"ko":"서버 설정", "ja-JP":"", "en":"Server Option"},
+	"miniparse":{"ko":"전투기록 사용", "ja-JP":"", "en":"Use Mini Parse"},
+	"onloglineread":{"ko":"OnLogLineRead 사용", "ja-JP":"", "en":"Use OnLogLineRead"},
+	"beforeloglineread":{"ko":"BeforeLogLineRead 사용", "ja-JP":"", "en":"Use BeforeLogLineRead"},
+	"miniparseset":{"ko":"전투기록 설정", "ja-JP":"", "en":"Mini Parse Setting"},
+	"miniparseSortkey":{"ko":"정렬 키", "ja-JP":"", "en":"Sort Key"},
+	"miniparseSorttype":{"ko":"정렬 방법", "ja-JP":"", "en":"Sort Type"},
+	"opt-none":{"ko":"없음", "ja-JP":"", "en":"None"},
+	"opt-sa":{"ko":"문자-오름차순", "ja-JP":"", "en":"StringAscending"},
+	"opt-sd":{"ko":"문자-내림차순", "ja-JP":"", "en":"StringDescending"},
+	"opt-na":{"ko":"숫자-오름차순", "ja-JP":"", "en":"NumericAscending"},
+	"opt-nd":{"ko":"숫자-내림차순", "ja-JP":"", "en":"NumericDescending"},
+	"overlays":{"ko":"오버레이 목록", "ja-JP":"", "en":"Overlays"},
+	"overlay-title":{"ko":"제목", "ja-JP":"", "en":"Title"},
+	"overlay-url":{"ko":"주소", "ja-JP":"", "en":"URL"},
+	"overlay-open":{"ko":"열기", "ja-JP":"", "en":"Open"},
+	"overlay-opacity":{"ko":"투명도", "ja-JP":"", "en":"Opacity"},
+	"overlay-zoom":{"ko":"확축", "ja-JP":"", "en":"Zoom"},
+	"overlay-fps":{"ko":"프레임", "ja-JP":"", "en":"FPS"},
+	"overlay-clickthru":{"ko":"클릭 통과 사용", "ja-JP":"", "en":"Enable ClickThru"},
+	"overlay-nonfocus":{"ko":"클릭시 포커스를 주지 않음", "ja-JP":"", "en":"Enable Non focusing"},
+	"overlay-dragging":{"ko":"화면 내 드래그 사용", "ja-JP":"", "en":"Enable Dragging"},
+	"overlay-dragndrop":{"ko":"드래그 화면 이동 사용", "ja-JP":"", "en":"Enable Drag &amp; Drop"},
+	"overlay-hide":{"ko":"오버레이 숨김", "ja-JP":"", "en":"Hide Overlay"},
+	"overlay-resize":{"ko":"크기 조절 사용", "ja-JP":"", "en":"Enable Resize"},
+	"overlay-x":{"ko":"X좌표", "ja-JP":"", "en":"pos X"},
+	"overlay-y":{"ko":"Y좌표", "ja-JP":"", "en":"pos Y"},
+	"overlay-width":{"ko":"폭", "ja-JP":"", "en":"Width"},
+	"overlay-height":{"ko":"높이", "ja-JP":"", "en":"Height"},
+	"overlay-save":{"ko":"저장", "ja-JP":"", "en":"Save"},
+	"overlay-delete":{"ko":"삭제", "ja-JP":"", "en":"Delete"},
+	"overlay-reload":{"ko":"리로드", "ja-JP":"", "en":"Reload"},
+	"serverstatus":
+	{
+		"ko":
+		{
+			"on":"서버 상태 : 작동중 <span style='color:rgba(255,255,255,.5);'> (멈추려면 클릭)</span>",
+			"off":"서버 상태 : 멈춤 <span style='color:rgba(255,255,255,.5);'> (시작하려면 클릭)</span>",
+		},
+		"ja":
+		{
+			"on":"Server Status : Running <span style='color:rgba(255,255,255,.5);'> (Stop at Click)</span>",
+			"off":"Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>",
+		},
+		"en":
+		{
+			"on":"Server Status : Running <span style='color:rgba(255,255,255,.5);'> (Stop at Click)</span>",
+			"off":"Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>",
+		}
+	}
+};
+
 $(document).ready(function(){
 	// 초기 로드 시 선택된 Overlay가 없으므로 disable 시킨다.
 	$(".setting *[data-flag]").attr("disabled", "disabled");
@@ -126,6 +187,22 @@ $(document).ready(function(){
 	});
 
 	actAttach();
+	var userLang = navigator.language || navigator.userLanguage;
+	
+	userLang = userLang+"-";
+	$("*[data-id]").each(function(){
+		$("*[data-id="+$(this).attr("data-id")+"]").html(language[$(this).attr("data-id")][userLang.substr(0, userLang.indexOf("-"))]);
+	});
+
+	$("*[data-id-ext]").each(function(){
+		$(this).attr("data-status-on", language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].on);
+		$(this).attr("data-status-off", language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].off);
+
+		if($(this).attr("data-checked"))
+			$(this).html(language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].off);
+		else
+			$(this).html(language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].on);
+	});
 });
 
 function actAttach()

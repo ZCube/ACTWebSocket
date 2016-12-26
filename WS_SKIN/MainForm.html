@@ -30,6 +30,16 @@
 					<div data-id="autorun" data-flag="autorun" data-checked="false">Auto Running With ACT</div>
 					<div data-id="localhost" data-flag="localhost" data-checked="true">Localhost Only</div>
 					<div data-id="randurl" data-flag="randurl" data-checked="false">Random URL</div>
+					<div>
+						<div class="label" data-id="url">URL</div>
+						<select data-flag="url">
+							<option value="localhost">localhost</div>
+						</select>
+					</div>
+					<div>
+						<div class="label" data-id="port">Port</div>
+						<input class="input" data-flag="port" value="8080"/>
+					</div>
 				</div>
 				<div class="title" data-id="server-status">Server Option</div>
 				<div class="startoption">
@@ -37,7 +47,7 @@
 					<div data-id="onloglineread" data-flag="onloglineread" data-checked="false">Use OnLogLineRead</div>
 					<div data-id="beforeloglineread" data-flag="beforeloglineread" data-checked="false">Use BeforeLogLineRead</div>
 				</div>
-				<div class="title" data-id="server-status">Mini Parse Setting</div>
+				<div class="title" data-id="miniparseset">Mini Parse Setting</div>
 				<div class="startoption">
 					<div>
 						<div class="label" data-id="miniparseSortkey">Sort Key</div>
@@ -62,17 +72,17 @@
 			</div>
 		</div>
 		<div class="body">
-			<div class="top" data-flag="serverstatus" 
+			<div class="top" data-id-ext="serverstatus" data-flag="serverstatus" 
 			data-status-off="Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>" 
 			data-status-off-css="{'background-color':'#744'}" 
 			data-status-on="Server Status : Running <span style='color:rgba(255,255,255,.5);'> (Stop at Click)</span>"
 			data-status-on-css="{'background-color':'#474'}" 
-			data-disableobject="{'objects':['localhost', 'randurl', 'miniparse', 'onloglineread', 'beforeloglineread', 'miniparseSortkey', 'miniparseSorttype']}"
+			data-disableobject="{'objects':['localhost', 'randurl', 'miniparse', 'onloglineread', 'beforeloglineread', 'miniparseSortkey', 'miniparseSorttype', 'url', 'port']}"
 			data-checked="false">
 				Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>
 			</div>
 			<div class="center">
-				<div class="listhead" data-id="overlays">
+				<div class="listhead">
 					<span data-id="overlays">Overlays</span>
 					<svg class="newbtn" viewbox="0 0 24 24">
    						<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
