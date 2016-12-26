@@ -27,7 +27,7 @@ var language = {
 	"overlay-zoom":{"ko":"확축", "ja-JP":"", "en":"Zoom"},
 	"overlay-fps":{"ko":"프레임", "ja-JP":"", "en":"FPS"},
 	"overlay-clickthru":{"ko":"클릭 통과 사용", "ja-JP":"", "en":"Enable ClickThru"},
-	"overlay-nonfocus":{"ko":"클릭시 포커스를 주지 않음", "ja-JP":"", "en":"Enable Non focusing"},
+	"overlay-nonfocus":{"ko":"포커스를 주지 않음", "ja-JP":"", "en":"Enable Non focusing"},
 	"overlay-dragging":{"ko":"화면 내 드래그 사용", "ja-JP":"", "en":"Enable Dragging"},
 	"overlay-dragndrop":{"ko":"드래그 화면 이동 사용", "ja-JP":"", "en":"Enable Drag &amp; Drop"},
 	"overlay-hide":{"ko":"오버레이 숨김", "ja-JP":"", "en":"Hide Overlay"},
@@ -39,6 +39,7 @@ var language = {
 	"overlay-save":{"ko":"저장", "ja-JP":"", "en":"Save"},
 	"overlay-delete":{"ko":"삭제", "ja-JP":"", "en":"Delete"},
 	"overlay-reload":{"ko":"리로드", "ja-JP":"", "en":"Reload"},
+	"overlay-opendevtool":{"ko":"개발자 도구 열기", "ja":"","en":"Open DevTool"},
 	"serverstatus":
 	{
 		"ko":
@@ -60,6 +61,20 @@ var language = {
 };
 
 $(document).ready(function(){
+	if(localStorage.getItem("mordernizer_collapse") == "true")
+	{
+		$(".wideswap").attr("data-checked", "true");
+		$(".body").css({"left":"0px", "box-shadow":"0px 0px 3px #000"});
+		$(".newwindow").addClass("closed");
+	}
+	else
+	{
+		$(".newwindow").removeClass("closed");
+		$(".body").css({"left":"261px", "box-shadow":"0px 0px 0px transparent"});
+	}
+
+	setTimeout(function(){$(".body").css("transition", ".2s");},1000)
+	
 	// 초기 로드 시 선택된 Overlay가 없으므로 disable 시킨다.
 	$(".setting *[data-flag]").attr("disabled", "disabled");
 	$(".setting *[data-id]").attr("disabled", "disabled");
@@ -80,12 +95,13 @@ $(document).ready(function(){
 	$("*[data-flag=new-add]").click(function(){
 		var html = "<div ";
 		html+='data-url="'+$("*[data-flag=new-url]").val()+'" data-opacity="100" data-zoom="100" data-fps="30" data-x="0" data-y="0" data-width="300" data-height="300" data-clickthru="false" data-nonfocus="true" data-dragging="false" data-dragndrop="true" data-hide="false" data-resize="true"';
+		
 		html+="><span>"+$("*[data-flag=new-url]").val()+"</span></div>";
-		$("*[data-flag=new-url]").val("about:blank");
 		$(".list").append(html);
+		actAttach();
+		$("*[data-flag=new-url]").val("about:blank");
 		$(".disableall").hide();
 		$(".newwindow").hide();
-		actAttach();
 	});
 
 	$("*[data-flag=overlay-delete]").click(function(){
@@ -188,10 +204,17 @@ $(document).ready(function(){
 
 	actAttach();
 	var userLang = navigator.language || navigator.userLanguage;
-	
+
 	userLang = userLang+"-";
 	$("*[data-id]").each(function(){
-		$("*[data-id="+$(this).attr("data-id")+"]").html(language[$(this).attr("data-id")][userLang.substr(0, userLang.indexOf("-"))]);
+		try
+		{
+			$("*[data-id="+$(this).attr("data-id")+"]").html(language[$(this).attr("data-id")][userLang.substr(0, userLang.indexOf("-"))]);
+		}
+		catch(ex)
+		{
+
+		}
 	});
 
 	$("*[data-id-ext]").each(function(){
@@ -202,6 +225,20 @@ $(document).ready(function(){
 			$(this).html(language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].off);
 		else
 			$(this).html(language[$(this).attr("data-id-ext")][userLang.substr(0, userLang.indexOf("-"))].on);
+	});
+
+	$(".wideswap").click(function(){
+		if($(this).attr("data-checked") == "true")
+		{
+			$(".body").css({"left":"0px", "box-shadow":"0px 0px 3px #000"});
+			$(".newwindow").addClass("closed");
+		}
+		else
+		{
+			$(".body").css({"left":"261px", "box-shadow":"0px 0px 0px transparent"});
+			$(".newwindow").removeClass("closed");
+		}
+		localStorage.setItem("mordernizer_collapse", $(this).attr("data-checked"));
 	});
 });
 
