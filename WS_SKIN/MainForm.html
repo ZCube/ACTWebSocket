@@ -72,6 +72,7 @@
 			</div>
 		</div>
 		<div class="body">
+			<div class="wideswap" data-checked="false"></div>
 			<div class="top" data-id-ext="serverstatus" data-flag="serverstatus" 
 			data-status-off="Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>" 
 			data-status-off-css="{'background-color':'#744'}" 
@@ -94,6 +95,12 @@
 					-->
 				</div>
 				<div class="setting">
+					<div>
+						<button style="right:5px; width:60px;" data-id="overlay-save" data-flag="overlay-save">Save</button>
+						<button style="right:70px; width:60px;" data-id="overlay-delete" data-flag="overlay-delete">Delete</button>
+						<button style="right:135px; width:60px;" data-id="overlay-reload" data-flag="overlay-reload">Reload</button>
+						<button style="right:200px; width:110px;" data-id="overlay-opendevtool" data-flag="overlay-opendevtool">Open DevTool</button>
+					</div>
 					<div>
 						<div class="label" data-id="overlay-title">Title</div>
 						<div class="inputcase">
@@ -129,11 +136,11 @@
 						<div class="valueview">30 FPS</div>
 					</div>
 					<div data-checked="false" data-flag="overlay-clickthru" data-id="overlay-clickthru">Enable ClickThru</div>
-					<div data-checked="false" data-flag="overlay-nonfocus" data-id="overlay-nonfocus">Enable Non focusing</div>
+					<div data-checked="false" data-flag="overlay-nonfocus" data-id="overlay-nonfocus" style="margin-top:-30px; margin-left:160px;">Enable Non focusing</div>
 					<div data-checked="false" data-flag="overlay-dragging" data-id="overlay-dragging">Enable Dragging</div>
-					<div data-checked="false" data-flag="overlay-dragndrop" data-id="overlay-dragndrop">Enable Drag &amp; Drop</div>
+					<div data-checked="false" data-flag="overlay-dragndrop" data-id="overlay-dragndrop" style="margin-top:-30px; margin-left:160px;">Enable Drag &amp; Drop</div>
 					<div data-checked="false" data-flag="overlay-hide" data-id="overlay-hide">Hide Overlay</div>
-					<div data-checked="false" data-flag="overlay-resize" data-id="overlay-resize">Enable Resize</div>
+					<div data-checked="false" data-flag="overlay-resize" data-id="overlay-resize" style="margin-top:-30px; margin-left:160px;">Enable Resize</div>
 					<div>
 						<div class="label" data-id="overlay-x">pos X</div>
 						<div class="inputcase" style="right:auto; width:80px;">
@@ -158,16 +165,10 @@
 							<input type="number" value="0" min="0" data-flag="overlay-height">
 						</div>
 					</div>
-					<div>
-						<button style="right:5px; width:60px;" data-id="overlay-save" data-flag="overlay-save">Save</button>
-					</div>
-					<div style="margin-top:-30px;">
-						<button style="right:70px; width:60px;" data-id="overlay-delete" data-flag="overlay-delete">Delete</button>
-					</div>
-					<div style="margin-top:-30px;">
-						<button style="right:135px; width:60px;" data-id="overlay-reload" data-flag="overlay-reload">Reload</button>
-					</div>
 				</div>
+			</div>
+			<div class="console">
+
 			</div>
 		</div>
 	</body>

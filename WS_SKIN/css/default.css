@@ -22,7 +22,12 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .left>.serverset>.startoption>div>input {float:left; width:156px; padding:2px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:16px; font-size:12px;}
 .left>.serverset>.startoption>div>select {float:left; width:162px; padding:0px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:22px; font-size:12px;}
 
-.body {position:fixed; left:260px; top:0px; bottom:0px; right:0px;}
+.body {position:fixed; left:261px; top:0px; bottom:0px; right:0px; background:#FFF;}
+.body>.wideswap {position:absolute; left:8px; top:8px; height:20px; width:20px; -webkit-mask-image:url(../img/wide.svg); background-color:#4D89C1; cursor:pointer;}
+.body>.wideswap[data-checked=true] {-webkit-mask-image:url(../img/detail.svg);}
+
+.body>.console {bottom:0px; left:0px; right:0px; top:90px; border-top:1px solid #E5E5E5; position:absolute; display:none;}
+
 .body>.top {position:absolute; height:50px; top:40px; left:0px; right:0px; background:#744; padding-left:45px; line-height:50px; color:#FFF; font-size:18px;}
 .body>.top[data-checked=false] {background-image:url(../img/off.svg); background-repeat:no-repeat; background-position:8px 10px; background-size:32px 32px; }
 .body>.top[data-checked=true] {background-image:url(../img/on.svg); background-repeat:no-repeat; background-position:8px 9px; background-size:32px 32px; }
@@ -35,7 +40,7 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .body>.center>.listhead>svg:active {fill:#0B4680;}
 
 .body>.center>.list {width:280px; position:Absolute; left:0px; right:0px; top:40px; bottom:0px;}
-.body>.center>.list>div {height:32px; line-height:32px; padding-left:38px; cursor:pointer; position:relative;}
+.body>.center>.list>div {height:32px; line-height:32px; padding-left:38px; cursor:pointer; position:relative; overflow:hidden;}
 .body>.center>.list>div::after{content:" "; position:absolute; left:8px; height:24px; width:24px; top:4px; background-color:#AAA;}
 .body>.center>.list>div[data-url^="file"]::after {-webkit-mask-image:url(../img/file.svg); background-repeat:no-repeat;}
 .body>.center>.list>div[data-url^="http"]::after {-webkit-mask-image:url(../img/link.svg); background-repeat:no-repeat;}
@@ -45,9 +50,9 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 .body>.center>.list>div:active::after {background-color:#FFF;}
 .body>.center>.list>div.selected::after {background-color:#FFF;}
 
-.body>.center>.setting {position:absolute; left:280px; top:0px; right:15px; bottom:0px; border-left:1px solid #E5E5E5; padding-top:20px;}
+.body>.center>.setting {position:absolute; overflow:auto; left:280px; top:0px; right:0px; bottom:0px; border-left:1px solid #E5E5E5; padding-top:20px; padding-right:10px;}
 .body>.center>.setting>div {height:30px; line-height:30px; padding-left:12px; position:relative;}
-.body>.center>.setting>div[data-checked] {padding-left:95px;}
+.body>.center>.setting>div[data-checked] {padding-left:55px;}
 .body>.center>.setting>div[data-checked=true][disabled]:after {background:#AAA;}
 .body>.center>.setting>div[data-checked=false]:after {float:left; margin-left:-24px;  margin-top:6px; width:18px; height:18px; background:#DDD; content:' '; border-radius:4px;}
 .body>.center>.setting>div[data-checked=true]:after {float:left; margin-left:-24px;  margin-top:6px; width:18px; height:18px; background:#4D89C1; content:'✓'; border-radius:4px; line-height:18px; font-weight:bold; text-align:center; color:#FFF;}
@@ -65,9 +70,11 @@ html, body{padding:0px; margin:0px; font-size:12px;}
 
 .newwindow {position:fixed; z-index:10000; left:140px; top:130px; width:400px; min-height:70px; max-height:600px; background:#FFF; border-radius:2px; -webkit-filter:drop-shadow(0px 0px 2px rgba(0,0,0,0.5));}
 .newwindow::after {position:absolute; right:16px; width:15px; height:15px; transform:rotate(45deg); content:" "; background:#FFF; top:-3px;}
+.newwindow.closed {left:10px;}
+.newwindow.closed::after {right:146px;}
 .newwindow>.url {height:40px; border-bottom:1px solid #E5E5E5; line-height:40px;}
 .newwindow>.url>.label {float:left; width:80px; text-align:right;}
-.newwindow>.url>.inputcase {position:absolute; left:90px; right:10px; }
+.newwindow>.url>.inputcase {position:absolute; left:90px; right:10px; z-index:99;}
 .newwindow>.url>.inputcase>input[type=text] {width:100%; height:16px; border:1px solid #E5E5E5; border-radius:4px; padding:2px; font-size:12px;}
 .newwindow>.url>button {position:absolute; border:1px solid #E5E5E5; background:transparent; height:22px; top:9px; font-size:12px; border-radius:4px; z-index:99;}
 .newwindow>.lists>div {height:29px; line-height:30px; padding-left:12px; cursor:default; border-bottom:1px solid #E5E5E5; position:relative; padding-right:50px;}
