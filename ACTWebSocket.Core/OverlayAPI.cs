@@ -11,9 +11,35 @@ namespace ACTWebSocket.Core
     using System.Threading;
     public class OverlayAPI
     {
+        protected string currentZone = "";
         public OverlayAPI()
         {
+            Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += (o, e) =>
+            {
+                if(e.detectedZone != currentZone && currentZone != string.Empty)
+                {
+                    // TODO : ActiveZoneChangeEvent
+                }
+                else if(currentZone == string.Empty)
+                {
+                    currentZone = e.detectedZone;
+                }
+            };
+        }
 
+        public string ActiveZone()
+        {
+            return currentZone;
+        }
+
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
         }
 
         public string[] GetFiles(string dir)
@@ -65,6 +91,16 @@ namespace ACTWebSocket.Core
         public void MP3Play(string path)
         {
             MP3 mp3 = new MP3(path);
+        }
+
+        public void callTTS(string speach)
+        {
+            Advanced_Combat_Tracker.ActGlobals.oFormActMain.TTS(speach);
+        }
+
+        public void getCombatData()
+        {
+            Advanced_Combat_Tracker.ActGlobals.oFormActMain.
         }
 
         public class MP3 : IDisposable
