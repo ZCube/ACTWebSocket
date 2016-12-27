@@ -3,10 +3,10 @@ set OverlayManager_DIR=C:\Workspace\OverlayManager
 pushd ..
 devenv ActWebSocket.sln /build Release
 mkdir Dist\temp
-copy /Y ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp
-copy /Y ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp
-copy /Y ACTWebSocket.Loader\bin\Release\MimeType*.dll Dist\temp
-copy /Y ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\MimeType*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp
 
 xcopy /hrkysd Sample Dist\temp\
 popd
@@ -20,10 +20,10 @@ popd temp
 
 pushd ..
 mkdir Dist\temp64
-copy /Y ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp64
-copy /Y ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp64
-copy /Y ACTWebSocket.Loader\bin\Release\MimeType*.dll Dist\temp64
-copy /Y ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp64
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp64
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp64
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\MimeType*.dll Dist\temp64
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp64
 
 xcopy /hrkysd Sample Dist\temp64\
 popd

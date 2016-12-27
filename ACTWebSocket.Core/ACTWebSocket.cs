@@ -800,6 +800,7 @@ namespace ACTWebSocket_Plugin
             {
                 core = new ACTWebSocketCore();
                 core.pluginDirectory = pluginDirectory;
+                NewUIWindow();
             }
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
@@ -1256,25 +1257,14 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        string GetRelativePath(string filespec, string folder)
-        {
-            Uri pathUri = new Uri(filespec);
-            // Folders must end in a slash
-            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                folder += Path.DirectorySeparatorChar;
-            }
-            Uri folderUri = new Uri(folder);
-            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
-        }
-
         public void CloseAll()
         {
             UpdateList(false);
-            for(int i=0;i<listBox2.Items.Count;++i)
+            List<String> full_titles = Native.SearchForWindow(overlayWindowPrefix);
+            for (int i=0;i< full_titles.Count;++i)
             {
-                String title = this.listBox2.Items[i].ToString();
-                IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+                String title = full_titles[i];
+                IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
                 }
@@ -1293,7 +1283,7 @@ namespace ACTWebSocket_Plugin
             this.listBox1.Items.Clear();
             foreach (string file in Directory.EnumerateFiles(pluginDirectory, "*.html", SearchOption.AllDirectories))
             {
-                this.listBox1.Items.Add(GetRelativePath(file, pluginDirectory));
+                this.listBox1.Items.Add(Utility.GetRelativePath(file, pluginDirectory));
             }
             List<String> titles = Native.SearchForWindow(overlayWindowPrefix);
             this.listBox2.Items.Clear();
@@ -1406,6 +1396,64 @@ namespace ACTWebSocket_Plugin
                 }
             }
         }
+        private bool NewUIWindow()
+        {
+            {
+                IntPtr hwnd = Native.FindWindow(null, "ui_title");
+                Native.CloseWindow(hwnd);
+            }
+            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
+            if (File.Exists(overlayPath))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                String uri = new System.Uri(pluginDirectory + "\\WS_SKIN\\MainForm.html").AbsoluteUri;
+                startInfo.FileName = overlayPath;
+                JObject o = new JObject();
+                o["Transparent"] = false;
+                o["NoActivate"] = false;
+                o["hide"] = false;
+                o["useDragFilter"] = true;
+                o["useDragMove"] = true;
+                o["useResizeGrip"] = true;
+                o["opacity"] = 1.0;
+                o["zoom"] = 1.0;
+                o["url"] = uri;
+                o["fps"] = 30.0;
+                o["title"] = "ui_title";
+
+
+                String json = json = o.ToString();
+                startInfo.Arguments = Utility.Base64Encoding(json) + " 9992 " + this.Handle.ToString();
+                var p = Process.Start(startInfo);
+                //p.WaitForInputIdle(1000); //wait for the window to be ready for input;
+                //p.Refresh();
+                //IntPtr hwnd = Native.FindWindow(null, "ui_title");
+                //IntPtr ghwnd = Native.GetParent(hwnd);
+                //Native.SetWindowLong(hwnd, Native.GWL_STYLE, Native.WS_CHILD);
+                //Native.SetWindowLong(hwnd, Native.GWL_EXSTYLE, 0);
+                //Native.SetParent(hwnd, this.Handle);
+                //SizeChanged += new EventHandler(UpdateUISize);
+                //UpdateUISize(new Object(), new EventArgs());
+                return true;
+            }
+            return false;
+        }
+        void UpdateUISize(object sender, EventArgs e)
+        {
+            IntPtr hwnd = Native.FindWindow(null, "ui_title");
+            //Native.SetParent(hwnd, this.Handle);
+            Native.RECT prect = new Native.RECT();
+            Native.GetWindowRect(this.Handle, out prect);
+            JObject o = new JObject();
+            o["x"] = prect.Left;
+            o["y"] = prect.Top;
+            o["width"] = prect.Right - prect.Left;
+            o["height"] = prect.Bottom - prect.Top;
+            o["hide"] = false;
+            String json = o.ToString();
+            Native.SendMessageToWindow(hwnd, 1, json);
+        }
+
         private bool NewOverlayWindow(String url, String title)
         {
             String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
@@ -1716,21 +1764,24 @@ namespace ACTWebSocket_Plugin
         {
             if (this.listBox2.SelectedIndex >= 0)
             {
+                JObject o = new JObject();
                 String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
-                IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
-                if (hwnd == null || hwnd.ToInt64() == 0)
-                {
-                    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
-                    UpdateList();
-                }
-                else
-                {
-                    Native.SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
-                    Native.CloseWindow(hwnd);
+                o["title"] = title;
+                core.APIOverlayWindowClose(o);
+                //IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+                //if (hwnd == null || hwnd.ToInt64() == 0)
+                //{
+                //    //this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                //    UpdateList();
+                //}
+                //else
+                //{
+                //    Native.SendMessage(hwnd, 0x0400 + 1, new IntPtr(0x08), new IntPtr(0x08));
+                //    Native.CloseWindow(hwnd);
 
-                    overlayWindows.Remove(title);
-                    this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
-                }
+                //    overlayWindows.Remove(title);
+                //    this.listBox2.Items.RemoveAt(this.listBox2.SelectedIndex);
+                //}
             }
         }
 
