@@ -23,6 +23,12 @@ namespace ACTWebSocket.Core
             public int Bottom;      // y position of lower-right corner
         }
 
+        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
@@ -50,7 +56,9 @@ namespace ACTWebSocket.Core
         [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
+        public const int GWL_STYLE = -16;
         public const int GWL_EXSTYLE = -20;
+        public const int WS_CHILD = 0x40000000;
         public const int WS_EX_TRANSPARENT = 0x00000020;
         public const int WS_EX_NOACTIVATE = 0x08000000;
 

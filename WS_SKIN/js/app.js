@@ -67,6 +67,236 @@ function closeMenu()
 	$(".wideswap").css({"left":"8px"});
 }
 
+function api_loadsettings(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/loadsettings",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_savesettings(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/savesettings",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_skin_get_list(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/skin_get_list",
+    data: JSON.stringify(json),
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_new(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_new",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_get_preference(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_get_preference",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_update_preference(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_update_preference",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_get_position(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_get_position",
+    data: JSON.stringify(json),
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_update_position(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_update_position",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function api_overlaywindow_close(json)
+{
+  $.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_close",
+    data: json,
+    success: function( data ) {
+      alert(json);
+      alert(data);
+    }
+  });
+}
+
+function newOverlayWindow(index)
+{
+	var index = parseInt($(".list").attr("data-selected-index"));
+  
+}
+
+// overlay window의 json으로 정리.
+function divToJSON(index)
+{
+  var savedvar = [
+    "url",
+    "opacity",
+    "zoom",
+    "fps",
+    "clickthru",
+    "nonfocus",
+    "dragging",
+    "dragndrop",
+    "hide",
+    "resize",
+    "x",
+    "y",
+    "width",
+    "height"
+  ];
+  var nativevar = [
+    "url",
+    "opacity",
+    "zoom",
+    "fps",
+    "Transparent",
+    "NoActivate",
+    "useDragFilter",
+    "useDragMove",
+    "hide",
+    "useResizeGrip",
+    "x",
+    "y",
+    "width",
+    "height"
+  ];
+  var floatvar = [
+    "opacity",
+    "zoom",
+    ];
+  var intvar = [
+    "x",
+    "y",
+    "width",
+    "height",
+    "fps",
+  ];
+  nameNativeToJSMap = {};
+  nameJSToNativeFromMap = {};
+  for(i=0;i<savedvar.length;++i)
+  {
+    nameJSToNativeFromMap[savedvar[i]] = nativevar[i];
+    nameNativeToJSMap[nativevar[i]] = savedvar[i];
+  }
+  var count = $(".list div").length;
+  var obj = {}
+  if(index < count && index >= 0)
+  {
+    obj["title"] = $(".list div span")[0].innerText;
+    //obj["title"] = $($(".list div")[index]).find("span").html($("*[data-flag=overlay-title]").val());
+    for(var i in savedvar)
+    {
+      if($("*[data-flag=overlay-"+savedvar[i]+"]").is("[data-checked]"))
+      {
+        $($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+        obj[nameJSToNativeFromMap[savedvar[i]]] = $($(".list div")[index]).attr("data-"+savedvar[i])=="true"?true:false;
+      }
+      else
+      {
+        $($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+        obj[nameJSToNativeFromMap[savedvar[i]]] = $($(".list div")[index]).attr("data-"+savedvar[i]);
+      }
+    }
+    for(var i in floatvar)
+    {
+      obj[floatvar[i]] = parseFloat(obj[floatvar[i]]) / 100.0;
+    }
+    for(var i in intvar)
+    {
+      obj[intvar[i]] = parseFloat(obj[intvar[i]]);
+    }
+  }
+  return obj;
+}
+
+function settingsTojson()
+{
+  var count = $(".list div").length;
+  
+  $(".list div span")[0].innerText
+	var savedvar = [
+		"url",
+		"opacity",
+		"zoom",
+		"fps",
+		"clickthru",
+		"nonfocus",
+		"dragging",
+		"dragndrop",
+		"hide",
+		"resize",
+		"x",
+		"y",
+		"width",
+		"height"
+	];
+	var savedvar = [
+		"url",
+		"opacity",
+		"zoom",
+		"fps",
+		"Transparent",
+		"NoActivate",
+		"useDragFilter",
+		"useDragMove",
+		"hide",
+		"useResizeGrip",
+		"x",
+		"y",
+		"width",
+		"height"
+	];
+  var divs = $(".list div");
+  
+}
+
 function saveOption()
 {
 	var savedvar = [
@@ -127,6 +357,7 @@ $(document).ready(function(){
 		html+="><span>"+$("*[data-flag=new-url]").val()+"</span></div>";
 		$(".list").append(html);
 		actAttach();
+		newOverlayWindow($(".list").length-1); // last window
 		$("*[data-flag=new-url]").val("about:blank");
 		$(".disableall").hide();
 		$(".newwindow").hide();

@@ -1,4 +1,5 @@
 ﻿using Advanced_Combat_Tracker;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,12 @@ namespace ACTWebSocket_Plugin
 {
     public partial class ACTWebSocketCore
     {
-        public ACTWebSocketCore(){}
-        
+        public ACTWebSocketCore() {
+            StartUIServer();
+        }
+
         public Dictionary<String, Boolean> Filters = new Dictionary<string, bool>();
+        HttpServer uiServer = null;
         HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
@@ -26,10 +30,10 @@ namespace ACTWebSocket_Plugin
 
         class EchoSocketBehavior : WebSocketBehavior
         {
-            public EchoSocketBehavior(){}
-            protected async override void OnOpen(){base.OnOpen();}
-            protected override void OnClose(CloseEventArgs e){base.OnClose(e);}
-            protected override async void OnMessage(MessageEventArgs e){
+            public EchoSocketBehavior() { }
+            protected async override void OnOpen() { base.OnOpen(); }
+            protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
+            protected override async void OnMessage(MessageEventArgs e) {
                 switch (e.Type)
                 {
                     case Opcode.Text:
@@ -45,10 +49,187 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        internal void StartUIServer()
+        {
+            StopUIServer();
+            uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9991);
+            uiServer.OnPost += (sender, e) =>
+            {
+                var req = e.Request;
+                var res = e.Response;
+                res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+                res.AddHeader("Access-Control-Allow-Origin", "*");
+
+                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
+
+                var path = req.RawUrl;
+                path = System.Uri.UnescapeDataString(path);
+
+                if (path.StartsWith("/api/"))
+                {
+                    JObject o = null;
+                    if (req.ContentLength64 != -1)
+                    {
+                        byte[] data = new byte[req.ContentLength64];
+                        req.InputStream.Read(data, 0, (int)req.ContentLength64);
+                        String str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
+                        try
+                        {
+                            o = JObject.Parse(str);
+                        }
+                        catch (Exception e3)
+                        {
+
+                        }
+                    }
+                    if (o != null)
+                    {
+
+                        if (path == "/api/loadsettings")
+                        {
+                            JObject ret = APILoadSettings(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/savesettings")
+                        {
+                            JObject ret = APISaveSettings(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/skin_get_list")
+                        {
+                            JObject ret = APIOverlayWindow_GetSkinList(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_new")
+                        {
+                            JObject ret = APIOverlayWindow_New(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_get_preference")
+                        {
+                            JObject ret = APIOverlayWindow_GetPreference(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_update_preference")
+                        {
+                            JObject ret = APIOverlayWindow_UpdatePreference(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_get_position")
+                        {
+                            JObject ret = APIOverlayWindow_GetPosition(o).Result;
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_update_position")
+                        {
+                            JObject ret = APIOverlayWindow_UpdatePosition(o).Result;
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_close")
+                        {
+                            JObject ret = APIOverlayWindowClose(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                    }
+                }
+            };
+            uiServer.OnOptions += (sender, e) =>
+            {
+                var req = e.Request;
+                var res = e.Response;
+                res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+                res.AddHeader("Access-Control-Allow-Origin", "*");
+
+                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
+
+                var path = req.RawUrl;
+                path = System.Uri.UnescapeDataString(path);
+
+                if (path.StartsWith("/api/"))
+                {
+                    JObject o = null;
+                    if (req.ContentLength64 != -1)
+                    {
+                        byte[] data = new byte[req.ContentLength64];
+                        req.InputStream.Read(data, 0, (int)req.ContentLength64);
+                        String str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
+                        try
+                        {
+                            o = JObject.Parse(str);
+                        }
+                        catch (Exception e3)
+                        {
+
+                        }
+                    }
+                    if (o != null)
+                    {
+
+                        if (path == "/api/loadsettings")
+                        {
+                            JObject ret = APILoadSettings(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/savesettings")
+                        {
+                            JObject ret = APISaveSettings(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/skin_get_list")
+                        {
+                            JObject ret = APIOverlayWindow_GetSkinList(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_new")
+                        {
+                            JObject ret = APIOverlayWindow_New(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_get_preference")
+                        {
+                            JObject ret = APIOverlayWindow_GetPreference(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_update_preference")
+                        {
+                            JObject ret = APIOverlayWindow_UpdatePreference(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_get_position")
+                        {
+                            JObject ret = APIOverlayWindow_GetPosition(o).Result;
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_update_position")
+                        {
+                            JObject ret = APIOverlayWindow_UpdatePosition(o).Result;
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                        else if (path == "/api/overlaywindow_close")
+                        {
+                            JObject ret = APIOverlayWindowClose(o);
+                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
+                        }
+                    }
+                }
+            };
+            uiServer.Start();
+        }
+
+        internal void StopUIServer()
+        {
+            if (uiServer != null)
+            {
+                uiServer.Stop();
+                uiServer = null;
+            }
+        }
+
 
         internal void StartServer(String address, int port, String domain = null)
         {
             StopServer();
+
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
 
             // TODO : SSL
@@ -70,6 +251,9 @@ namespace ACTWebSocket_Plugin
             httpServer.OnConnect += (sender, e) =>
             {
                 var req = e.Request;
+            };
+            uiServer.OnPost += (sender, e) =>
+            {
             };
             httpServer.OnGet += (sender, e) =>
             {
