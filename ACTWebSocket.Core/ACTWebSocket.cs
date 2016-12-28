@@ -750,7 +750,7 @@ namespace ACTWebSocket_Plugin
             SaveSettings();
         }
 
-        string overlayWindowPrefix = "overlay_";
+        string overlayWindowPrefix = "_private_overlay_";
 
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
@@ -1274,7 +1274,7 @@ namespace ACTWebSocket_Plugin
         {
             UpdateList(false);
             List<string> full_titles = Native.SearchForWindow(overlayWindowPrefix);
-            for (int i=0;i< full_titles.Count;++i)
+            for (int i = 0; i < full_titles.Count; ++i)
             {
                 string title = full_titles[i];
                 IntPtr hwnd = Native.FindWindow(null, title);
@@ -1466,14 +1466,13 @@ namespace ACTWebSocket_Plugin
             String json = o.ToString();
             Native.SendMessageToWindow(hwnd, 1, json);
         }
+        global::ACTWebSocket_Plugin.Job job = new global::ACTWebSocket_Plugin.Job();
 
         private bool NewOverlayWindow(string url, string title)
         {
             string overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
             if (File.Exists(overlayPath) && listBox1.SelectedIndex >= 0)
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = overlayPath;
                 JObject o = new JObject();
                 o["Transparent"] = false;
                 o["NoActivate"] = false;
@@ -1497,6 +1496,8 @@ namespace ACTWebSocket_Plugin
             }
             return false;
         }
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         private bool NewOverlayWindow(JObject obj)
         {
@@ -1511,10 +1512,13 @@ namespace ACTWebSocket_Plugin
 
                 if (overlayWindows[title] == null)
                     overlayWindows[title] = obj;
-
                 string json = json = o.ToString();
                 startInfo.Arguments = Utility.Base64Encoding(json);
-                Process.Start(startInfo);
+                Process p = Process.Start(startInfo);
+
+                uint pid = 0;
+                GetWindowThreadProcessId(Handle, out pid);
+                job.AddProcess(Process.GetProcessById((int)pid).Handle);
                 return true;
             }
             return false;

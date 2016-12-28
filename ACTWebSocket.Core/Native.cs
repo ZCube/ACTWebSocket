@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace ACTWebSocket.Core
@@ -211,6 +213,12 @@ namespace ACTWebSocket.Core
         }
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        [SuppressUnmanagedCodeSecurity]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

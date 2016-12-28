@@ -86,7 +86,8 @@ namespace ACTWebSocket_Plugin
 
                         }
                     }
-                    if (o != null)
+                    //if (o != null)
+                    try
                     {
 
                         if (path == "/api/loadsettings")
@@ -134,6 +135,10 @@ namespace ACTWebSocket_Plugin
                             JObject ret = APIOverlayWindowClose(o);
                             res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
                         }
+                    }
+                    catch(Exception error)
+                    {
+                        System.Windows.Forms.MessageBox.Show(error.Message);
                     }
                 }
             };
