@@ -64,6 +64,7 @@
     <Compile Include="ACTWebSocketCore_MiniParse.cs" />
     <Compile Include="ACTWebSocket_Overlay.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Job.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="OverlayAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
