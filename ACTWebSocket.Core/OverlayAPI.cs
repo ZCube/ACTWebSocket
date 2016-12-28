@@ -5,31 +5,273 @@ using System.Drawing.Imaging;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Advanced_Combat_Tracker;
+using System.Linq;
 
 namespace ACTWebSocket.Core
 {
     using System.Threading;
-    public class OverlayAPI
+    public class FFXIV_OverlayAPI
     {
-        protected string currentZone = "";
-        public OverlayAPI()
+        Dictionary<string, string> Combatants = new Dictionary<string, string>();
+
+        protected long currentZone = 0L;
+        public FFXIV_OverlayAPI()
         {
-            Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += (o, e) =>
+            if (!CombatantData.ExportVariables.ContainsKey("Last10DPS"))
+                CombatantData.ExportVariables.Add("Last10DPS",
+                    new CombatantData.TextExportFormatter(
+                        "Last10DPS",
+                        "Last 10 Seconds DPS",
+                        "Average DPS for last 10 seconds.",
+                        (Data, ExtraFormat) =>
+                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                            (
+                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 10))
+                            ).Sum
+                            (
+                                x => x.Damage.Number
+                            ) / (Data.Duration.TotalSeconds < 10.0 ? Data.Duration.TotalSeconds : 10.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!CombatantData.ExportVariables.ContainsKey("Last30DPS"))
+                CombatantData.ExportVariables.Add("Last30DPS",
+                    new CombatantData.TextExportFormatter(
+                        "Last30DPS",
+                        "Last 30 Seconds DPS",
+                        "Average DPS for last 30 seconds.",
+                        (Data, ExtraFormat) =>
+                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                            (
+                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 30))
+                            ).Sum
+                            (
+                                x => x.Damage.Number
+                            ) / (Data.Duration.TotalSeconds < 30.0 ? Data.Duration.TotalSeconds : 30.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!CombatantData.ExportVariables.ContainsKey("Last60DPS"))
+                CombatantData.ExportVariables.Add("Last60DPS",
+                    new CombatantData.TextExportFormatter(
+                        "Last60DPS",
+                        "Last 60 Seconds DPS",
+                        "Average DPS for last 60 seconds.",
+                        (Data, ExtraFormat) =>
+                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                            (
+                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 60))
+                            ).Sum
+                            (
+                                x => x.Damage.Number
+                            ) / (Data.Duration.TotalSeconds < 60.0 ? Data.Duration.TotalSeconds : 60.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!CombatantData.ExportVariables.ContainsKey("Last180DPS"))
+                CombatantData.ExportVariables.Add("Last180DPS",
+                    new CombatantData.TextExportFormatter(
+                        "Last180DPS",
+                        "Last 180 Seconds DPS",
+                        "Average DPS for last 180 seconds.",
+                        (Data, ExtraFormat) =>
+                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                            (
+                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 180))
+                            ).Sum
+                            (
+                                x => x.Damage.Number
+                            ) / (Data.Duration.TotalSeconds < 180.0 ? Data.Duration.TotalSeconds : 180.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
+                CombatantData.ExportVariables.Add("overHeal",
+                    new CombatantData.TextExportFormatter(
+                        "overHeal",
+                        "overHeal",
+                        "overHeal",
+                        (Data, Extra) =>
+                        (
+                            Data.Items[CombatantData.DamageTypeDataOutgoingHealing].Items["All"].Items.ToList().Sum
+                            (
+                                x => Convert.ToInt64(x.Tags["overheal"])
+                            ).ToString()
+                        )
+                    ));
+
+            if (!EncounterData.ExportVariables.ContainsKey("Last10DPS"))
+                EncounterData.ExportVariables.Add("Last10DPS", 
+                    new EncounterData.TextExportFormatter
+                    (
+                        "Last10DPS", 
+                        "Last 10 Seconds DPS", 
+                        "Average DPS for last 10 seconds", 
+                        (Data, SelectiveAllies, Extra) => 
+                        (SelectiveAllies.Sum
+                            (
+                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                (
+                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 10))
+                                ).Sum
+                                (
+                                    y => y.Damage.Number
+                                )
+                            ) / (Data.Duration.TotalSeconds < 10.0 ? Data.Duration.TotalSeconds : 10.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!EncounterData.ExportVariables.ContainsKey("Last30DPS"))
+                EncounterData.ExportVariables.Add("Last30DPS",
+                    new EncounterData.TextExportFormatter
+                    (
+                        "Last30DPS",
+                        "Last 30 Seconds DPS",
+                        "Average DPS for last 30 seconds",
+                        (Data, SelectiveAllies, Extra) =>
+                        (SelectiveAllies.Sum
+                            (
+                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                (
+                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 30))
+                                ).Sum
+                                (
+                                    y => y.Damage.Number
+                                )
+                            ) / (Data.Duration.TotalSeconds < 30.0 ? Data.Duration.TotalSeconds : 30.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!EncounterData.ExportVariables.ContainsKey("Last60DPS"))
+                EncounterData.ExportVariables.Add("Last60DPS",
+                    new EncounterData.TextExportFormatter
+                    (
+                        "Last60DPS",
+                        "Last 60 Seconds DPS",
+                        "Average DPS for last 60 seconds",
+                        (Data, SelectiveAllies, Extra) =>
+                        (SelectiveAllies.Sum
+                            (
+                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                (
+                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 60))
+                                ).Sum
+                                (
+                                    y => y.Damage.Number
+                                )
+                            ) / (Data.Duration.TotalSeconds < 60.0 ? Data.Duration.TotalSeconds : 60.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!EncounterData.ExportVariables.ContainsKey("Last180DPS"))
+                EncounterData.ExportVariables.Add("Last180DPS",
+                    new EncounterData.TextExportFormatter
+                    (
+                        "Last180DPS",
+                        "Last 180 Seconds DPS",
+                        "Average DPS for last 180 seconds",
+                        (Data, SelectiveAllies, Extra) =>
+                        (SelectiveAllies.Sum
+                            (
+                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                (
+                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 180))
+                                ).Sum
+                                (
+                                    y => y.Damage.Number
+                                )
+                            ) / (Data.Duration.TotalSeconds < 180.0 ? Data.Duration.TotalSeconds : 180.0)
+                        ).ToString("0.00")
+                    ));
+
+            if (!EncounterData.ExportVariables.ContainsKey("overHeal"))
+                EncounterData.ExportVariables.Add("overHeal",
+                    new EncounterData.TextExportFormatter
+                    (
+                        "overHeal",
+                        "overHeal",
+                        "overHeal",
+                        (Data, SelectiveAllies, Extra) => 
+                        (SelectiveAllies.Sum
+                            (
+                                x => x.Items[CombatantData.DamageTypeDataOutgoingHealing].Items["All"].Items.ToList().Sum
+                                (
+                                    y => Convert.ToInt64(y.Tags["overheal"])
+                                )
+                            )
+                        ).ToString()
+                    ));
+
+            ActGlobals.oFormActMain.BeforeLogLineRead += (o, e) =>
             {
-                if(e.detectedZone != currentZone && currentZone != string.Empty)
+                string[] data = e.logLine.Split('|');
+                MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
+
+                switch(messageType)
                 {
-                    // TODO : ActiveZoneChangeEvent
-                }
-                else if(currentZone == string.Empty)
-                {
-                    currentZone = e.detectedZone;
+                    case MessageType.LogLine:
+
+                        break;
+                    case MessageType.ChangeZone:
+                        currentZone = Convert.ToInt32(data[2], 16);
+                        break;
+                    case MessageType.ChangePrimaryPlayer:
+                        break;
+                    case MessageType.AddCombatant:
+                        break;
+                    case MessageType.RemoveCombatant:
+                        break;
+                    case MessageType.NetworkStartsCasting:
+                    case MessageType.NetworkCancelAbility:
+                    case MessageType.NetworkDoT:
+                    case MessageType.NetworkDeath:
+                    case MessageType.NetworkBuff:
+                    case MessageType.NetworkTargetIcon:
+                    case MessageType.NetworkRaidMarker:
+                    case MessageType.NetworkTargetMarker:
+                    case MessageType.NetworkBuffRemove:
+                        break;
+                    case MessageType.NetworkAbility:
+                    case MessageType.NetworkAOEAbility:
+                        Ability(messageType, data);
+                        break;
                 }
             };
         }
 
-        public string ActiveZone()
+        private void Ability(MessageType type, string[] data)
         {
-            return currentZone;
+            LogEntry entry = new LogEntry();
+            if (data.Length < 25)
+            {
+                InvalidLogRecive(data);
+            }
+
+            entry.SkillID = Convert.ToInt32(data[4], 16);
+            entry.ActorID = Convert.ToUInt32(data[2], 16);
+            entry.TargetID = Convert.ToUInt32(data[6], 16);
+
+            string[] ability = new string[16];
+            for (int index = 0; index < 16; ++index)
+                ability[index] = data[8 + index];
+
+            if (data.Length >= 26)
+            {
+                entry.TargetCurrentHP = Convert.ToInt32(data[24]);
+                entry.TargetMaxHP = Convert.ToInt32(data[25]);
+            }
+
+            if (data.Length >= 35)
+            {
+                entry.ActorCurrentHP = Convert.ToInt32(data[33]);
+                entry.ActorMaxHP = Convert.ToInt32(data[34]);
+            }
+        }
+
+        public void InvalidLogRecive(string[] data)
+        {
+
         }
 
         public bool FileExists(string path)
@@ -96,11 +338,6 @@ namespace ACTWebSocket.Core
         public void callTTS(string speach)
         {
             Advanced_Combat_Tracker.ActGlobals.oFormActMain.TTS(speach);
-        }
-
-        public void getCombatData()
-        {
-            Advanced_Combat_Tracker.ActGlobals.oFormActMain.
         }
 
         public class MP3 : IDisposable
@@ -192,11 +429,73 @@ namespace ACTWebSocket.Core
         }
     }
 
+    public class LogEntry
+    {
+        public int SkillID { get; set; }
+        public uint ActorID { get; set; }
+        public uint TargetID { get; set; }
+        public int ActorMaxHP { get; set; }
+        public int ActorCurrentHP { get; set; }
+        public int TargetMaxHP { get; set; }
+        public int TargetCurrentHP { get; set; }
+    }
+
     public static class OverlayStaticAPI
     {
         public static string JSONSafeString(this string s)
         {
             return s.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t").Replace("'", "\\'").Replace("\"", "\\\"");
         }
+    }
+
+    public enum MessageType
+    {
+        LogLine = 0,
+        ChangeZone = 1,
+        ChangePrimaryPlayer = 2,
+        AddCombatant = 3,
+        RemoveCombatant = 4,
+        AddBuff = 5,
+        RemoveBuff = 6,
+        FlyingText = 7,
+        OutgoingAbility = 8,
+        IncomingAbility = 10,
+        PartyList = 11,
+        PlayerStats = 12,
+        CombatantHP = 13,
+        NetworkStartsCasting = 20,
+        NetworkAbility = 21,
+        NetworkAOEAbility = 22,
+        NetworkCancelAbility = 23,
+        NetworkDoT = 24,
+        NetworkDeath = 25,
+        NetworkBuff = 26,
+        NetworkTargetIcon = 27,
+        NetworkRaidMarker = 28,
+        NetworkTargetMarker = 29,
+        NetworkBuffRemove = 30,
+        Debug = 251,
+        PacketDump = 252,
+        Version = 253,
+        Error = 254,
+        Timer = 255,
+    }
+
+    public enum SwingTypeEnum
+    {
+        None = 0,
+        Autoattack = 1,
+        Ability = 2,
+        Healing = 10,
+        HoT = 11,
+        Dispel = 15,
+        DoT = 20,
+        Buff = 21,
+        Debuff = 22,
+        PowerDrain = 30,
+        PowerHealing = 31,
+        TPDrain = 40,
+        TPHeal = 41,
+        Threat = 50,
     }
 }
