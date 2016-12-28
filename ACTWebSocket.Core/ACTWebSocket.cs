@@ -801,6 +801,7 @@ namespace ACTWebSocket_Plugin
                 core = new ACTWebSocketCore();
                 core.pluginDirectory = pluginDirectory;
                 core.overlaySkinDirectory = overlaySkinDirectory;
+                core.hwnd = Handle;
                 NewUIWindow();
             }
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
@@ -1434,9 +1435,9 @@ namespace ACTWebSocket_Plugin
                 o["title"] = "ui_title";
 
 
-                string json = json = o.ToString();
-                startInfo.Arguments = Utility.Base64Encoding(json) + " 9992 " + Handle.ToString();
-                var p = Process.Start(startInfo);
+                //String json = json = o.ToString();
+                //startInfo.Arguments = Utility.Base64Encoding(json) + " 9992 " + this.Handle.ToString();
+                //var p = Process.Start(startInfo);
                 //p.WaitForInputIdle(1000); //wait for the window to be ready for input;
                 //p.Refresh();
                 //IntPtr hwnd = Native.FindWindow(null, "ui_title");
@@ -1948,6 +1949,27 @@ namespace ACTWebSocket_Plugin
         private void url_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            try
+            {
+                switch (m.Msg)
+                {
+                    case Native.WM_COPYDATA:
+                        Native.COPYDATASTRUCT cds = (Native.COPYDATASTRUCT)m.GetLParam(typeof(Native.COPYDATASTRUCT));
+                        MessageBox.Show(cds.lpData);
+                        break;
+                    default:
+                        base.WndProc(ref m);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
