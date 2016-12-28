@@ -750,7 +750,7 @@ namespace ACTWebSocket_Plugin
             SaveSettings();
         }
 
-        String overlayWindowPrefix = "overlay_";
+        string overlayWindowPrefix = "overlay_";
 
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
@@ -804,7 +804,7 @@ namespace ACTWebSocket_Plugin
             }
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
-            this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
+            Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             xmlSettings = new SettingsSerializer(this);	// Create a new settings serializer and pass it this instance
             sortType.SelectedIndex = -1;
 
@@ -1443,7 +1443,7 @@ namespace ACTWebSocket_Plugin
             IntPtr hwnd = Native.FindWindow(null, "ui_title");
             //Native.SetParent(hwnd, this.Handle);
             Native.RECT prect = new Native.RECT();
-            Native.GetWindowRect(this.Handle, out prect);
+            Native.GetWindowRect(Handle, out prect);
             JObject o = new JObject();
             o["x"] = prect.Left;
             o["y"] = prect.Top;
@@ -1522,7 +1522,7 @@ namespace ACTWebSocket_Plugin
             {
                 url += core.randomDir + "/";
             }
-            if (this.listBox1.SelectedIndex >= 0)
+            if (listBox1.SelectedIndex >= 0)
             {
                 string fullURL = url + Uri.EscapeDataString(listBox1.Items[listBox1.SelectedIndex].ToString());
                 fullURL = fullURL.Replace("%5C", "/");
@@ -1563,7 +1563,7 @@ namespace ACTWebSocket_Plugin
                     o["zoom"] = zoom.Value / 100.0;
                     o["fps"] = (double)fps.Value;
                     checkBox5.Enabled = checkBox4.Checked;
-                    String json = o.ToString();
+                    string json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
@@ -1637,7 +1637,7 @@ namespace ACTWebSocket_Plugin
                     catch (Exception e2)
                     {
                     }
-                    String json = o.ToString();
+                    string json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
