@@ -15,8 +15,8 @@ namespace ACTWebSocket.Core
     {
         Dictionary<string, CombatData> Combatants = new Dictionary<string, CombatData>();
 
-        List<uint> partylist = new List<uint>();
-        int partyCount = 0;
+        public List<uint> partylist = new List<uint>();
+        public int partyCount = 0;
 
         string myID = "00000000";
         string myName = "You";
@@ -28,6 +28,7 @@ namespace ACTWebSocket.Core
             AttachACTEvent();
         }
 
+        #region FileIO
         public bool FileExists(string path)
         {
             return File.Exists(path);
@@ -83,7 +84,9 @@ namespace ACTWebSocket.Core
         {
             return string.Join("\\", dir.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries));
         }
+        #endregion
 
+        #region SoundPlay
         public void MP3Play(string path)
         {
             MP3 mp3 = new MP3(path);
@@ -93,7 +96,9 @@ namespace ACTWebSocket.Core
         {
             ActGlobals.oFormActMain.TTS(speach);
         }
+        #endregion
 
+        #region ACT Events
         public void ChangeZoneEvent(string[] data)
         {
             currentZone = Convert.ToInt32(data[2], 16);
@@ -142,11 +147,6 @@ namespace ACTWebSocket.Core
             }
         }
 
-        public void InvalidLogRecive(string[] data)
-        {
-
-        }
-
         private void UpdatePartyList(string[] data)
         {
             partylist = new List<uint>();
@@ -159,6 +159,11 @@ namespace ACTWebSocket.Core
                     partylist.Add(id);
                 }
             }
+        }
+
+        public void InvalidLogRecive(string[] data)
+        {
+
         }
 
         private void AttachACTEvent()
@@ -410,6 +415,7 @@ namespace ACTWebSocket.Core
                         ).ToString()
                     ));
         }
+        #endregion
     }
 
     public class CombatData
