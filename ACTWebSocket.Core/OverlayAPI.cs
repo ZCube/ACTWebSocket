@@ -34,6 +34,7 @@ namespace ACTWebSocket_Plugin
             outH = CombatantData.DamageTypeDataOutgoingHealing;
 
             SetExportVariables();
+            AttachACTEvent();
         }
 
         public void SendJSON(SendMessageType type, string json)

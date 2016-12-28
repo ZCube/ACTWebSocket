@@ -232,7 +232,6 @@ namespace ACTWebSocket_Plugin
         internal void StartServer(string address, int port, string domain = null)
         {
             StopServer();
-            overlayAPI.AttachACTEvent();
 
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
 
@@ -341,7 +340,7 @@ namespace ACTWebSocket_Plugin
 
             pingTimer = new Timer();
             pingTimer.Interval = 2000;
-            pingTimer.Elapsed += (o, e) =>
+            pingTimer.Elapsed += async (o, e) =>
             {
                 try
                 {
@@ -363,7 +362,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    await Update();
+                    Update();
                 }
                 catch (Exception ex)
                 {
@@ -375,7 +374,8 @@ namespace ACTWebSocket_Plugin
 
         internal void StopServer()
         {
-            overlayAPI.DetachACTEvent();
+            // TODO : 아직 서버 실행 시 Attach 가 정상적으로 되지 않음...
+            // overlayAPI.DetachACTEvent();
             if (httpServer != null)
             {
                 httpServer.Stop();
