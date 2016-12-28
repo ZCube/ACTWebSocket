@@ -19,9 +19,11 @@ namespace ACTWebSocket_Plugin
     {
         public ACTWebSocketCore() {
             StartUIServer();
+            overlayAPI = new FFXIV_OverlayAPI(this);
         }
 
         public Dictionary<String, Boolean> Filters = new Dictionary<string, bool>();
+        FFXIV_OverlayAPI overlayAPI;
         HttpServer uiServer = null;
         HttpServer httpServer = null;
         Timer updateTimer = null;
