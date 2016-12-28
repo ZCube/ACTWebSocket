@@ -74,5 +74,6 @@
         ChangeZone = 1,
         SendCharName = 2,
         CombatantDataChange = 3,
+        NetworkError = 90002,
     }
 }

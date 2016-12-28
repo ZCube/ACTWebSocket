@@ -232,6 +232,7 @@ namespace ACTWebSocket_Plugin
         internal void StartServer(string address, int port, string domain = null)
         {
             StopServer();
+            overlayAPI.AttachACTEvent();
 
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
 
@@ -248,9 +249,8 @@ namespace ACTWebSocket_Plugin
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
-
-
-            httpServer.RootPath = pluginDirectory;
+            
+            httpServer.RootPath = overlaySkinDirectory;
             httpServer.OnConnect += (sender, e) =>
             {
                 var req = e.Request;
@@ -359,11 +359,11 @@ namespace ACTWebSocket_Plugin
 
             updateTimer = new Timer();
             updateTimer.Interval = 1000;
-            updateTimer.Elapsed += async (o, e) =>
+            updateTimer.Elapsed += (o, e) =>
             {
                 try
                 {
-                    await Update();
+                    Update();
                 }
                 catch (Exception ex)
                 {
@@ -375,6 +375,7 @@ namespace ACTWebSocket_Plugin
 
         internal void StopServer()
         {
+            overlayAPI.DetachACTEvent();
             if (httpServer != null)
             {
                 httpServer.Stop();

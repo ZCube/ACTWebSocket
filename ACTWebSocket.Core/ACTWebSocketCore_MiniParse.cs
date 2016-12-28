@@ -17,6 +17,7 @@ namespace ACTWebSocket_Plugin
         private DateTime prevEndDateTime { get; set; }
         private bool prevEncounterActive { get; set; }
         public string pluginDirectory { get; internal set; }
+        public string overlaySkinDirectory { get; set; }
 
         public struct ConfigStruct
         {
@@ -37,7 +38,7 @@ namespace ACTWebSocket_Plugin
         }
 
 
-        protected async Task Update()
+        protected void Update()
         {
             if (CheckIsActReady())
             {

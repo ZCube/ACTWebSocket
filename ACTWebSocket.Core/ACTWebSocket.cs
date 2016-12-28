@@ -30,8 +30,8 @@ namespace ACTWebSocket_Plugin
 
     public interface PluginDirectory
     {
-        void SetPluginDirectory(String path);
-        String GetPluginDirectory();
+        void SetPluginDirectory(string path);
+        string GetPluginDirectory();
     }
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
@@ -800,6 +800,7 @@ namespace ACTWebSocket_Plugin
             {
                 core = new ACTWebSocketCore();
                 core.pluginDirectory = pluginDirectory;
+                core.overlaySkinDirectory = overlaySkinDirectory;
                 NewUIWindow();
             }
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
@@ -1206,7 +1207,18 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        String pluginDirectory = "";
+        string overlaySkinDirectory { get; set; }
+        string pluginDirectory = "";
+        public void SetSkinDir(string path)
+        {
+            overlaySkinDirectory = path;
+        }
+
+        public string GetSkinDir()
+        {
+            return overlaySkinDirectory;
+        }
+
         public void SetPluginDirectory(string path)
         {
             pluginDirectory = path;
@@ -1281,9 +1293,9 @@ namespace ACTWebSocket_Plugin
         public void UpdateList(bool updateInfo = true)
         {
             listBox1.Items.Clear();
-            foreach (string file in Directory.EnumerateFiles(pluginDirectory, "*.html", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
             {
-                listBox1.Items.Add(Utility.GetRelativePath(file, pluginDirectory));
+                listBox1.Items.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
             }
             List<string> titles = Native.SearchForWindow(overlayWindowPrefix);
             listBox2.Items.Clear();

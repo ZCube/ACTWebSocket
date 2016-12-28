@@ -14,6 +14,7 @@ namespace ACTWebSocket_Plugin
     using System.Threading.Tasks;
     public class FFXIV_OverlayAPI
     {
+        ACTWebSocketCore core;
         Dictionary<string, CombatData> Combatants = new Dictionary<string, CombatData>();
 
         public List<uint> partylist = new List<uint>();
@@ -24,8 +25,6 @@ namespace ACTWebSocket_Plugin
         string outD = CombatantData.DamageTypeDataOutgoingDamage;
         string outH = CombatantData.DamageTypeDataOutgoingHealing;
 
-        ACTWebSocketCore core;
-
         protected long currentZone = 0L;
         public FFXIV_OverlayAPI(ACTWebSocketCore core)
         {
@@ -35,13 +34,18 @@ namespace ACTWebSocket_Plugin
             outH = CombatantData.DamageTypeDataOutgoingHealing;
 
             SetExportVariables();
-            AttachACTEvent();
         }
 
         public void SendJSON(SendMessageType type, string json)
         {
-            string sendjson = $"{{typeText:\"updateValue\", detail:{{msgType:\"{type}\", data:{json}}}}}";
+            string sendjson = $"{{typeText:\"update\", detail:{{msgType:\"{type}\", data:{json}}}}}";
 
+            core.Broadcast("/MiniParse", sendjson);
+        }
+
+        public void SendErrorJSON(string json)
+        {
+            string sendjson = $"{{typeText:\"error\", detail:{{msgType:\"{SendMessageType.NetworkError}\", data:{json.JSONSafeString()}}}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
 
@@ -186,69 +190,75 @@ namespace ACTWebSocket_Plugin
 
         public void InvalidLogRecive(string[] data)
         {
-
+            Log(LogLevel.Error, "Invalid Log Recived : <br>" + string.Join(":", data));
         }
 
-        private void AttachACTEvent()
+        private void ACTExtension(bool isImport, LogLineEventArgs e)
         {
-            ActGlobals.oFormActMain.BeforeLogLineRead += (o, e) =>
-            {
-                string[] data = e.logLine.Split('|');
-                MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
+            string[] data = e.logLine.Split('|');
+            MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
 
-                switch (messageType)
-                {
-                    case MessageType.LogLine:
-                        DetectMyName(data);
-                        break;
-                    case MessageType.ChangeZone:
-                        ChangeZoneEvent(data);
-                        break;
-                    case MessageType.ChangePrimaryPlayer:
-                        DetectMyName(data);
-                        break;
-                    case MessageType.AddCombatant:
-                        if(!Combatants.ContainsKey(data[2]))
+            switch (messageType)
+            {
+                case MessageType.LogLine:
+                    break;
+                case MessageType.ChangeZone:
+                    ChangeZoneEvent(data);
+                    break;
+                case MessageType.ChangePrimaryPlayer:
+                    DetectMyName(data);
+                    break;
+                case MessageType.AddCombatant:
+                    if (!Combatants.ContainsKey(data[2]))
+                    {
+                        CombatData cd = new CombatData();
+                        cd.PlayerID = Convert.ToUInt32(data[2], 16);
+                        cd.PlayerJob = Convert.ToUInt32(data[4], 16);
+                        cd.PlayerName = data[3];
+                        cd.MaxHP = cd.CurrentHP = Convert.ToInt64(data[5], 16);
+                        cd.MaxMP = cd.CurrentMP = Convert.ToInt64(data[6], 16);
+                        if (data[7] != "0")
                         {
-                            CombatData cd = new CombatData();
-                            cd.PlayerID = Convert.ToUInt32(data[2], 16);
-                            cd.PlayerJob = Convert.ToUInt32(data[4], 16);
-                            cd.PlayerName = data[3];
-                            cd.MaxHP = cd.CurrentHP = Convert.ToInt64(data[5], 16);
-                            cd.MaxMP = cd.CurrentMP = Convert.ToInt64(data[6], 16);
-                            if(data[7] != "0")
-                            {
-                                cd.IsPet = true;
-                                cd.OwnerID = Convert.ToUInt32(data[7]);
-                            }
-                            Combatants.Add(data[2], cd);
+                            cd.IsPet = true;
+                            cd.OwnerID = Convert.ToUInt32(data[7]);
                         }
-                        break;
-                    case MessageType.RemoveCombatant:
-                        if(Combatants.ContainsKey(data[2]))
-                        {
-                            Combatants.Remove(data[2]);
-                        }
-                        break;
-                    case MessageType.PartyList:
-                        UpdatePartyList(data);
-                        break;
-                    case MessageType.NetworkStartsCasting:
-                    case MessageType.NetworkCancelAbility:
-                    case MessageType.NetworkDoT:
-                    case MessageType.NetworkDeath:
-                    case MessageType.NetworkBuff:
-                    case MessageType.NetworkTargetIcon:
-                    case MessageType.NetworkRaidMarker:
-                    case MessageType.NetworkTargetMarker:
-                    case MessageType.NetworkBuffRemove:
-                        break;
-                    case MessageType.NetworkAbility:
-                    case MessageType.NetworkAOEAbility:
-                        Ability(messageType, data);
-                        break;
-                }
-            };
+                        Combatants.Add(data[2], cd);
+                    }
+                    break;
+                case MessageType.RemoveCombatant:
+                    if (Combatants.ContainsKey(data[2]))
+                    {
+                        Combatants.Remove(data[2]);
+                    }
+                    break;
+                case MessageType.PartyList:
+                    UpdatePartyList(data);
+                    break;
+                case MessageType.NetworkStartsCasting:
+                case MessageType.NetworkCancelAbility:
+                case MessageType.NetworkDoT:
+                case MessageType.NetworkDeath:
+                case MessageType.NetworkBuff:
+                case MessageType.NetworkTargetIcon:
+                case MessageType.NetworkRaidMarker:
+                case MessageType.NetworkTargetMarker:
+                case MessageType.NetworkBuffRemove:
+                    break;
+                case MessageType.NetworkAbility:
+                case MessageType.NetworkAOEAbility:
+                    Ability(messageType, data);
+                    break;
+            }
+        }
+
+        public void AttachACTEvent()
+        {
+            ActGlobals.oFormActMain.BeforeLogLineRead += ACTExtension;
+        }
+
+        public void DetachACTEvent()
+        {
+            ActGlobals.oFormActMain.BeforeLogLineRead -= ACTExtension;
         }
 
         private void SetExportVariables()
@@ -477,6 +487,7 @@ namespace ACTWebSocket_Plugin
                     }
                     catch (Exception e)
                     {
+                        SendErrorJSON(e.Message);
                         Log(LogLevel.Debug, "GetCombatantList: {0}: {1}: {2}", ally.Name, exportValuePair.Key, e);
                         continue;
                     }
@@ -494,7 +505,6 @@ namespace ACTWebSocket_Plugin
         {
 
             var encounterDict = new Dictionary<string, string>();
-            //Parallel.ForEach(EncounterData.ExportVariables, (exportValuePair) =>
             foreach (var exportValuePair in EncounterData.ExportVariables)
             {
                 try
@@ -518,17 +528,14 @@ namespace ACTWebSocket_Plugin
                         ActGlobals.oFormActMain.ActiveZone.ActiveEncounter,
                         allies,
                         "");
-                    //lock (encounterDict)
-                    //{
                     encounterDict.Add(exportValuePair.Key, value);
-                    //}
                 }
                 catch (Exception e)
                 {
+                    SendErrorJSON(e.Message);
                     Log(LogLevel.Debug, "GetEncounterDictionary: {0}: {1}", exportValuePair.Key, e);
                 }
             }
-            //);
             return encounterDict;
         }
 
@@ -658,6 +665,11 @@ namespace ACTWebSocket_Plugin
         public static string ReplaceNaN(this string str, string replace = "---")
         {
             return str.Replace(double.NaN.ToString(), replace);
+        }
+
+        public static string[] SplitStr(this string str, string needle, StringSplitOptions option = StringSplitOptions.None)
+        {
+            return str.Split(new string[] { str }, option);
         }
     }
 }
