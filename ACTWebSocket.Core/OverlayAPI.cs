@@ -46,7 +46,7 @@ namespace ACTWebSocket_Plugin
 
         public void SendErrorJSON(string json)
         {
-            string sendjson = $"{{typeText:\"error\", detail:{{msgType:\"{SendMessageType.NetworkError}\", data:{json.JSONSafeString()}}}}}";
+            string sendjson = $"{{typeText:\"error\", detail:{{msgType:\"{SendMessageType.NetworkError}\", data:\"{json.JSONSafeString()}\"}}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
 
@@ -194,6 +194,27 @@ namespace ACTWebSocket_Plugin
             Log(LogLevel.Error, "Invalid Log Recived : <br>" + string.Join(":", data));
         }
 
+        public void SendCombatantList()
+        {
+            string jsonformat = "{{ playerID : {0}, playerName : \"{1}\", playerJob : \"{2}\", maxHP : {3}, maxMP : {4} }},";
+
+            StringBuilder sb = new StringBuilder();
+            foreach(KeyValuePair<string, CombatData> kv in Combatants)
+            {
+                sb.Append(
+                    string.Format(jsonformat,
+                    kv.Value.PlayerID,
+                    kv.Value.PlayerName.JSONSafeString(),
+                    kv.Value.PlayerJob,
+                    kv.Value.MaxHP,
+                    kv.Value.MaxMP));
+            }
+
+            string result = "[" + sb.ToString() + "]";
+
+            SendJSON(SendMessageType.CombatantsList, $"{{ combatantList : {result} }}");
+        }
+
         private void ACTExtension(bool isImport, LogLineEventArgs e)
         {
             string[] data = e.logLine.Split('|');
@@ -218,18 +239,20 @@ namespace ACTWebSocket_Plugin
                         cd.PlayerName = data[3];
                         cd.MaxHP = cd.CurrentHP = Convert.ToInt64(data[5], 16);
                         cd.MaxMP = cd.CurrentMP = Convert.ToInt64(data[6], 16);
-                        if (data[7] != "0")
+                        if (data[8] != "0")
                         {
                             cd.IsPet = true;
-                            cd.OwnerID = Convert.ToUInt32(data[7]);
+                            cd.OwnerID = Convert.ToUInt32(data[8]);
                         }
                         Combatants.Add(data[2], cd);
+                        SendCombatantList();
                     }
                     break;
                 case MessageType.RemoveCombatant:
                     if (Combatants.ContainsKey(data[2]))
                     {
                         Combatants.Remove(data[2]);
+                        SendCombatantList();
                     }
                     break;
                 case MessageType.PartyList:
@@ -332,21 +355,6 @@ namespace ACTWebSocket_Plugin
                         ).ToString("0.00")
                     ));
 
-            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
-                CombatantData.ExportVariables.Add("overHeal",
-                    new CombatantData.TextExportFormatter(
-                        "overHeal",
-                        "overHeal",
-                        "overHeal",
-                        (Data, Extra) =>
-                        (
-                            Data.Items[outH].Items["All"].Items.ToList().Sum
-                            (
-                                x => Convert.ToInt64(x.Tags["overheal"])
-                            ).ToString()
-                        )
-                    ));
-
             if (!EncounterData.ExportVariables.ContainsKey("Last10DPS"))
                 EncounterData.ExportVariables.Add("Last10DPS",
                     new EncounterData.TextExportFormatter
@@ -431,6 +439,129 @@ namespace ACTWebSocket_Plugin
                         ).ToString("0.00")
                     ));
 
+            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
+            {
+                CombatantData.ExportVariables.Add
+                (
+                    "overHeal",
+                    new CombatantData.TextExportFormatter
+                    (
+                        "overHeal",
+                        "overHeal",
+                        "overHeal",
+                        (Data, ExtraFormat) =>
+                        (
+                            (
+                                // Data.Items[outD].Items["All"].Items.ToList().Where
+                                Data.Items[outH].Items.ToList().Where
+                                (
+                                    x => x.Key == "All"
+                                ).Sum
+                                (
+                                    x => x.Value.Items.ToList().Where
+                                    (
+                                        y => y.Tags.ContainsKey("overheal")
+                                    ).Sum
+                                    (
+                                        y => Convert.ToInt64(y.Tags["overheal"])
+                                    )
+                                )
+                            ).ToString()
+                        )
+                    )
+                );
+            }
+
+            if(!CombatantData.ExportVariables.ContainsKey("damageShield"))
+            {
+                CombatantData.ExportVariables.Add
+                (
+                    "damageShield",
+                    new CombatantData.TextExportFormatter
+                    (
+                        "damageShield",
+                        "damageShield",
+                        "Healers DamageShield Skill Total Value",
+                        (Data, ExtraFormat) =>
+                        (
+                            (
+                                Data.Items[outH].Items.ToList().Where
+                                (
+                                    x => x.Key == "All"
+                                ).Sum
+                                (
+                                    x => x.Value.Items.Where
+                                    (
+                                        y =>
+                                        {
+                                            if (y.DamageType == "DamageShield")
+                                                return true;
+                                            else
+                                                return false;
+                                        }
+                                    ).Sum
+                                    (
+                                        y => Convert.ToInt64(y.Damage)
+                                    )
+                                )
+                            ).ToString()
+                        )
+                    )
+                );
+            }
+
+            if (!CombatantData.ExportVariables.ContainsKey("effectiveHeal"))
+            {
+                CombatantData.ExportVariables.Add
+                (
+                    "effectiveHeal",
+                    new CombatantData.TextExportFormatter
+                    (
+                        "effectiveHeal",
+                        "effectiveHeal",
+                        "effectiveHeal",
+                        (Data, ExtraFormat) =>
+                        (
+                            (
+                                Data.Items[outH].Items.ToList().Where
+                                (
+                                    x => x.Key == "All"
+                                ).Sum
+                                (
+                                    x => x.Value.Items.Where
+                                    (
+                                        y => y.Tags.ContainsKey("overheal")  
+                                    ).Sum
+                                    (
+                                        y => Convert.ToInt64(y.Tags["overheal"])  
+                                    ) - x.Value.Items.Where
+                                    (
+                                        y => y.DamageType == "DamageShield"
+                                    ).Sum
+                                    (
+                                        y => Convert.ToInt64(y.Damage)
+                                    )
+                                )
+                            ).ToString()
+                        )
+                    )
+                );
+            }
+            /*
+            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
+                CombatantData.ExportVariables.Add("overHeal",
+                    new CombatantData.TextExportFormatter(
+                        "overHeal",
+                        "overHeal",
+                        "overHeal",
+                        (Data, Extra) =>
+                        (
+                            (
+                                Convert.ToInt64(Data.Items[outH].Tags["OverHeal"])
+                            ).ToString()
+                        )
+                    ));
+
             if (!EncounterData.ExportVariables.ContainsKey("overHeal"))
                 EncounterData.ExportVariables.Add("overHeal",
                     new EncounterData.TextExportFormatter
@@ -441,13 +572,10 @@ namespace ACTWebSocket_Plugin
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[outH].Items["All"].Items.ToList().Sum
-                                (
-                                    y => Convert.ToInt64(y.Tags["overheal"])
-                                )
+                                x => Convert.ToInt64(x.Items[outH].Tags["OverHeal"])
                             )
                         ).ToString()
-                    ));
+                    ));*/
         }
         #endregion
 
@@ -460,6 +588,7 @@ namespace ACTWebSocket_Plugin
             //foreach (var ally in allies)
             {
                 var valueDict = new Dictionary<string, string>();
+                bool FindOverheal = false;
                 foreach (var exportValuePair in CombatantData.ExportVariables)
                 {
                     try
@@ -477,21 +606,23 @@ namespace ACTWebSocket_Plugin
                             valueDict.Add(exportValuePair.Key, "");
                             continue;
                         }
-                        else if(exportValuePair.Key == "overHeal" && !ally.Items[outH].Items.ContainsKey("All"))
-                        {
-                            valueDict.Add(exportValuePair.Key, "");
-                            continue;
-                        }
 
                         var value = exportValuePair.Value.GetExportString(ally, "");
                         valueDict.Add(exportValuePair.Key, value);
                     }
                     catch (Exception e)
                     {
-                        SendErrorJSON(e.Message);
+                        SendErrorJSON(e.Message + "\n" + e.GetBaseException().ToString());
                         Log(LogLevel.Debug, "GetCombatantList: {0}: {1}: {2}", ally.Name, exportValuePair.Key, e);
                         continue;
                     }
+
+                    if (exportValuePair.Key == "overHeal") FindOverheal = true;
+                }
+
+                if(!FindOverheal)
+                {
+                    valueDict.Add("overHeal", "0");
                 }
 
                 lock (combatantList)
@@ -504,7 +635,7 @@ namespace ACTWebSocket_Plugin
 
         public Dictionary<string, string> GetEncounterDictionary(List<CombatantData> allies)
         {
-
+            bool FindOverheal = false;
             var encounterDict = new Dictionary<string, string>();
             foreach (var exportValuePair in EncounterData.ExportVariables)
             {
@@ -518,12 +649,6 @@ namespace ACTWebSocket_Plugin
                         encounterDict.Add(exportValuePair.Key, "");
                         continue;
                     }
-                    else if(exportValuePair.Key == "overHeal" && 
-                        !allies.All((ally) => ally.Items[outH].Items.ContainsKey("All")))
-                    {
-                        encounterDict.Add(exportValuePair.Key, "");
-                        continue;
-                    }
 
                     var value = exportValuePair.Value.GetExportString(
                         ActGlobals.oFormActMain.ActiveZone.ActiveEncounter,
@@ -533,9 +658,15 @@ namespace ACTWebSocket_Plugin
                 }
                 catch (Exception e)
                 {
-                    SendErrorJSON(e.Message);
+                    SendErrorJSON(e.Message + "\n" + e.GetBaseException().ToString());
                     Log(LogLevel.Debug, "GetEncounterDictionary: {0}: {1}", exportValuePair.Key, e);
                 }
+                if (exportValuePair.Key == "overHeal") FindOverheal = true;
+            }
+
+            if (!FindOverheal)
+            {
+                encounterDict.Add("overHeal", "0");
             }
             return encounterDict;
         }
