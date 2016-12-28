@@ -14,6 +14,40 @@ namespace ACTWebSocket_Plugin
         static public string overlayWindowPrefix = "overlay_";
         static public string overlayFullscreenName = "FullScreen_Overlay";
 
+
+        String [] savedvar = {
+          "url",
+          "opacity",
+          "zoom",
+          "fps",
+          "clickthru",
+          "nonfocus",
+          "dragging",
+          "dragndrop",
+          "hide",
+          "resize",
+          "x",
+          "y",
+          "width",
+          "height"
+        };
+        String [] nativevar = {
+          "url",
+          "opacity",
+          "zoom",
+          "fps",
+          "Transparent",
+          "NoActivate",
+          "useDragFilter",
+          "useDragMove",
+          "hide",
+          "useResizeGrip",
+          "x",
+          "y",
+          "width",
+          "height"
+        };
+
         public JObject APIOverlayWindowClose(JObject o)
         {
             //  in
@@ -127,10 +161,23 @@ namespace ACTWebSocket_Plugin
             //    "hide",
             //    "resize",
             //    "error",
-            throw new NotImplementedException();
+            JObject ret = new JObject();
+            String title = o.Value<String>("title");
+            IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+            ret["title"] = title;
+            if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
+            {
+                ret["error"] = "NoWindow";
+            }
+            else
+            {
+                ret = o;
+                Native.SendMessageToWindow(hwnd, 1, o.ToString());
+            }
+            return ret;
         }
 
-        public JObject APIOverlayWindow_GetPreference(JObject o)
+        public async Task<JObject> APIOverlayWindow_GetPreference(JObject o)
         {
             //  in
             //    "title",
@@ -147,7 +194,21 @@ namespace ACTWebSocket_Plugin
             //    "hide",
             //    "resize",
             //    "error",
-            throw new NotImplementedException();
+            JObject ret = new JObject();
+            String title = o.Value<String>("title");
+            IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
+            ret["title"] = title;
+            if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
+            {
+                ret["error"] = "NoWindow";
+            }
+            else
+            {
+                // request
+                ret["hwnd"] = hwnd.ToInt64().ToString();
+                Native.SendMessageToWindow(hwnd, 2, o.ToString());
+            }
+            return ret;
         }
 
         public JObject APIOverlayWindow_New(JObject o)
@@ -193,7 +254,7 @@ namespace ACTWebSocket_Plugin
             try
             {
                 JObject ret = new JObject();
-                JObject skins = new JObject();
+                JArray skins = new JArray();
                 foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
                 {
                     skins.Add(Utility.GetRelativePath(file, overlaySkinDirectory));

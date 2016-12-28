@@ -29,6 +29,7 @@ namespace ACTWebSocket_Plugin
         Timer updateTimer = null;
         Timer pingTimer = null;
         public string randomDir = "Test";
+        internal IntPtr hwnd;
 
         class EchoSocketBehavior : WebSocketBehavior
         {
@@ -110,7 +111,7 @@ namespace ACTWebSocket_Plugin
                         }
                         else if (path == "/api/overlaywindow_get_preference")
                         {
-                            JObject ret = APIOverlayWindow_GetPreference(o);
+                            JObject ret = APIOverlayWindow_GetPreference(o).Result;
                             res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
                         }
                         else if (path == "/api/overlaywindow_update_preference")
@@ -142,79 +143,6 @@ namespace ACTWebSocket_Plugin
                 var res = e.Response;
                 res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
                 res.AddHeader("Access-Control-Allow-Origin", "*");
-
-                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-
-                var path = req.RawUrl;
-                path = Uri.UnescapeDataString(path);
-
-                if (path.StartsWith("/api/"))
-                {
-                    JObject o = null;
-                    if (req.ContentLength64 != -1)
-                    {
-                        byte[] data = new byte[req.ContentLength64];
-                        req.InputStream.Read(data, 0, (int)req.ContentLength64);
-                        string str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
-                        try
-                        {
-                            o = JObject.Parse(str);
-                        }
-                        catch (Exception e3)
-                        {
-
-                        }
-                    }
-                    if (o != null)
-                    {
-
-                        if (path == "/api/loadsettings")
-                        {
-                            JObject ret = APILoadSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/savesettings")
-                        {
-                            JObject ret = APISaveSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/skin_get_list")
-                        {
-                            JObject ret = APIOverlayWindow_GetSkinList(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_new")
-                        {
-                            JObject ret = APIOverlayWindow_New(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_preference")
-                        {
-                            JObject ret = APIOverlayWindow_GetPreference(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_preference")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePreference(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_position")
-                        {
-                            JObject ret = APIOverlayWindow_GetPosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_position")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_close")
-                        {
-                            JObject ret = APIOverlayWindowClose(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                    }
-                }
             };
             uiServer.Start();
         }
