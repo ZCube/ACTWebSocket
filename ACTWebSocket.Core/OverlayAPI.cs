@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace ACTWebSocket.Core
+namespace ACTWebSocket_Plugin
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,11 +22,28 @@ namespace ACTWebSocket.Core
         string myID = "00000000";
         string myName = "You";
 
+        string outD = CombatantData.DamageTypeDataOutgoingDamage;
+        string outH = CombatantData.DamageTypeDataOutgoingHealing;
+
+        ACTWebSocketCore core;
+
         protected long currentZone = 0L;
-        public FFXIV_OverlayAPI()
+        public FFXIV_OverlayAPI(ACTWebSocketCore core)
         {
+            this.core = core;
+
+            outD = CombatantData.DamageTypeDataOutgoingDamage;
+            outH = CombatantData.DamageTypeDataOutgoingHealing;
+
             SetExportVariables();
             AttachACTEvent();
+        }
+
+        public void SendJSON(SendMessageType type, string json)
+        {
+            string sendjson = $"{{typeText:\"updateValue\", detail:{{msgType:\"{type}\", data:{json}}}}}";
+
+            core.Broadcast("/MiniParse", sendjson);
         }
 
         #region FileIO
@@ -104,7 +121,7 @@ namespace ACTWebSocket.Core
         {
             currentZone = Convert.ToInt32(data[2], 16);
 
-            // TODO: Some Event
+            SendJSON(SendMessageType.ChangeZone, $"{{zoneID:\"{currentZone}\"}}");
         }
 
         // 해루's Request : I want Player real name. don't need 'YOU'
@@ -113,7 +130,7 @@ namespace ACTWebSocket.Core
             myID = data[2];
             myName = data[3];
 
-            // TODO: Some Event
+            SendJSON(SendMessageType.SendCharName, $"{{charID:\"{myID}\", charName:\"{myName.JSONSafeString()}\"}}");
         }
 
         private void Ability(MessageType type, string[] data)
@@ -133,8 +150,11 @@ namespace ACTWebSocket.Core
             {
                 if (Combatants.ContainsKey(data[2]))
                 {
-                    Combatants[data[2]].CurrentHP = Convert.ToInt32(data[24]);
-                    Combatants[data[2]].MaxHP = Convert.ToInt32(data[25]);
+                    CombatData c = Combatants[data[2]];
+                    c.CurrentHP = Convert.ToInt32(data[24]);
+                    c.MaxHP = Convert.ToInt32(data[25]);
+
+                    SendJSON(SendMessageType.CombatantDataChange, $"{{charID:\"{data[2]}\", charName:\"{c.PlayerName.JSONSafeString()}\", charMaxHP:{c.CurrentHP}, charCurrentHP:{c.CurrentHP}, charJob:\"{c.PlayerJob}\"}}");
                 }
             }
 
@@ -142,8 +162,11 @@ namespace ACTWebSocket.Core
             {
                 if (Combatants.ContainsKey(data[6]))
                 {
-                    Combatants[data[6]].CurrentHP = Convert.ToInt32(data[33]);
-                    Combatants[data[6]].MaxHP = Convert.ToInt32(data[34]);
+                    CombatData c = Combatants[data[6]];
+                    c.CurrentHP = Convert.ToInt32(data[33]);
+                    c.MaxHP = Convert.ToInt32(data[34]);
+
+                    SendJSON(SendMessageType.CombatantDataChange, $"{{charID:\"{data[6]}\", charName:\"{c.PlayerName.JSONSafeString()}\", charMaxHP:{c.CurrentHP}, charCurrentHP:{c.CurrentHP}, charJob:\"{c.PlayerJob}\"}}");
                 }
             }
         }
@@ -152,10 +175,10 @@ namespace ACTWebSocket.Core
         {
             partylist = new List<uint>();
             partyCount = Convert.ToInt32(data[2]);
-            for(int i = 3; i < data.Length; ++i)
+            for (int i = 3; i < data.Length; ++i)
             {
                 uint id = Convert.ToUInt32(data[i], 16);
-                if(id<0 && id != 0xE0000000)
+                if (id < 0 && id != 0xE0000000)
                 {
                     partylist.Add(id);
                 }
@@ -238,7 +261,7 @@ namespace ACTWebSocket.Core
                         "Last 10 Seconds DPS",
                         "Average DPS for last 10 seconds.",
                         (Data, ExtraFormat) =>
-                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                        (Data.Items[outD].Items["All"].Items.ToList().Where
                             (
                                 x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 10))
                             ).Sum
@@ -255,7 +278,7 @@ namespace ACTWebSocket.Core
                         "Last 30 Seconds DPS",
                         "Average DPS for last 30 seconds.",
                         (Data, ExtraFormat) =>
-                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                        (Data.Items[outD].Items["All"].Items.ToList().Where
                             (
                                 x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 30))
                             ).Sum
@@ -272,7 +295,7 @@ namespace ACTWebSocket.Core
                         "Last 60 Seconds DPS",
                         "Average DPS for last 60 seconds.",
                         (Data, ExtraFormat) =>
-                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                        (Data.Items[outD].Items["All"].Items.ToList().Where
                             (
                                 x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 60))
                             ).Sum
@@ -289,7 +312,7 @@ namespace ACTWebSocket.Core
                         "Last 180 Seconds DPS",
                         "Average DPS for last 180 seconds.",
                         (Data, ExtraFormat) =>
-                        (Data.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                        (Data.Items[outD].Items["All"].Items.ToList().Where
                             (
                                 x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 180))
                             ).Sum
@@ -307,7 +330,7 @@ namespace ACTWebSocket.Core
                         "overHeal",
                         (Data, Extra) =>
                         (
-                            Data.Items[CombatantData.DamageTypeDataOutgoingHealing].Items["All"].Items.ToList().Sum
+                            Data.Items[outH].Items["All"].Items.ToList().Sum
                             (
                                 x => Convert.ToInt64(x.Tags["overheal"])
                             ).ToString()
@@ -324,7 +347,7 @@ namespace ACTWebSocket.Core
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                x => x.Items[outD].Items["All"].Items.ToList().Where
                                 (
                                     y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 10))
                                 ).Sum
@@ -345,7 +368,7 @@ namespace ACTWebSocket.Core
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                x => x.Items[outD].Items["All"].Items.ToList().Where
                                 (
                                     y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 30))
                                 ).Sum
@@ -366,7 +389,7 @@ namespace ACTWebSocket.Core
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                x => x.Items[outD].Items["All"].Items.ToList().Where
                                 (
                                     y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 60))
                                 ).Sum
@@ -387,7 +410,7 @@ namespace ACTWebSocket.Core
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[CombatantData.DamageTypeDataOutgoingDamage].Items["All"].Items.ToList().Where
+                                x => x.Items[outD].Items["All"].Items.ToList().Where
                                 (
                                     y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 180))
                                 ).Sum
@@ -408,7 +431,7 @@ namespace ACTWebSocket.Core
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
-                                x => x.Items[CombatantData.DamageTypeDataOutgoingHealing].Items["All"].Items.ToList().Sum
+                                x => x.Items[outH].Items["All"].Items.ToList().Sum
                                 (
                                     y => Convert.ToInt64(y.Tags["overheal"])
                                 )
@@ -436,17 +459,18 @@ namespace ACTWebSocket.Core
                             continue;
                         }
 
-                        if (exportValuePair.Key == "Last10DPS" ||
+                        if ((exportValuePair.Key == "Last10DPS" ||
                             exportValuePair.Key == "Last30DPS" ||
                             exportValuePair.Key == "Last60DPS" ||
-                            exportValuePair.Key == "Last180DPS" ||
-                            exportValuePair.Key == "overHeal")
+                            exportValuePair.Key == "Last180DPS") && !ally.Items[outD].Items.ContainsKey("All"))
                         {
-                            if (!ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All"))
-                            {
-                                valueDict.Add(exportValuePair.Key, "");
-                                continue;
-                            }
+                            valueDict.Add(exportValuePair.Key, "");
+                            continue;
+                        }
+                        else if(exportValuePair.Key == "overHeal" && !ally.Items[outH].Items.ContainsKey("All"))
+                        {
+                            valueDict.Add(exportValuePair.Key, "");
+                            continue;
                         }
 
                         var value = exportValuePair.Value.GetExportString(ally, "");
@@ -476,17 +500,19 @@ namespace ACTWebSocket.Core
             {
                 try
                 {
-                    if (exportValuePair.Key == "Last10DPS" ||
+                    if ((exportValuePair.Key == "Last10DPS" ||
                         exportValuePair.Key == "Last30DPS" ||
                         exportValuePair.Key == "Last60DPS" ||
-                        exportValuePair.Key == "Last180DPS" ||
-                        exportValuePair.Key == "overHeal")
+                        exportValuePair.Key == "Last180DPS") && !allies.All((ally) => ally.Items[outD].Items.ContainsKey("All")))
                     {
-                        if (!allies.All((ally) => ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All")))
-                        {
-                            encounterDict.Add(exportValuePair.Key, "");
-                            continue;
-                        }
+                        encounterDict.Add(exportValuePair.Key, "");
+                        continue;
+                    }
+                    else if(exportValuePair.Key == "overHeal" && 
+                        !allies.All((ally) => ally.Items[outH].Items.ContainsKey("All")))
+                    {
+                        encounterDict.Add(exportValuePair.Key, "");
+                        continue;
                     }
 
                     var value = exportValuePair.Value.GetExportString(
@@ -507,16 +533,16 @@ namespace ACTWebSocket.Core
             return encounterDict;
         }
 
-        public void Log(LogLevel level, string format, params string[] args)
+        public void Log(LogLevel level, string format, params object[] args)
         {
             Log(level, string.Format(format, args));
         }
 
         public void Log(LogLevel level, string text)
         {
-            string sendJSONData = $"{{detail:{{logLevel:\"{level}\",text:\"{text.JSONSafeString()}\"}}}}";
+            string sendJSONData = $"{{typeText:\"Log\", detail:{{logLevel:\"{level}\",text:\"{text.JSONSafeString()}\"}}}}";
 
-            // TODO : Send This JSON
+            // TODO : Require UI Server <-> this... LogStream
         }
         #endregion
     }
@@ -689,5 +715,12 @@ namespace ACTWebSocket.Core
         Info = 2,
         Warning = 4,
         Error = 8
+    }
+
+    public enum SendMessageType : int
+    {
+        ChangeZone = 1,
+        SendCharName = 2,
+        CombatantDataChange = 3,
     }
 }

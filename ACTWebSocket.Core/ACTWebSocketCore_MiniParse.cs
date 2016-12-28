@@ -98,11 +98,11 @@ namespace ACTWebSocket_Plugin
 
             var encounterTask = Task.Run(() =>
             {
-                encounter = GetEncounterDictionary(allies);
+                encounter = overlayAPI.GetEncounterDictionary(allies);
             });
             var combatantTask = Task.Run(() =>
             {
-                combatant = GetCombatantList(allies);
+                combatant = overlayAPI.GetCombatantList(allies);
                 SortCombatantList(combatant);
             });
             Task.WaitAll(encounterTask, combatantTask);
@@ -213,95 +213,6 @@ namespace ACTWebSocket_Plugin
                     return result;
                 });
             }
-        }
-
-        private List<KeyValuePair<CombatantData, Dictionary<string, string>>> GetCombatantList(List<CombatantData> allies)
-        {
-
-            var combatantList = new List<KeyValuePair<CombatantData, Dictionary<string, string>>>();
-            Parallel.ForEach(allies, (ally) =>
-            //foreach (var ally in allies)
-            {
-                var valueDict = new Dictionary<string, string>();
-                foreach (var exportValuePair in CombatantData.ExportVariables)
-                {
-                    try
-                    {
-                        if (exportValuePair.Key == "NAME")
-                        {
-                            continue;
-                        }
-
-                        if (exportValuePair.Key == "Last10DPS" ||
-                            exportValuePair.Key == "Last30DPS" ||
-                            exportValuePair.Key == "Last60DPS")
-                        {
-                            if (!ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All"))
-                            {
-                                valueDict.Add(exportValuePair.Key, "");
-                                continue;
-                            }
-                        }
-
-                        var value = exportValuePair.Value.GetExportString(ally, "");
-                        valueDict.Add(exportValuePair.Key, value);
-                    }
-                    catch (Exception e)
-                    {
-                        Log(LogLevel.Debug, "GetCombatantList: {0}: {1}: {2}", ally.Name, exportValuePair.Key, e);
-                        continue;
-                    }
-                }
-
-                lock (combatantList)
-                {
-                    combatantList.Add(new KeyValuePair<CombatantData, Dictionary<string, string>>(ally, valueDict));
-                }
-            }
-            );
-
-
-            return combatantList;
-        }
-
-        private Dictionary<string, string> GetEncounterDictionary(List<CombatantData> allies)
-        {
-
-            var encounterDict = new Dictionary<string, string>();
-            //Parallel.ForEach(EncounterData.ExportVariables, (exportValuePair) =>
-            foreach (var exportValuePair in EncounterData.ExportVariables)
-            {
-                try
-                {
-                    if (exportValuePair.Key == "Last10DPS" ||
-                        exportValuePair.Key == "Last30DPS" ||
-                        exportValuePair.Key == "Last60DPS")
-                    {
-                        if (!allies.All((ally) => ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All")))
-                        {
-                            encounterDict.Add(exportValuePair.Key, "");
-                            continue;
-                        }
-                    }
-
-                    var value = exportValuePair.Value.GetExportString(
-                        ActGlobals.oFormActMain.ActiveZone.ActiveEncounter,
-                        allies,
-                        "");
-                    //lock (encounterDict)
-                    //{
-                    encounterDict.Add(exportValuePair.Key, value);
-                    //}
-                }
-                catch (Exception e)
-                {
-                    Log(LogLevel.Debug, "GetEncounterDictionary: {0}: {1}", exportValuePair.Key, e);
-                }
-            }
-            //);
-
-
-            return encounterDict;
         }
 
         private static bool CheckIsActReady()
