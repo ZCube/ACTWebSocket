@@ -33,9 +33,9 @@ namespace ACTWebSocket_Plugin
         class EchoSocketBehavior : WebSocketBehavior
         {
             public EchoSocketBehavior() { }
-            protected override void OnOpen() { base.OnOpen(); }
+            protected override async void OnOpen() { base.OnOpen(); }
             protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
-            protected override void OnMessage(MessageEventArgs e)
+            protected override async void OnMessage(MessageEventArgs e)
             {
                 switch (e.Type)
                 {
@@ -359,11 +359,11 @@ namespace ACTWebSocket_Plugin
 
             updateTimer = new Timer();
             updateTimer.Interval = 1000;
-            updateTimer.Elapsed += (o, e) =>
+            updateTimer.Elapsed += async (o, e) =>
             {
                 try
                 {
-                    Update();
+                    await Update();
                 }
                 catch (Exception ex)
                 {

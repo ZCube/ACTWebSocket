@@ -36,9 +36,8 @@ namespace ACTWebSocket_Plugin
             prevEncounterId = null;
             prevEndDateTime = DateTime.MinValue;
         }
-
-
-        protected void Update()
+        
+        protected async Task Update()
         {
             if (CheckIsActReady())
             {
