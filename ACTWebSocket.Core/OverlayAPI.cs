@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using Advanced_Combat_Tracker;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Advanced_Combat_Tracker;
-using System.Linq;
 
 namespace ACTWebSocket.Core
 {
     using System.Threading;
+    using System.Threading.Tasks;
     public class FFXIV_OverlayAPI
     {
         Dictionary<string, CombatData> Combatants = new Dictionary<string, CombatData>();
@@ -416,6 +417,108 @@ namespace ACTWebSocket.Core
                     ));
         }
         #endregion
+
+        #region For JSON
+        public List<KeyValuePair<CombatantData, Dictionary<string, string>>> 
+            GetCombatantList(List<CombatantData> allies)
+        {
+            var combatantList = new List<KeyValuePair<CombatantData, Dictionary<string, string>>>();
+            Parallel.ForEach(allies, (ally) =>
+            //foreach (var ally in allies)
+            {
+                var valueDict = new Dictionary<string, string>();
+                foreach (var exportValuePair in CombatantData.ExportVariables)
+                {
+                    try
+                    {
+                        if (exportValuePair.Key == "NAME")
+                        {
+                            continue;
+                        }
+
+                        if (exportValuePair.Key == "Last10DPS" ||
+                            exportValuePair.Key == "Last30DPS" ||
+                            exportValuePair.Key == "Last60DPS" ||
+                            exportValuePair.Key == "Last180DPS" ||
+                            exportValuePair.Key == "overHeal")
+                        {
+                            if (!ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All"))
+                            {
+                                valueDict.Add(exportValuePair.Key, "");
+                                continue;
+                            }
+                        }
+
+                        var value = exportValuePair.Value.GetExportString(ally, "");
+                        valueDict.Add(exportValuePair.Key, value);
+                    }
+                    catch (Exception e)
+                    {
+                        Log(LogLevel.Debug, "GetCombatantList: {0}: {1}: {2}", ally.Name, exportValuePair.Key, e);
+                        continue;
+                    }
+                }
+
+                lock (combatantList)
+                {
+                    combatantList.Add(new KeyValuePair<CombatantData, Dictionary<string, string>>(ally, valueDict));
+                }
+            });
+            return combatantList;
+        }
+
+        public Dictionary<string, string> GetEncounterDictionary(List<CombatantData> allies)
+        {
+
+            var encounterDict = new Dictionary<string, string>();
+            //Parallel.ForEach(EncounterData.ExportVariables, (exportValuePair) =>
+            foreach (var exportValuePair in EncounterData.ExportVariables)
+            {
+                try
+                {
+                    if (exportValuePair.Key == "Last10DPS" ||
+                        exportValuePair.Key == "Last30DPS" ||
+                        exportValuePair.Key == "Last60DPS" ||
+                        exportValuePair.Key == "Last180DPS" ||
+                        exportValuePair.Key == "overHeal")
+                    {
+                        if (!allies.All((ally) => ally.Items[CombatantData.DamageTypeDataOutgoingDamage].Items.ContainsKey("All")))
+                        {
+                            encounterDict.Add(exportValuePair.Key, "");
+                            continue;
+                        }
+                    }
+
+                    var value = exportValuePair.Value.GetExportString(
+                        ActGlobals.oFormActMain.ActiveZone.ActiveEncounter,
+                        allies,
+                        "");
+                    //lock (encounterDict)
+                    //{
+                    encounterDict.Add(exportValuePair.Key, value);
+                    //}
+                }
+                catch (Exception e)
+                {
+                    Log(LogLevel.Debug, "GetEncounterDictionary: {0}: {1}", exportValuePair.Key, e);
+                }
+            }
+            //);
+            return encounterDict;
+        }
+
+        public void Log(LogLevel level, string format, params string[] args)
+        {
+            Log(level, string.Format(format, args));
+        }
+
+        public void Log(LogLevel level, string text)
+        {
+            string sendJSONData = $"{{detail:{{logLevel:\"{level}\",text:\"{text.JSONSafeString()}\"}}}}";
+
+            // TODO : Send This JSON
+        }
+        #endregion
     }
 
     public class CombatData
@@ -577,5 +680,14 @@ namespace ACTWebSocket.Core
         TPDrain = 40,
         TPHeal = 41,
         Threat = 50,
+    }
+
+    public enum LogLevel : int
+    {
+        Trace = 0,
+        Debug = 1,
+        Info = 2,
+        Warning = 4,
+        Error = 8
     }
 }
