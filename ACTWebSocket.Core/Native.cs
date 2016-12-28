@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ACTWebSocket.Core
 {
@@ -33,7 +31,7 @@ namespace ACTWebSocket.Core
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -72,7 +70,7 @@ namespace ACTWebSocket.Core
 
             if (IntPtr.Size == 4)
             {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                int result32 = GetWindowLong(hWnd, nIndex);
                 error = Marshal.GetLastWin32Error();
                 result = new IntPtr(result32);
             }
@@ -102,7 +100,7 @@ namespace ACTWebSocket.Core
 
             if (IntPtr.Size == 4)
             {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                int result32 = GetWindowLong(hWnd, nIndex);
                 error = Marshal.GetLastWin32Error();
                 result = new IntPtr(result32);
             }
@@ -121,7 +119,7 @@ namespace ACTWebSocket.Core
 
             if (IntPtr.Size == 4)
             {
-                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
+                int result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
                 error = Marshal.GetLastWin32Error();
                 result = new IntPtr(result32);
             }
@@ -149,7 +147,7 @@ namespace ACTWebSocket.Core
 
             if (IntPtr.Size == 4)
             {
-                Int32 result32 = GetWindowLong(hWnd, nIndex);
+                int result32 = GetWindowLong(hWnd, nIndex);
                 error = Marshal.GetLastWin32Error();
                 result = new IntPtr(result32);
             }
@@ -168,7 +166,7 @@ namespace ACTWebSocket.Core
 
             if (IntPtr.Size == 4)
             {
-                Int32 result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
+                int result32 = SetWindowLong(hWnd, nIndex, ToIntPtr32(result));
                 error = Marshal.GetLastWin32Error();
                 result = new IntPtr(result32);
             }
@@ -186,7 +184,7 @@ namespace ACTWebSocket.Core
             return result;
         }
 
-        public static List<String> SearchForWindow(string title)
+        public static List<string> SearchForWindow(string title)
         {
             SearchData sd = new SearchData { TitleKeyword = title };
             EnumWindows(new EnumWindowsProc(EnumProc), ref sd);
@@ -208,8 +206,8 @@ namespace ACTWebSocket.Core
 
         public class SearchData
         {
-            public String TitleKeyword = "";
-            public List<String> overlayWindowTitles = new List<String>();
+            public string TitleKeyword = "";
+            public List<string> overlayWindowTitles = new List<string>();
         }
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
@@ -226,7 +224,7 @@ namespace ACTWebSocket.Core
         const int WM_COPYDATA = 0x4A;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref COPYDATASTRUCT lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, ref COPYDATASTRUCT lParam);
 
         public struct COPYDATASTRUCT
         {
@@ -239,7 +237,7 @@ namespace ACTWebSocket.Core
         public static void SendMessageToWindow(IntPtr hwnd, uint i, string str)
         {
             //byte[] buff = System.Text.Encoding.UTF8.GetBytes(str);
-            String bs = Utility.Base64Encoding(str) + "\0";
+            string bs = Utility.Base64Encoding(str) + "\0";
             COPYDATASTRUCT cds = new COPYDATASTRUCT();
             cds.dwData = IntPtr.Zero;
             cds.cbData = bs.Length + 1;
@@ -247,21 +245,21 @@ namespace ACTWebSocket.Core
             SendMessage(hwnd, WM_COPYDATA, new IntPtr(i), ref cds);
         }
 
-        public static string Base64Encoding(string EncodingText, System.Text.Encoding oEncoding = null)
+        public static string Base64Encoding(string EncodingText, Encoding oEncoding = null)
         {
             if (oEncoding == null)
-                oEncoding = System.Text.Encoding.UTF8;
+                oEncoding = Encoding.UTF8;
 
             byte[] arr = oEncoding.GetBytes(EncodingText);
-            return System.Convert.ToBase64String(arr);
+            return Convert.ToBase64String(arr);
         }
 
-        public static string Base64Decoding(string DecodingText, System.Text.Encoding oEncoding = null)
+        public static string Base64Decoding(string DecodingText, Encoding oEncoding = null)
         {
             if (oEncoding == null)
-                oEncoding = System.Text.Encoding.UTF8;
+                oEncoding = Encoding.UTF8;
 
-            byte[] arr = System.Convert.FromBase64String(DecodingText);
+            byte[] arr = Convert.FromBase64String(DecodingText);
             return oEncoding.GetString(arr);
         }
 
