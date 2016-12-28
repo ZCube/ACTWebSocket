@@ -13,33 +13,16 @@ namespace ACTWebSocket_Plugin
     {
         #region MiniParse
 
-        public enum MiniParseSortType
-        {
-            None,
-            StringAscending,
-            StringDescending,
-            NumericAscending,
-            NumericDescending
-        }
-
-        public enum LogLevel
-        {
-            Trace,
-            Debug,
-            Info,
-            Warning,
-            Error
-        }
-
         private string prevEncounterId { get; set; }
         private DateTime prevEndDateTime { get; set; }
         private bool prevEncounterActive { get; set; }
         public string pluginDirectory { get; internal set; }
+        public string overlaySkinDirectory { get; set; }
 
         public struct ConfigStruct
         {
             public MiniParseSortType SortType;
-            public String SortKey;
+            public string SortKey;
         }
 
         public ConfigStruct Config;// { get; set; }
@@ -50,25 +33,25 @@ namespace ACTWebSocket_Plugin
 
         public void Reload()
         {
-            this.prevEncounterId = null;
-            this.prevEndDateTime = DateTime.MinValue;
+            prevEncounterId = null;
+            prevEndDateTime = DateTime.MinValue;
         }
 
 
-        protected async Task Update()
+        protected void Update()
         {
             if (CheckIsActReady())
             {
-                if (this.prevEncounterId == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId &&
-                    this.prevEndDateTime == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime &&
-                    this.prevEncounterActive == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active)
+                if (prevEncounterId == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId &&
+                    prevEndDateTime == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime &&
+                    prevEncounterActive == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active)
                 {
                     return;
                 }
 
-                this.prevEncounterId = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId;
-                this.prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
-                this.prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
+                prevEncounterId = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId;
+                prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
+                prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
 
                 Broadcast("/MiniParse", CreateJsonData());
             }
@@ -76,7 +59,7 @@ namespace ACTWebSocket_Plugin
 
         private string CreateEventDispatcherScript()
         {
-            return "var ActXiv = " + this.CreateJsonData() + ";\n" +
+            return "var ActXiv = " + CreateJsonData() + ";\n" +
                    "document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: ActXiv }));";
         }
 
@@ -121,8 +104,8 @@ namespace ACTWebSocket_Plugin
                 {
                     builder.Append(",");
                 }
-                var valueString = Util.CreateJsonSafeString(Util.ReplaceNaNString(pair.Value, "---"));
-                builder.AppendFormat("\"{0}\":\"{1}\"", Util.CreateJsonSafeString(pair.Key), valueString);
+                var valueString = pair.Value.ReplaceNaN().JSONSafeString();
+                builder.AppendFormat("\"{0}\":\"{1}\"", pair.Key.JSONSafeString(), valueString);
             }
             builder.Append("},");
             builder.Append("\"Combatant\": {");
@@ -137,7 +120,7 @@ namespace ACTWebSocket_Plugin
                 {
                     builder.Append(",");
                 }
-                builder.AppendFormat("\"{0}\": {{", Util.CreateJsonSafeString(pair.Key.Name));
+                builder.AppendFormat("\"{0}\": {{", pair.Key.Name.JSONSafeString());
                 var isFirst3 = true;
                 foreach (var pair2 in pair.Value)
                 {
@@ -149,8 +132,8 @@ namespace ACTWebSocket_Plugin
                     {
                         builder.Append(",");
                     }
-                    var valueString = Util.CreateJsonSafeString(Util.ReplaceNaNString(pair2.Value, "---"));
-                    builder.AppendFormat("\"{0}\":\"{1}\"", Util.CreateJsonSafeString(pair2.Key), valueString);
+                    var valueString = pair2.Value.ReplaceNaN().JSONSafeString();
+                    builder.AppendFormat("\"{0}\":\"{1}\"", pair2.Key.JSONSafeString(), valueString);
                 }
                 builder.Append("}");
             }
@@ -168,22 +151,22 @@ namespace ACTWebSocket_Plugin
 
         private void SortCombatantList(List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant)
         {
-            if (this.Config.SortType == MiniParseSortType.NumericAscending ||
-                this.Config.SortType == MiniParseSortType.NumericDescending)
+            if (Config.SortType == MiniParseSortType.NumericAscending ||
+                Config.SortType == MiniParseSortType.NumericDescending)
             {
                 combatant.Sort((x, y) =>
                 {
                     int result = 0;
-                    if (x.Value.ContainsKey(this.Config.SortKey) &&
-                        y.Value.ContainsKey(this.Config.SortKey))
+                    if (x.Value.ContainsKey(Config.SortKey) &&
+                        y.Value.ContainsKey(Config.SortKey))
                     {
                         double xValue, yValue;
-                        double.TryParse(x.Value[this.Config.SortKey].Replace("%", ""), out xValue);
-                        double.TryParse(y.Value[this.Config.SortKey].Replace("%", ""), out yValue);
+                        double.TryParse(x.Value[Config.SortKey].Replace("%", ""), out xValue);
+                        double.TryParse(y.Value[Config.SortKey].Replace("%", ""), out yValue);
 
                         result = xValue.CompareTo(yValue);
 
-                        if (this.Config.SortType == MiniParseSortType.NumericDescending)
+                        if (Config.SortType == MiniParseSortType.NumericDescending)
                         {
                             result *= -1;
                         }
@@ -193,18 +176,18 @@ namespace ACTWebSocket_Plugin
                 });
             }
             else if (
-                this.Config.SortType == MiniParseSortType.StringAscending ||
-                this.Config.SortType == MiniParseSortType.StringDescending)
+                Config.SortType == MiniParseSortType.StringAscending ||
+                Config.SortType == MiniParseSortType.StringDescending)
             {
                 combatant.Sort((x, y) =>
                 {
                     int result = 0;
-                    if (x.Value.ContainsKey(this.Config.SortKey) &&
-                        y.Value.ContainsKey(this.Config.SortKey))
+                    if (x.Value.ContainsKey(Config.SortKey) &&
+                        y.Value.ContainsKey(Config.SortKey))
                     {
-                        result = x.Value[this.Config.SortKey].CompareTo(y.Value[this.Config.SortKey]);
+                        result = x.Value[Config.SortKey].CompareTo(y.Value[Config.SortKey]);
 
-                        if (this.Config.SortType == MiniParseSortType.StringDescending)
+                        if (Config.SortType == MiniParseSortType.StringDescending)
                         {
                             result *= -1;
                         }

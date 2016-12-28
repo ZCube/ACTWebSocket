@@ -22,20 +22,21 @@ namespace ACTWebSocket_Plugin
             overlayAPI = new FFXIV_OverlayAPI(this);
         }
 
-        public Dictionary<String, Boolean> Filters = new Dictionary<string, bool>();
+        public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
         FFXIV_OverlayAPI overlayAPI;
         HttpServer uiServer = null;
         HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
-        public String randomDir = "Test";
+        public string randomDir = "Test";
 
         class EchoSocketBehavior : WebSocketBehavior
         {
             public EchoSocketBehavior() { }
-            protected async override void OnOpen() { base.OnOpen(); }
+            protected override void OnOpen() { base.OnOpen(); }
             protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
-            protected override async void OnMessage(MessageEventArgs e) {
+            protected override void OnMessage(MessageEventArgs e)
+            {
                 switch (e.Type)
                 {
                     case Opcode.Text:
@@ -65,7 +66,7 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
-                path = System.Uri.UnescapeDataString(path);
+                path = Uri.UnescapeDataString(path);
 
                 if (path.StartsWith("/api/"))
                 {
@@ -74,7 +75,7 @@ namespace ACTWebSocket_Plugin
                     {
                         byte[] data = new byte[req.ContentLength64];
                         req.InputStream.Read(data, 0, (int)req.ContentLength64);
-                        String str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
+                        string str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
                         try
                         {
                             o = JObject.Parse(str);
@@ -145,7 +146,7 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
-                path = System.Uri.UnescapeDataString(path);
+                path = Uri.UnescapeDataString(path);
 
                 if (path.StartsWith("/api/"))
                 {
@@ -154,7 +155,7 @@ namespace ACTWebSocket_Plugin
                     {
                         byte[] data = new byte[req.ContentLength64];
                         req.InputStream.Read(data, 0, (int)req.ContentLength64);
-                        String str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
+                        string str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
                         try
                         {
                             o = JObject.Parse(str);
@@ -228,9 +229,10 @@ namespace ACTWebSocket_Plugin
         }
 
 
-        internal void StartServer(String address, int port, String domain = null)
+        internal void StartServer(string address, int port, string domain = null)
         {
             StopServer();
+            overlayAPI.AttachACTEvent();
 
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
 
@@ -239,7 +241,7 @@ namespace ACTWebSocket_Plugin
             //wssv.SslConfiguration.ServerCertificate =
             //  new X509Certificate2("/path/to/cert.pfx", "password for cert.pfx");
 
-            String parent_path = "";
+            string parent_path = "";
             if(randomDir != null)
             {
                 parent_path = "/" + randomDir;
@@ -247,9 +249,8 @@ namespace ACTWebSocket_Plugin
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
-
-
-            httpServer.RootPath = pluginDirectory;
+            
+            httpServer.RootPath = overlaySkinDirectory;
             httpServer.OnConnect += (sender, e) =>
             {
                 var req = e.Request;
@@ -279,7 +280,7 @@ namespace ACTWebSocket_Plugin
                 if (path == "/")
                     path += "index.html";
 
-                path = System.Uri.UnescapeDataString(path);
+                path = Uri.UnescapeDataString(path);
 
                 var content = httpServer.GetFile(path);
                 if (content == null)
@@ -287,14 +288,14 @@ namespace ACTWebSocket_Plugin
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
-                String extension = System.IO.Path.GetExtension(path);
+                string extension = System.IO.Path.GetExtension(path);
                 extension = extension.ToLower();
                 res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
                 if (extension == ".html" || extension == ".js")
                 {
                     res.ContentType = "text/html";
                     res.ContentEncoding = Encoding.UTF8;
-                    String host = "";
+                    string host = "";
                     if (address == "127.0.0.1" || address == "localhost")
                     {
                         host = "localhost";
@@ -304,12 +305,12 @@ namespace ACTWebSocket_Plugin
                         host = domain;
                     }
 
-                    String host_port = host + ":" + port.ToString();
+                    string host_port = host + ":" + port.ToString();
                     if (context.User != null)
                     {
-                        String username = context.User.Identity.Name;
+                        string username = context.User.Identity.Name;
                         NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
-                        String password = cred.Password;
+                        string password = cred.Password;
                         host_port = username + ":" + password + "@" + host + ":" + port.ToString();
                     }
                     else
@@ -338,9 +339,9 @@ namespace ACTWebSocket_Plugin
 
             httpServer.Start();
 
-            pingTimer = new System.Timers.Timer();
+            pingTimer = new Timer();
             pingTimer.Interval = 2000;
-            pingTimer.Elapsed += async (o, e) =>
+            pingTimer.Elapsed += (o, e) =>
             {
                 try
                 {
@@ -356,9 +357,9 @@ namespace ACTWebSocket_Plugin
             };
             pingTimer.Start();
 
-            updateTimer = new System.Timers.Timer();
+            updateTimer = new Timer();
             updateTimer.Interval = 1000;
-            updateTimer.Elapsed += async (o, e) =>
+            updateTimer.Elapsed += (o, e) =>
             {
                 try
                 {
@@ -374,6 +375,7 @@ namespace ACTWebSocket_Plugin
 
         internal void StopServer()
         {
+            overlayAPI.DetachACTEvent();
             if (httpServer != null)
             {
                 httpServer.Stop();
@@ -403,14 +405,14 @@ namespace ACTWebSocket_Plugin
         {
             if (httpServer != null)
             {
-                String parent_path = "";
+                string parent_path = "";
                 if (randomDir != null)
                 {
                     parent_path = "/" + randomDir;
                 }
                 foreach (var s in httpServer.WebSocketServices.Hosts)
                 {
-                    String x = s.Path;
+                    string x = s.Path;
                     if(Filters.ContainsKey(v) && Filters[v])
                     {
                         if (s.Path.CompareTo(parent_path + v) == 0)

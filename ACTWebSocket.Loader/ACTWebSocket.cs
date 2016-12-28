@@ -1,27 +1,16 @@
-﻿using System;
+﻿using Advanced_Combat_Tracker;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using Advanced_Combat_Tracker;
-using System.IO;
-using System.Reflection;
-using System.Xml;
 
 namespace ACTWebSocket_Plugin
 {
     using System.Linq;
-    using System.Net.Sockets;
-    using System.Runtime.CompilerServices;
-    using System.Threading.Tasks;
-    using System.Timers;
 
     public interface PluginDirectory
     {
-        void SetPluginDirectory(String path);
-        String GetPluginDirectory();
+        void SetPluginDirectory(string path);
+        string GetPluginDirectory();
     }
 
     public class ACTWebSocket : IActPluginV1
@@ -39,7 +28,7 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            String pluginDirectory = GetPluginDirectory();
+            string pluginDirectory = GetPluginDirectory();
 
             var directories = new List<string>();
             directories.Add(pluginDirectory);
@@ -60,7 +49,8 @@ namespace ACTWebSocket_Plugin
             };
 
             var m = new ACTWebSocketMain();
-            String pluginDirectory = GetPluginDirectory();
+            string pluginDirectory = GetPluginDirectory();
+            m.SetSkinDir(System.IO.Path.Combine(Environment.CurrentDirectory, "OverlaySkin"));
             m.SetPluginDirectory(pluginDirectory);
             m.InitPlugin(pluginScreenSpace, pluginStatusText);
             main = m;

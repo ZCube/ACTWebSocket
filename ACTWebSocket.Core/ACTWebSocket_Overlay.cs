@@ -194,9 +194,9 @@ namespace ACTWebSocket_Plugin
             {
                 JObject ret = new JObject();
                 JObject skins = new JObject();
-                foreach (string file in Directory.EnumerateFiles(pluginDirectory, "*.html", SearchOption.AllDirectories))
+                foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
                 {
-                    skins.Add(Utility.GetRelativePath(file, pluginDirectory));
+                    skins.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
                 }
                 ret["skins"] = skins;
                 return ret;

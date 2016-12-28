@@ -30,8 +30,8 @@ namespace ACTWebSocket_Plugin
 
     public interface PluginDirectory
     {
-        void SetPluginDirectory(String path);
-        String GetPluginDirectory();
+        void SetPluginDirectory(string path);
+        string GetPluginDirectory();
     }
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
@@ -750,7 +750,7 @@ namespace ACTWebSocket_Plugin
             SaveSettings();
         }
 
-        String overlayWindowPrefix = "overlay_";
+        string overlayWindowPrefix = "overlay_";
 
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
@@ -800,11 +800,12 @@ namespace ACTWebSocket_Plugin
             {
                 core = new ACTWebSocketCore();
                 core.pluginDirectory = pluginDirectory;
+                core.overlaySkinDirectory = overlaySkinDirectory;
                 NewUIWindow();
             }
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
-            this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
+            Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             xmlSettings = new SettingsSerializer(this);	// Create a new settings serializer and pass it this instance
             sortType.SelectedIndex = -1;
 
@@ -830,8 +831,8 @@ namespace ACTWebSocket_Plugin
                 StopServer();
             }
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
-            ActGlobals.oFormActMain.BeforeLogLineRead += this.oFormActMain_BeforeLogLineRead;
-            ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.BeforeLogLineRead += oFormActMain_BeforeLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead += oFormActMain_OnLogLineRead;
             var s = ActGlobals.oFormActMain.ActPlugins;
             lblStatus.Text = "Plugin Started";
         }
@@ -840,8 +841,8 @@ namespace ACTWebSocket_Plugin
         {
             StopServer();
             // Unsubscribe from any events you listen to when exiting!
-            ActGlobals.oFormActMain.BeforeLogLineRead -= this.oFormActMain_BeforeLogLineRead;
-            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.BeforeLogLineRead -= oFormActMain_BeforeLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
 
             SaveSettings();
             CloseAll();
@@ -945,7 +946,7 @@ namespace ACTWebSocket_Plugin
                                 }
                                 try
                                 {
-                                    String json = overlayWindows[title].ToString();
+                                    string json = overlayWindows[title].ToString();
                                     var content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(json));
                                     var response = await client.PostAsync("http://localhost:5088/req", content);
                                     var responseString = await response.Content.ReadAsStringAsync();
@@ -957,7 +958,7 @@ namespace ACTWebSocket_Plugin
                             }
                         }
                     }
-                    foreach (String title in keysLoaded)
+                    foreach (string title in keysLoaded)
                     {
                         if (title == overlayFullscreenName)
                         {
@@ -968,7 +969,7 @@ namespace ACTWebSocket_Plugin
                         {
                             if (NewOverlayWindow((JObject)overlayWindows[title]))
                             {
-                                this.listBox2.Items.Add(title);
+                                listBox2.Items.Add(title);
                             }
                         }
                     }
@@ -998,7 +999,7 @@ namespace ACTWebSocket_Plugin
             xWriter.Close();
 
             IList<string> keys = overlayWindows.Properties().Select(p => p.Name).ToList();
-            foreach (String title in keys)
+            foreach (string title in keys)
             {
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
@@ -1206,7 +1207,18 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        String pluginDirectory = "";
+        string overlaySkinDirectory { get; set; }
+        string pluginDirectory = "";
+        public void SetSkinDir(string path)
+        {
+            overlaySkinDirectory = path;
+        }
+
+        public string GetSkinDir()
+        {
+            return overlaySkinDirectory;
+        }
+
         public void SetPluginDirectory(string path)
         {
             pluginDirectory = path;
@@ -1260,10 +1272,10 @@ namespace ACTWebSocket_Plugin
         public void CloseAll()
         {
             UpdateList(false);
-            List<String> full_titles = Native.SearchForWindow(overlayWindowPrefix);
+            List<string> full_titles = Native.SearchForWindow(overlayWindowPrefix);
             for (int i=0;i< full_titles.Count;++i)
             {
-                String title = full_titles[i];
+                string title = full_titles[i];
                 IntPtr hwnd = Native.FindWindow(null, title);
                 if (hwnd == null || hwnd.ToInt64() == 0)
                 {
@@ -1280,21 +1292,21 @@ namespace ACTWebSocket_Plugin
 
         public void UpdateList(bool updateInfo = true)
         {
-            this.listBox1.Items.Clear();
-            foreach (string file in Directory.EnumerateFiles(pluginDirectory, "*.html", SearchOption.AllDirectories))
+            listBox1.Items.Clear();
+            foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
             {
-                this.listBox1.Items.Add(Utility.GetRelativePath(file, pluginDirectory));
+                listBox1.Items.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
             }
-            List<String> titles = Native.SearchForWindow(overlayWindowPrefix);
-            this.listBox2.Items.Clear();
-            this.listBox2.Sorted = true;
+            List<string> titles = Native.SearchForWindow(overlayWindowPrefix);
+            listBox2.Items.Clear();
+            listBox2.Sorted = true;
 
             // Fullscreen Overlay..
             //titles.Add(overlayWindowPrefix+overlayFullscreenName);
             foreach (string fulltitle in titles)
             {
-                String title = fulltitle.Substring(overlayWindowPrefix.Length);
-                this.listBox2.Items.Add(title);
+                string title = fulltitle.Substring(overlayWindowPrefix.Length);
+                listBox2.Items.Add(title);
 
                 if (updateInfo)
                 {
@@ -1346,9 +1358,9 @@ namespace ACTWebSocket_Plugin
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (this.listBox1.SelectedIndex >= 0)
+            if (listBox1.SelectedIndex >= 0)
             {
-                String url = "";
+                string url = "";
                 if (localhostOnly.Checked)
                 {
                     url = "http://localhost:" + port.Text + "/";
@@ -1361,20 +1373,20 @@ namespace ACTWebSocket_Plugin
                 {
                     url += core.randomDir + "/";
                 }
-                String param = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                string param = url + Uri.EscapeDataString(listBox1.Items[listBox1.SelectedIndex].ToString());
                 param = param.Replace("%5C", "/");
-                String title = Guid.NewGuid().ToString();
+                string title = Guid.NewGuid().ToString();
                 if(NewOverlayWindow(param, title))
                 {
-                    this.listBox2.Items.Add(title);
+                    listBox2.Items.Add(title);
                 }
             }
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            if (this.listBox1.SelectedIndex >= 0)
+            if (listBox1.SelectedIndex >= 0)
             {
-                String url = "";
+                string url = "";
                 if (localhostOnly.Checked)
                 {
                     url = "http://localhost:" + port.Text + "/";
@@ -1387,9 +1399,9 @@ namespace ACTWebSocket_Plugin
                 {
                     url += core.randomDir + "/";
                 }
-                String param = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                string param = url + Uri.EscapeDataString(listBox1.Items[listBox1.SelectedIndex].ToString());
                 param = param.Replace("%5C", "/");
-                String title = Guid.NewGuid().ToString();
+                string title = Guid.NewGuid().ToString();
                 if (NewOverlayWindow(param, title))
                 {
                     this.listBox2.Items.Add(title);
@@ -1402,11 +1414,11 @@ namespace ACTWebSocket_Plugin
                 IntPtr hwnd = Native.FindWindow(null, "ui_title");
                 Native.CloseWindow(hwnd);
             }
-            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
+            string overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
             if (File.Exists(overlayPath))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                String uri = new System.Uri(pluginDirectory + "\\WS_SKIN\\MainForm.html").AbsoluteUri;
+                string uri = new Uri(pluginDirectory + "\\WS_SKIN\\MainForm.html").AbsoluteUri;
                 startInfo.FileName = overlayPath;
                 JObject o = new JObject();
                 o["Transparent"] = false;
@@ -1422,8 +1434,8 @@ namespace ACTWebSocket_Plugin
                 o["title"] = "ui_title";
 
 
-                String json = json = o.ToString();
-                startInfo.Arguments = Utility.Base64Encoding(json) + " 9992 " + this.Handle.ToString();
+                string json = json = o.ToString();
+                startInfo.Arguments = Utility.Base64Encoding(json) + " 9992 " + Handle.ToString();
                 var p = Process.Start(startInfo);
                 //p.WaitForInputIdle(1000); //wait for the window to be ready for input;
                 //p.Refresh();
@@ -1443,7 +1455,7 @@ namespace ACTWebSocket_Plugin
             IntPtr hwnd = Native.FindWindow(null, "ui_title");
             //Native.SetParent(hwnd, this.Handle);
             Native.RECT prect = new Native.RECT();
-            Native.GetWindowRect(this.Handle, out prect);
+            Native.GetWindowRect(Handle, out prect);
             JObject o = new JObject();
             o["x"] = prect.Left;
             o["y"] = prect.Top;
@@ -1454,10 +1466,10 @@ namespace ACTWebSocket_Plugin
             Native.SendMessageToWindow(hwnd, 1, json);
         }
 
-        private bool NewOverlayWindow(String url, String title)
+        private bool NewOverlayWindow(string url, string title)
         {
-            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
-            if (File.Exists(overlayPath) && this.listBox1.SelectedIndex >= 0)
+            string overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
+            if (File.Exists(overlayPath) && listBox1.SelectedIndex >= 0)
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = overlayPath;
@@ -1487,19 +1499,19 @@ namespace ACTWebSocket_Plugin
 
         private bool NewOverlayWindow(JObject obj)
         {
-            String overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
+            string overlayPath = pluginDirectory + "/overlay/overlay_proc.exe";
             if (File.Exists(overlayPath))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = overlayPath;
                 JObject o = (JObject)obj.DeepClone();
-                String title = o["title"].Value<String>();
+                string title = o["title"].Value<string>();
                 o["title"] = overlayWindowPrefix + o["title"];
 
                 if (overlayWindows[title] == null)
                     overlayWindows[title] = obj;
 
-                String json = json = o.ToString();
+                string json = json = o.ToString();
                 startInfo.Arguments = Utility.Base64Encoding(json);
                 Process.Start(startInfo);
                 return true;
@@ -1509,7 +1521,7 @@ namespace ACTWebSocket_Plugin
 
         private void copyURL_Click(object sender, EventArgs e)
         {
-            String url = "";
+            string url = "";
             if (localhostOnly.Checked)
             {
                 url = "http://localhost:" + port.Text + "/";
@@ -1522,9 +1534,9 @@ namespace ACTWebSocket_Plugin
             {
                 url += core.randomDir + "/";
             }
-            if (this.listBox1.SelectedIndex >= 0)
+            if (listBox1.SelectedIndex >= 0)
             {
-                String fullURL = url + System.Uri.EscapeDataString(this.listBox1.Items[this.listBox1.SelectedIndex].ToString());
+                string fullURL = url + Uri.EscapeDataString(listBox1.Items[listBox1.SelectedIndex].ToString());
                 fullURL = fullURL.Replace("%5C", "/");
                 Clipboard.SetText(fullURL);
             }
@@ -1542,9 +1554,9 @@ namespace ACTWebSocket_Plugin
         private async void update_overlayWindow(object sender, EventArgs e)
         {
             checkBox5.Enabled = checkBox4.Checked;
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
@@ -1559,18 +1571,18 @@ namespace ACTWebSocket_Plugin
                     o["useDragFilter"] = checkBox4.Checked;
                     o["useDragMove"] = checkBox4.Checked && checkBox5.Checked;
                     o["useResizeGrip"] = checkBox6.Checked;
-                    o["opacity"] = (double)opacity.Value / (double)opacity.Maximum;
-                    o["zoom"] = (double)zoom.Value / (double)100.0;
+                    o["opacity"] = (double)opacity.Value / opacity.Maximum;
+                    o["zoom"] = zoom.Value / 100.0;
                     o["fps"] = (double)fps.Value;
                     checkBox5.Enabled = checkBox4.Checked;
-                    String json = o.ToString();
+                    string json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
                         {
                             try
                             {
-                                var content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(json));
+                                var content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
                                 var response = await client.PostAsync("http://localhost:5088/req", content);
                                 var responseString = await response.Content.ReadAsStringAsync();
                             }
@@ -1586,7 +1598,7 @@ namespace ACTWebSocket_Plugin
                     }
 
                     IList<string> keys = o.Properties().Select(p => p.Name).ToList();
-                    foreach (String key in keys)
+                    foreach (string key in keys)
                     {
                         overlayWindows[title][key] = o[key].DeepClone();
                     }
@@ -1598,9 +1610,9 @@ namespace ACTWebSocket_Plugin
         {
             if (updateUIWithoutMove)
                 return;
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
@@ -1637,14 +1649,14 @@ namespace ACTWebSocket_Plugin
                     catch (Exception e2)
                     {
                     }
-                    String json = o.ToString();
+                    string json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
                         {
                             try
                             {
-                                var content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(json));
+                                var content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
                                 var response = await client.PostAsync("http://localhost:5088/req", content);
                                 var responseString = await response.Content.ReadAsStringAsync();
                             }
@@ -1660,7 +1672,7 @@ namespace ACTWebSocket_Plugin
                     }
 
                     IList<string> keys = o.Properties().Select(p => p.Name).ToList();
-                    foreach (String key in keys)
+                    foreach (string key in keys)
                     {
                         overlayWindows[title][key] = o[key].DeepClone();
                     }
@@ -1668,12 +1680,12 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        Boolean updateUIWithoutMove = false;
+        bool updateUIWithoutMove = false;
         private async void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
@@ -1707,22 +1719,22 @@ namespace ACTWebSocket_Plugin
 
                     if (keys.Contains(title))
                     {
-                        checkBox1.Checked = overlayWindows[title].Value<Boolean>("Transparent");
-                        checkBox2.Checked = overlayWindows[title].Value<Boolean>("NoActivate");
-                        checkBox3.Checked = overlayWindows[title].Value<Boolean>("hide");
-                        checkBox4.Checked = overlayWindows[title].Value<Boolean>("useDragFilter");
-                        checkBox5.Checked = overlayWindows[title].Value<Boolean>("useDragMove");
-                        checkBox6.Checked = overlayWindows[title].Value<Boolean>("useResizeGrip");
-                        url.Text = overlayWindows[title].Value<String>("url");
+                        checkBox1.Checked = overlayWindows[title].Value<bool>("Transparent");
+                        checkBox2.Checked = overlayWindows[title].Value<bool>("NoActivate");
+                        checkBox3.Checked = overlayWindows[title].Value<bool>("hide");
+                        checkBox4.Checked = overlayWindows[title].Value<bool>("useDragFilter");
+                        checkBox5.Checked = overlayWindows[title].Value<bool>("useDragMove");
+                        checkBox6.Checked = overlayWindows[title].Value<bool>("useResizeGrip");
+                        url.Text = overlayWindows[title].Value<string>("url");
                         try
                         {
-                            opacity.Value = (int)(overlayWindows[title].Value<double>("opacity") * (double)opacity.Maximum);
+                            opacity.Value = (int)(overlayWindows[title].Value<double>("opacity") * opacity.Maximum);
                         }
                         catch (Exception e2) { }
                         finally { }
                         try
                         {
-                            zoom.Value = (int)(overlayWindows[title].Value<double>("zoom") * (double)100);
+                            zoom.Value = (int)(overlayWindows[title].Value<double>("zoom") * 100);
                         }
                         catch (Exception e2) { }
                         finally { }
@@ -1762,10 +1774,10 @@ namespace ACTWebSocket_Plugin
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
                 JObject o = new JObject();
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 o["title"] = title;
                 core.APIOverlayWindowClose(o);
                 //IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
@@ -1789,9 +1801,9 @@ namespace ACTWebSocket_Plugin
         {
             if(e.KeyCode == Keys.Enter)
             {
-                if (this.listBox2.SelectedIndex >= 0)
+                if (listBox2.SelectedIndex >= 0)
                 {
-                    String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                    string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                     IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                     if (hwnd == null || hwnd.ToInt64() == 0)
                     {
@@ -1803,7 +1815,7 @@ namespace ACTWebSocket_Plugin
                         {
                             JObject o = new JObject();
                             o["title"] = overlayWindowPrefix + overlayTitle.Text;
-                            String json = o.ToString();
+                            string json = o.ToString();
                             Native.SendMessageToWindow(hwnd, 1, json);
                             overlayWindows[overlayTitle.Text] = overlayWindows[title].DeepClone();
                             overlayWindows[overlayTitle.Text]["title"] = overlayTitle.Text;
@@ -1821,9 +1833,9 @@ namespace ACTWebSocket_Plugin
 
         private async void button5_Click(object sender, EventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
@@ -1833,12 +1845,12 @@ namespace ACTWebSocket_Plugin
                 {
                     JObject o = new JObject();
                     o["url"] = url.Text;
-                    String json = o.ToString();
+                    string json = o.ToString();
                     if (title == overlayFullscreenName)
                     {
                         using (var client = new HttpClient())
                         {
-                            var content = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(json));
+                            var content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
                             var response = await client.PostAsync("http://localhost:5088/req", content);
                             var responseString = await response.Content.ReadAsStringAsync();
                         }
@@ -1849,7 +1861,7 @@ namespace ACTWebSocket_Plugin
                     }
 
                     IList<string> keys = o.Properties().Select(p => p.Name).ToList();
-                    foreach (String key in keys)
+                    foreach (string key in keys)
                     {
                         overlayWindows[title][key] = o[key].DeepClone();
                     }
@@ -1864,9 +1876,9 @@ namespace ACTWebSocket_Plugin
 
         private async void x_Enter(object sender, EventArgs e)
         {
-            if (this.listBox2.SelectedIndex >= 0)
+            if (listBox2.SelectedIndex >= 0)
             {
-                String title = this.listBox2.Items[this.listBox2.SelectedIndex].ToString();
+                string title = listBox2.Items[listBox2.SelectedIndex].ToString();
                 IntPtr hwnd = Native.FindWindow(null, overlayWindowPrefix + title);
                 if ((hwnd == null || hwnd.ToInt64() == 0) && title != overlayFullscreenName)
                 {
