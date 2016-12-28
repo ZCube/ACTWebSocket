@@ -295,7 +295,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    Update();
+                    overlayAPI.Update();
                 }
                 catch (Exception ex)
                 {

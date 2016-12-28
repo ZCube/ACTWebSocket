@@ -25,6 +25,10 @@ namespace ACTWebSocket_Plugin
         string outD = CombatantData.DamageTypeDataOutgoingDamage;
         string outH = CombatantData.DamageTypeDataOutgoingHealing;
 
+        private string prevEncounterId { get; set; }
+        private DateTime prevEndDateTime { get; set; }
+        private bool prevEncounterActive { get; set; }
+
         protected long currentZone = 0L;
         public FFXIV_OverlayAPI(ACTWebSocketCore core)
         {
@@ -536,7 +540,7 @@ namespace ACTWebSocket_Plugin
                                         y => Convert.ToInt64(y.Tags["overheal"])  
                                     ) - x.Value.Items.Where
                                     (
-                                        y => y.DamageType == "DamageShield"
+                                        y => y.DamageType == "Absorb"
                                     ).Sum
                                     (
                                         y => Convert.ToInt64(y.Damage)
@@ -547,35 +551,6 @@ namespace ACTWebSocket_Plugin
                     )
                 );
             }
-            /*
-            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
-                CombatantData.ExportVariables.Add("overHeal",
-                    new CombatantData.TextExportFormatter(
-                        "overHeal",
-                        "overHeal",
-                        "overHeal",
-                        (Data, Extra) =>
-                        (
-                            (
-                                Convert.ToInt64(Data.Items[outH].Tags["OverHeal"])
-                            ).ToString()
-                        )
-                    ));
-
-            if (!EncounterData.ExportVariables.ContainsKey("overHeal"))
-                EncounterData.ExportVariables.Add("overHeal",
-                    new EncounterData.TextExportFormatter
-                    (
-                        "overHeal",
-                        "overHeal",
-                        "overHeal",
-                        (Data, SelectiveAllies, Extra) =>
-                        (SelectiveAllies.Sum
-                            (
-                                x => Convert.ToInt64(x.Items[outH].Tags["OverHeal"])
-                            )
-                        ).ToString()
-                    ));*/
         }
         #endregion
 
@@ -669,6 +644,113 @@ namespace ACTWebSocket_Plugin
                 encounterDict.Add("overHeal", "0");
             }
             return encounterDict;
+        }
+
+        public async Task Update()
+        {
+            if (ACTWebSocketCore.CheckIsActReady())
+            {
+                if (prevEncounterId == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId &&
+                    prevEndDateTime == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime &&
+                    prevEncounterActive == ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active)
+                {
+                    return;
+                }
+
+                prevEncounterId = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EncId;
+                prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
+                prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
+
+                core.Broadcast("/MiniParse", CreateEncounterJsonData());
+            }
+        }
+
+        public string CreateEncounterJsonData()
+        {
+
+            if (DateTime.Now - 
+                ACTWebSocketCore.updateStringCacheLastUpdate < ACTWebSocketCore.updateStringCacheExpireInterval)
+            {
+                return ACTWebSocketCore.updateStringCache;
+            }
+
+            if (!ACTWebSocketCore.CheckIsActReady())
+            {
+                return "";
+            }
+
+            var allies = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+            Dictionary<string, string> encounter = null;
+            List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant = null;
+
+            var encounterTask = Task.Run(() =>
+            {
+                encounter = GetEncounterDictionary(allies);
+            });
+            var combatantTask = Task.Run(() =>
+            {
+                combatant = GetCombatantList(allies);
+                core.SortCombatantList(combatant);
+            });
+            Task.WaitAll(encounterTask, combatantTask);
+
+            var builder = new StringBuilder();
+            builder.Append("{typeText:\"encounter\", detail:{");
+            builder.Append("\"Encounter\": {");
+            var isFirst1 = true;
+            foreach (var pair in encounter)
+            {
+                if (isFirst1)
+                {
+                    isFirst1 = false;
+                }
+                else
+                {
+                    builder.Append(",");
+                }
+                var valueString = pair.Value.ReplaceNaN().JSONSafeString();
+                builder.AppendFormat("\"{0}\":\"{1}\"", pair.Key.JSONSafeString(), valueString);
+            }
+            builder.Append("},");
+            builder.Append("\"Combatant\": {");
+            var isFirst2 = true;
+            foreach (var pair in combatant)
+            {
+                if (isFirst2)
+                {
+                    isFirst2 = false;
+                }
+                else
+                {
+                    builder.Append(",");
+                }
+                builder.AppendFormat("\"{0}\": {{", pair.Key.Name.JSONSafeString());
+                var isFirst3 = true;
+                foreach (var pair2 in pair.Value)
+                {
+                    if (isFirst3)
+                    {
+                        isFirst3 = false;
+                    }
+                    else
+                    {
+                        builder.Append(",");
+                    }
+                    var valueString = pair2.Value.ReplaceNaN().JSONSafeString();
+                    builder.AppendFormat("\"{0}\":\"{1}\"", pair2.Key.JSONSafeString(), valueString);
+                }
+                builder.Append("}");
+            }
+            builder.Append("},");
+            builder.AppendFormat("\"isActive\": {0}", ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active ? "true" : "false");
+            builder.Append("}}");
+
+
+            var result = builder.ToString();
+            ACTWebSocketCore.updateStringCache = result;
+            ACTWebSocketCore.updateStringCacheLastUpdate = DateTime.Now;
+
+            return result;
         }
 
         public void Log(LogLevel level, string format, params object[] args)
