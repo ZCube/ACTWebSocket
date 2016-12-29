@@ -12,7 +12,7 @@ namespace ACTWebSocket_Plugin
 {
     using System.Threading;
     using System.Threading.Tasks;
-    public class FFXIV_OverlayAPI
+    public partial class FFXIV_OverlayAPI
     {
         ACTWebSocketCore core;
         Dictionary<string, CombatData> Combatants = new Dictionary<string, CombatData>();
@@ -47,10 +47,16 @@ namespace ACTWebSocket_Plugin
             {
                 switch(data)
                 {
+                    // Send Last Combat Data
                     case "RequestLastCombat":
+                    case "RequestLastCombatData":
                         SendPrivMessage(id, CreateEncounterJsonData());
                         break;
-
+                    // E END
+                    case "RequestEnd":
+                    case "RequestEncounterEnd":
+                        ActGlobals.oFormActMain.EndCombat(false);
+                        break;
                     // DBM?
                 }
             }
@@ -59,11 +65,82 @@ namespace ACTWebSocket_Plugin
         // DBM?...
         public void ReadFFxivEcho(string r)
         {
-            if(r.ToLower().StartsWith("dbm"))
-            {
-                string[] data = r.SplitStr(" ", StringSplitOptions.RemoveEmptyEntries);
+            string[] data = r.SplitStr(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                // TODO...
+            // something like TShock... hmmm
+            switch(data[0])
+            {
+                case "server":
+                    if (data.Length < 2) return;
+                    switch(data[1])
+                    {
+                        case "켜기":
+                        case "on":
+                            // TODO
+
+                            break;
+                        case "끄기":
+                        case "off":
+                            // TODO
+
+                            break;
+                        case "모두닫기":
+                        case "closeall":
+                            // TODO
+
+                            break;
+                        case "열기":
+                        case "open":
+                            if (data.Length < 3) return;
+
+                            string url = data[2];
+                            // TODO
+                            break;
+                        case "크기변경":
+                        case "resize":
+                            if (data.Length < 4) return;
+                            int w = Convert.ToInt32(data[2]);
+                            int h = Convert.ToInt32(data[3]);
+
+                            break;
+                        case "위치변경":
+                        case "repos":
+                            if (data.Length < 4) return;
+                            int x = Convert.ToInt32(data[2]);
+                            int y = Convert.ToInt32(data[3]);
+
+                            break;
+                        case "클릭통과":
+                        case "clickthru":
+                            if (data.Length < 3) return;
+                            bool clickthru = Convert.ToBoolean(data[2]);
+
+                            break;
+                        case "이동가능":
+                        case "dragable":
+                            if (data.Length < 3) return;
+                            bool dragable = Convert.ToBoolean(data[2]);
+
+                            break;
+                        case "강조가능":
+                        case "focusable":
+                            if (data.Length < 3) return;
+                            bool focusable = Convert.ToBoolean(data[2]);
+
+                            break;
+                        case "영역선택가능":
+                        case "contentselectable":
+                            if (data.Length < 3) return;
+                            bool contentselectable = Convert.ToBoolean(data[2]);
+
+                            break;
+                    }
+                    break;
+                case "dbm":
+                    if (data.Length < 2) return;
+
+                    // TODO...
+                    break;
             }
         }
 
@@ -73,29 +150,6 @@ namespace ACTWebSocket_Plugin
             {
                 v.Sessions.SendTo(text, id);
             }
-        }
-        
-        public void GetMessage(WebSocketSharp.MessageEventArgs e)
-        {
-            core.Broadcast("/MiniParse", $"{{\"typeText\":\"onMessage\", \"data\":\"{e.Data.JSONSafeString()}\"}}");
-        }
-
-        public void SendJSON(SendMessageType type, string json)
-        {
-            string sendjson = $"{{\"typeText\":\"update\", \"detail\":{{\"msgType\":\"{type}\", \"data\":{json}}}}}";
-
-            core.Broadcast("/MiniParse", sendjson);
-        }
-
-        public void SendErrorJSON(string json)
-        {
-            string sendjson = $"{{\"typeText\":\"error\", \"detail\":{{\"msgType\":\"{SendMessageType.NetworkError}\", \"data\":\"{json.JSONSafeString()}\"}}}}";
-            core.Broadcast("/MiniParse", sendjson);
-        }
-
-        public void SendLastCombat()
-        {
-            core.Broadcast("/MiniParse", CreateEncounterJsonData());
         }
 
 
@@ -264,337 +318,6 @@ namespace ACTWebSocket_Plugin
             SendJSON(SendMessageType.CombatantsList, $"{{ \"combatantList\" : {result.Replace(",]", "]")} }}");
         }
 
-        private void ACTExtension(bool isImport, LogLineEventArgs e)
-        {
-            string[] data = e.logLine.Split('|');
-            MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
-
-            switch (messageType)
-            {
-                case MessageType.LogLine:
-                    if(Convert.ToInt32(data[2], 16) == 56)
-                    {
-                        ReadFFxivEcho(data[4]);
-                    }
-                    break;
-                case MessageType.ChangeZone:
-                    ChangeZoneEvent(data);
-                    break;
-                case MessageType.ChangePrimaryPlayer:
-                    DetectMyName(data);
-                    break;
-                case MessageType.AddCombatant:
-                    if (!Combatants.ContainsKey(data[2]))
-                    {
-                        CombatData cd = new CombatData();
-                        cd.PlayerID = Convert.ToUInt32(data[2], 16);
-                        cd.PlayerJob = Convert.ToUInt32(data[4], 16);
-                        cd.PlayerName = data[3];
-                        cd.MaxHP = cd.CurrentHP = Convert.ToInt64(data[5], 16);
-                        cd.MaxMP = cd.CurrentMP = Convert.ToInt64(data[6], 16);
-                        if (data[8] != "0")
-                        {
-                            cd.IsPet = true;
-                            cd.OwnerID = Convert.ToUInt32(data[8]);
-                        }
-                        Combatants.Add(data[2], cd);
-                        SendCombatantList();
-                    }
-                    break;
-                case MessageType.RemoveCombatant:
-                    if (Combatants.ContainsKey(data[2]))
-                    {
-                        Combatants.Remove(data[2]);
-                        SendCombatantList();
-                    }
-                    break;
-                case MessageType.PartyList:
-                    UpdatePartyList(data);
-                    break;
-                case MessageType.NetworkStartsCasting:
-                case MessageType.NetworkCancelAbility:
-                case MessageType.NetworkDoT:
-                case MessageType.NetworkDeath:
-                case MessageType.NetworkBuff:
-                case MessageType.NetworkTargetIcon:
-                case MessageType.NetworkRaidMarker:
-                case MessageType.NetworkTargetMarker:
-                case MessageType.NetworkBuffRemove:
-                    break;
-                case MessageType.NetworkAbility:
-                case MessageType.NetworkAOEAbility:
-                    Ability(messageType, data);
-                    break;
-            }
-        }
-
-        public void AttachACTEvent()
-        {
-            ActGlobals.oFormActMain.BeforeLogLineRead += ACTExtension;
-        }
-
-        public void DetachACTEvent()
-        {
-            ActGlobals.oFormActMain.BeforeLogLineRead -= ACTExtension;
-        }
-
-        private void SetExportVariables()
-        {
-            if (!CombatantData.ExportVariables.ContainsKey("Last10DPS"))
-                CombatantData.ExportVariables.Add("Last10DPS",
-                    new CombatantData.TextExportFormatter(
-                        "Last10DPS",
-                        "Last 10 Seconds DPS",
-                        "Average DPS for last 10 seconds.",
-                        (Data, ExtraFormat) =>
-                        (Data.Items[outD].Items["All"].Items.ToList().Where
-                            (
-                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 10))
-                            ).Sum
-                            (
-                                x => x.Damage.Number
-                            ) / (Data.Duration.TotalSeconds < 10.0 ? Data.Duration.TotalSeconds : 10.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!CombatantData.ExportVariables.ContainsKey("Last30DPS"))
-                CombatantData.ExportVariables.Add("Last30DPS",
-                    new CombatantData.TextExportFormatter(
-                        "Last30DPS",
-                        "Last 30 Seconds DPS",
-                        "Average DPS for last 30 seconds.",
-                        (Data, ExtraFormat) =>
-                        (Data.Items[outD].Items["All"].Items.ToList().Where
-                            (
-                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 30))
-                            ).Sum
-                            (
-                                x => x.Damage.Number
-                            ) / (Data.Duration.TotalSeconds < 30.0 ? Data.Duration.TotalSeconds : 30.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!CombatantData.ExportVariables.ContainsKey("Last60DPS"))
-                CombatantData.ExportVariables.Add("Last60DPS",
-                    new CombatantData.TextExportFormatter(
-                        "Last60DPS",
-                        "Last 60 Seconds DPS",
-                        "Average DPS for last 60 seconds.",
-                        (Data, ExtraFormat) =>
-                        (Data.Items[outD].Items["All"].Items.ToList().Where
-                            (
-                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 60))
-                            ).Sum
-                            (
-                                x => x.Damage.Number
-                            ) / (Data.Duration.TotalSeconds < 60.0 ? Data.Duration.TotalSeconds : 60.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!CombatantData.ExportVariables.ContainsKey("Last180DPS"))
-                CombatantData.ExportVariables.Add("Last180DPS",
-                    new CombatantData.TextExportFormatter(
-                        "Last180DPS",
-                        "Last 180 Seconds DPS",
-                        "Average DPS for last 180 seconds.",
-                        (Data, ExtraFormat) =>
-                        (Data.Items[outD].Items["All"].Items.ToList().Where
-                            (
-                                x => x.Time >= ActGlobals.oFormActMain.LastKnownTime.Subtract(new TimeSpan(0, 0, 180))
-                            ).Sum
-                            (
-                                x => x.Damage.Number
-                            ) / (Data.Duration.TotalSeconds < 180.0 ? Data.Duration.TotalSeconds : 180.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!EncounterData.ExportVariables.ContainsKey("Last10DPS"))
-                EncounterData.ExportVariables.Add("Last10DPS",
-                    new EncounterData.TextExportFormatter
-                    (
-                        "Last10DPS",
-                        "Last 10 Seconds DPS",
-                        "Average DPS for last 10 seconds",
-                        (Data, SelectiveAllies, Extra) =>
-                        (SelectiveAllies.Sum
-                            (
-                                x => x.Items[outD].Items["All"].Items.ToList().Where
-                                (
-                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 10))
-                                ).Sum
-                                (
-                                    y => y.Damage.Number
-                                )
-                            ) / (Data.Duration.TotalSeconds < 10.0 ? Data.Duration.TotalSeconds : 10.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!EncounterData.ExportVariables.ContainsKey("Last30DPS"))
-                EncounterData.ExportVariables.Add("Last30DPS",
-                    new EncounterData.TextExportFormatter
-                    (
-                        "Last30DPS",
-                        "Last 30 Seconds DPS",
-                        "Average DPS for last 30 seconds",
-                        (Data, SelectiveAllies, Extra) =>
-                        (SelectiveAllies.Sum
-                            (
-                                x => x.Items[outD].Items["All"].Items.ToList().Where
-                                (
-                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 30))
-                                ).Sum
-                                (
-                                    y => y.Damage.Number
-                                )
-                            ) / (Data.Duration.TotalSeconds < 30.0 ? Data.Duration.TotalSeconds : 30.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!EncounterData.ExportVariables.ContainsKey("Last60DPS"))
-                EncounterData.ExportVariables.Add("Last60DPS",
-                    new EncounterData.TextExportFormatter
-                    (
-                        "Last60DPS",
-                        "Last 60 Seconds DPS",
-                        "Average DPS for last 60 seconds",
-                        (Data, SelectiveAllies, Extra) =>
-                        (SelectiveAllies.Sum
-                            (
-                                x => x.Items[outD].Items["All"].Items.ToList().Where
-                                (
-                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 60))
-                                ).Sum
-                                (
-                                    y => y.Damage.Number
-                                )
-                            ) / (Data.Duration.TotalSeconds < 60.0 ? Data.Duration.TotalSeconds : 60.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!EncounterData.ExportVariables.ContainsKey("Last180DPS"))
-                EncounterData.ExportVariables.Add("Last180DPS",
-                    new EncounterData.TextExportFormatter
-                    (
-                        "Last180DPS",
-                        "Last 180 Seconds DPS",
-                        "Average DPS for last 180 seconds",
-                        (Data, SelectiveAllies, Extra) =>
-                        (SelectiveAllies.Sum
-                            (
-                                x => x.Items[outD].Items["All"].Items.ToList().Where
-                                (
-                                    y => y.Time >= Data.EndTime.Subtract(new TimeSpan(0, 0, 180))
-                                ).Sum
-                                (
-                                    y => y.Damage.Number
-                                )
-                            ) / (Data.Duration.TotalSeconds < 180.0 ? Data.Duration.TotalSeconds : 180.0)
-                        ).ToString("0.00")
-                    ));
-
-            if (!CombatantData.ExportVariables.ContainsKey("overHeal"))
-            {
-                CombatantData.ExportVariables.Add
-                (
-                    "overHeal",
-                    new CombatantData.TextExportFormatter
-                    (
-                        "overHeal",
-                        "overHeal",
-                        "overHeal",
-                        (Data, ExtraFormat) =>
-                        (
-                            (
-                                // Data.Items[outD].Items["All"].Items.ToList().Where
-                                Data.Items[outH].Items.ToList().Where
-                                (
-                                    x => x.Key == "All"
-                                ).Sum
-                                (
-                                    x => x.Value.Items.ToList().Where
-                                    (
-                                        y => y.Tags.ContainsKey("overheal")
-                                    ).Sum
-                                    (
-                                        y => Convert.ToInt64(y.Tags["overheal"])
-                                    )
-                                )
-                            ).ToString()
-                        )
-                    )
-                );
-            }
-
-            if(!CombatantData.ExportVariables.ContainsKey("damageShield"))
-            {
-                CombatantData.ExportVariables.Add
-                (
-                    "damageShield",
-                    new CombatantData.TextExportFormatter
-                    (
-                        "damageShield",
-                        "damageShield",
-                        "Healers DamageShield Skill Total Value",
-                        (Data, ExtraFormat) =>
-                        (
-                            (
-                                Data.Items[outH].Items.ToList().Where
-                                (
-                                    x => x.Key == "All"
-                                ).Sum
-                                (
-                                    x => x.Value.Items.Where
-                                    (
-                                        y =>
-                                        {
-                                            if (y.DamageType == "DamageShield")
-                                                return true;
-                                            else
-                                                return false;
-                                        }
-                                    ).Sum
-                                    (
-                                        y => Convert.ToInt64(y.Damage)
-                                    )
-                                )
-                            ).ToString()
-                        )
-                    )
-                );
-            }
-
-            if (!CombatantData.ExportVariables.ContainsKey("absorbHeal"))
-            {
-                CombatantData.ExportVariables.Add
-                (
-                    "absorbHeal",
-                    new CombatantData.TextExportFormatter
-                    (
-                        "absorbHeal",
-                        "absorbHeal",
-                        "absorbHeal",
-                        (Data, ExtraFormat) =>
-                        (
-                            (
-                                Data.Items[outH].Items.ToList().Where
-                                (
-                                    x => x.Key == "All"
-                                ).Sum
-                                (
-                                    x => x.Value.Items.Where
-                                    (
-                                        y => y.DamageType == "Absorb"
-                                    ).Sum
-                                    (
-                                        y => Convert.ToInt64(y.Damage)
-                                    )
-                                )
-                            ).ToString()
-                        )
-                    )
-                );
-            }
-        }
         #endregion
 
         #region For JSON
@@ -925,7 +648,10 @@ namespace ACTWebSocket_Plugin
 
         public static string[] SplitStr(this string str, string needle, StringSplitOptions option = StringSplitOptions.None)
         {
-            return str.Split(new string[] { str }, option);
+            if (str.Contains(needle))
+                return str.Split(new string[] { str }, option);
+            else
+                return new string[] { str };
         }
     }
 }
