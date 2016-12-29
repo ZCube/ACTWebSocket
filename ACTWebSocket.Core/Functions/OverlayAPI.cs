@@ -50,7 +50,20 @@ namespace ACTWebSocket_Plugin
                     case "RequestLastCombat":
                         SendPrivMessage(id, CreateEncounterJsonData());
                         break;
+
+                    // DBM?
                 }
+            }
+        }
+
+        // DBM?...
+        public void ReadFFxivEcho(string r)
+        {
+            if(r.ToLower().StartsWith("dbm"))
+            {
+                string[] data = r.SplitStr(" ", StringSplitOptions.RemoveEmptyEntries);
+
+                // TODO...
             }
         }
 
@@ -259,6 +272,10 @@ namespace ACTWebSocket_Plugin
             switch (messageType)
             {
                 case MessageType.LogLine:
+                    if(Convert.ToInt32(data[2], 16) == 56)
+                    {
+                        ReadFFxivEcho(data[4]);
+                    }
                     break;
                 case MessageType.ChangeZone:
                     ChangeZoneEvent(data);
