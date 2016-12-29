@@ -23,23 +23,29 @@ namespace ACTWebSocket_Plugin
         }
 
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
-        FFXIV_OverlayAPI overlayAPI;
+        public static FFXIV_OverlayAPI overlayAPI;
+        public HttpServer httpServer = null;
         HttpServer uiServer = null;
-        HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
         public string randomDir = "Test";
+        internal IntPtr hwnd;
 
-        class EchoSocketBehavior : WebSocketBehavior
+        public class EchoSocketBehavior : WebSocketBehavior
         {
             public EchoSocketBehavior() { }
-            protected override async void OnOpen() { base.OnOpen(); }
+            protected override async void OnOpen()
+            {
+                base.OnOpen();
+            }
             protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
-            protected override async void OnMessage(MessageEventArgs e)
+            protected override void OnMessage(MessageEventArgs e)
             {
                 switch (e.Type)
                 {
                     case Opcode.Text:
+                        overlayAPI.ProcPrivateMsg(ID, Sessions, e.Data);
+                        break;
                     case Opcode.Binary:
                     case Opcode.Cont:
                     case Opcode.Close:
@@ -54,6 +60,7 @@ namespace ACTWebSocket_Plugin
 
         internal void StartUIServer()
         {
+
             StopUIServer();
             uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9991);
             uiServer.OnPost += (sender, e) =>
@@ -85,7 +92,8 @@ namespace ACTWebSocket_Plugin
 
                         }
                     }
-                    if (o != null)
+                    //if (o != null)
+                    try
                     {
 
                         if (path == "/api/loadsettings")
@@ -110,7 +118,7 @@ namespace ACTWebSocket_Plugin
                         }
                         else if (path == "/api/overlaywindow_get_preference")
                         {
-                            JObject ret = APIOverlayWindow_GetPreference(o);
+                            JObject ret = APIOverlayWindow_GetPreference(o).Result;
                             res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
                         }
                         else if (path == "/api/overlaywindow_update_preference")
@@ -133,6 +141,10 @@ namespace ACTWebSocket_Plugin
                             JObject ret = APIOverlayWindowClose(o);
                             res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
                         }
+                    }
+                    catch(Exception error)
+                    {
+                        System.Windows.Forms.MessageBox.Show(error.Message);
                     }
                 }
             };
@@ -142,79 +154,6 @@ namespace ACTWebSocket_Plugin
                 var res = e.Response;
                 res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
                 res.AddHeader("Access-Control-Allow-Origin", "*");
-
-                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-
-                var path = req.RawUrl;
-                path = Uri.UnescapeDataString(path);
-
-                if (path.StartsWith("/api/"))
-                {
-                    JObject o = null;
-                    if (req.ContentLength64 != -1)
-                    {
-                        byte[] data = new byte[req.ContentLength64];
-                        req.InputStream.Read(data, 0, (int)req.ContentLength64);
-                        string str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
-                        try
-                        {
-                            o = JObject.Parse(str);
-                        }
-                        catch (Exception e3)
-                        {
-
-                        }
-                    }
-                    if (o != null)
-                    {
-
-                        if (path == "/api/loadsettings")
-                        {
-                            JObject ret = APILoadSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/savesettings")
-                        {
-                            JObject ret = APISaveSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/skin_get_list")
-                        {
-                            JObject ret = APIOverlayWindow_GetSkinList(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_new")
-                        {
-                            JObject ret = APIOverlayWindow_New(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_preference")
-                        {
-                            JObject ret = APIOverlayWindow_GetPreference(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_preference")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePreference(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_position")
-                        {
-                            JObject ret = APIOverlayWindow_GetPosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_position")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_close")
-                        {
-                            JObject ret = APIOverlayWindowClose(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                    }
-                }
             };
             uiServer.Start();
         }
@@ -227,7 +166,12 @@ namespace ACTWebSocket_Plugin
                 uiServer = null;
             }
         }
-
+        
+        void InitUpdate()
+        {
+            System.Threading.Thread.Sleep(1000);
+            Broadcast("/MiniParse", overlayAPI.CreateEncounterJsonData());
+        }
 
         internal void StartServer(string address, int port, string domain = null)
         {
@@ -245,6 +189,7 @@ namespace ACTWebSocket_Plugin
             {
                 parent_path = "/" + randomDir;
             }
+
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
@@ -254,9 +199,12 @@ namespace ACTWebSocket_Plugin
             {
                 var req = e.Request;
             };
+
             uiServer.OnPost += (sender, e) =>
             {
+
             };
+            
             httpServer.OnGet += (sender, e) =>
             {
                 var req = e.Request;
@@ -264,6 +212,7 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
+
                 if(randomDir != null)
                 {
                     if (!path.StartsWith(parent_path))
@@ -272,21 +221,25 @@ namespace ACTWebSocket_Plugin
                         return;
                     }
                 }
+
                 if(path.StartsWith(parent_path))
                 {
                     path = path.Substring(parent_path.Length);
                 }
+
                 if (path == "/")
                     path += "index.html";
 
                 path = Uri.UnescapeDataString(path);
 
                 var content = httpServer.GetFile(path);
+
                 if (content == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
+
                 string extension = System.IO.Path.GetExtension(path);
                 extension = extension.ToLower();
                 res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
@@ -319,9 +272,11 @@ namespace ACTWebSocket_Plugin
                     host_port += parent_path;
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
+
                 }
 
                 res.WriteContent(content);
+                //new System.Threading.Thread(InitUpdate).Start();
             };
 
             //// TODO : Basic Auth
@@ -362,7 +317,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    Update();
+                    overlayAPI.Update();
                 }
                 catch (Exception ex)
                 {

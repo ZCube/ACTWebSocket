@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace ACTWebSocket.Core
@@ -212,6 +214,12 @@ namespace ACTWebSocket.Core
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        [SuppressUnmanagedCodeSecurity]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool CloseHandle(IntPtr hObject);
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, ref SearchData data);
@@ -221,7 +229,7 @@ namespace ACTWebSocket.Core
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-        const int WM_COPYDATA = 0x4A;
+        public const int WM_COPYDATA = 0x4A;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, ref COPYDATASTRUCT lParam);
