@@ -23,24 +23,29 @@ namespace ACTWebSocket_Plugin
         }
 
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
-        FFXIV_OverlayAPI overlayAPI;
+        public static FFXIV_OverlayAPI overlayAPI;
+        public HttpServer httpServer = null;
         HttpServer uiServer = null;
-        HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
         public string randomDir = "Test";
         internal IntPtr hwnd;
 
-        class EchoSocketBehavior : WebSocketBehavior
+        public class EchoSocketBehavior : WebSocketBehavior
         {
             public EchoSocketBehavior() { }
-            protected override void OnOpen() { base.OnOpen(); }
+            protected override async void OnOpen()
+            {
+                base.OnOpen();
+            }
             protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
             protected override void OnMessage(MessageEventArgs e)
             {
                 switch (e.Type)
                 {
                     case Opcode.Text:
+                        overlayAPI.ProcPrivateMsg(ID, Sessions, e.Data);
+                        break;
                     case Opcode.Binary:
                     case Opcode.Cont:
                     case Opcode.Close:
@@ -55,6 +60,7 @@ namespace ACTWebSocket_Plugin
 
         internal void StartUIServer()
         {
+
             StopUIServer();
             uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9991);
             uiServer.OnPost += (sender, e) =>
@@ -160,12 +166,16 @@ namespace ACTWebSocket_Plugin
                 uiServer = null;
             }
         }
-
+        
+        void InitUpdate()
+        {
+            System.Threading.Thread.Sleep(1000);
+            Broadcast("/MiniParse", overlayAPI.CreateEncounterJsonData());
+        }
 
         internal void StartServer(string address, int port, string domain = null)
         {
             StopServer();
-            overlayAPI.AttachACTEvent();
 
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
 
@@ -179,6 +189,7 @@ namespace ACTWebSocket_Plugin
             {
                 parent_path = "/" + randomDir;
             }
+
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
@@ -188,9 +199,12 @@ namespace ACTWebSocket_Plugin
             {
                 var req = e.Request;
             };
+
             uiServer.OnPost += (sender, e) =>
             {
+
             };
+            
             httpServer.OnGet += (sender, e) =>
             {
                 var req = e.Request;
@@ -198,6 +212,7 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
+
                 if(randomDir != null)
                 {
                     if (!path.StartsWith(parent_path))
@@ -206,21 +221,25 @@ namespace ACTWebSocket_Plugin
                         return;
                     }
                 }
+
                 if(path.StartsWith(parent_path))
                 {
                     path = path.Substring(parent_path.Length);
                 }
+
                 if (path == "/")
                     path += "index.html";
 
                 path = Uri.UnescapeDataString(path);
 
                 var content = httpServer.GetFile(path);
+
                 if (content == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
+
                 string extension = System.IO.Path.GetExtension(path);
                 extension = extension.ToLower();
                 res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
@@ -253,9 +272,11 @@ namespace ACTWebSocket_Plugin
                     host_port += parent_path;
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
+
                 }
 
                 res.WriteContent(content);
+                //new System.Threading.Thread(InitUpdate).Start();
             };
 
             //// TODO : Basic Auth
@@ -274,7 +295,7 @@ namespace ACTWebSocket_Plugin
 
             pingTimer = new Timer();
             pingTimer.Interval = 2000;
-            pingTimer.Elapsed += (o, e) =>
+            pingTimer.Elapsed += async (o, e) =>
             {
                 try
                 {
@@ -292,11 +313,11 @@ namespace ACTWebSocket_Plugin
 
             updateTimer = new Timer();
             updateTimer.Interval = 1000;
-            updateTimer.Elapsed += (o, e) =>
+            updateTimer.Elapsed += async (o, e) =>
             {
                 try
                 {
-                    Update();
+                    overlayAPI.Update();
                 }
                 catch (Exception ex)
                 {
@@ -308,7 +329,8 @@ namespace ACTWebSocket_Plugin
 
         internal void StopServer()
         {
-            overlayAPI.DetachACTEvent();
+            // TODO : 아직 서버 실행 시 Attach 가 정상적으로 되지 않음...
+            // overlayAPI.DetachACTEvent();
             if (httpServer != null)
             {
                 httpServer.Stop();

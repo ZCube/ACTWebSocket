@@ -27,18 +27,17 @@ namespace ACTWebSocket_Plugin
 
         public ConfigStruct Config;// { get; set; }
 
-        private static string updateStringCache = "";
-        private static DateTime updateStringCacheLastUpdate;
-        private static readonly TimeSpan updateStringCacheExpireInterval = new TimeSpan(0, 0, 0, 0, 500); // 500 msec
+        public static string updateStringCache = "";
+        public static DateTime updateStringCacheLastUpdate;
+        public static readonly TimeSpan updateStringCacheExpireInterval = new TimeSpan(0, 0, 0, 0, 500); // 500 msec
 
         public void Reload()
         {
             prevEncounterId = null;
             prevEndDateTime = DateTime.MinValue;
         }
-
-
-        protected void Update()
+        
+        protected async Task Update()
         {
             if (CheckIsActReady())
             {
@@ -149,7 +148,7 @@ namespace ACTWebSocket_Plugin
             return result;
         }
 
-        private void SortCombatantList(List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant)
+        public void SortCombatantList(List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant)
         {
             if (Config.SortType == MiniParseSortType.NumericAscending ||
                 Config.SortType == MiniParseSortType.NumericDescending)
@@ -198,7 +197,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private static bool CheckIsActReady()
+        public static bool CheckIsActReady()
         {
             if (ActGlobals.oFormActMain != null &&
                 ActGlobals.oFormActMain.ActiveZone != null &&
