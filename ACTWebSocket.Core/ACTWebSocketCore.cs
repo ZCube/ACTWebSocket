@@ -160,7 +160,12 @@ namespace ACTWebSocket_Plugin
                 uiServer = null;
             }
         }
-
+        
+        void InitUpdate()
+        {
+            System.Threading.Thread.Sleep(1000);
+            Broadcast("/MiniParse", overlayAPI.CreateEncounterJsonData());
+        }
 
         internal void StartServer(string address, int port, string domain = null)
         {
@@ -178,6 +183,7 @@ namespace ACTWebSocket_Plugin
             {
                 parent_path = "/" + randomDir;
             }
+
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
@@ -187,9 +193,12 @@ namespace ACTWebSocket_Plugin
             {
                 var req = e.Request;
             };
+
             uiServer.OnPost += (sender, e) =>
             {
+
             };
+            
             httpServer.OnGet += (sender, e) =>
             {
                 var req = e.Request;
@@ -197,6 +206,7 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
 
                 var path = req.RawUrl;
+
                 if(randomDir != null)
                 {
                     if (!path.StartsWith(parent_path))
@@ -205,21 +215,25 @@ namespace ACTWebSocket_Plugin
                         return;
                     }
                 }
+
                 if(path.StartsWith(parent_path))
                 {
                     path = path.Substring(parent_path.Length);
                 }
+
                 if (path == "/")
                     path += "index.html";
 
                 path = Uri.UnescapeDataString(path);
 
                 var content = httpServer.GetFile(path);
+
                 if (content == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.NotFound;
                     return;
                 }
+
                 string extension = System.IO.Path.GetExtension(path);
                 extension = extension.ToLower();
                 res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
@@ -252,9 +266,11 @@ namespace ACTWebSocket_Plugin
                     host_port += parent_path;
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
+
                 }
 
                 res.WriteContent(content);
+                //new System.Threading.Thread(InitUpdate).Start();
             };
 
             //// TODO : Basic Auth

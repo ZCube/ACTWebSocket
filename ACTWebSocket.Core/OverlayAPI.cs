@@ -43,14 +43,14 @@ namespace ACTWebSocket_Plugin
 
         public void SendJSON(SendMessageType type, string json)
         {
-            string sendjson = $"{{typeText:\"update\", detail:{{msgType:\"{type}\", data:{json}}}}}";
+            string sendjson = $"{{\"typeText\":\"update\", \"detail\":{{\"msgType\":\"{type}\", \"data\":{json}}}}}";
 
             core.Broadcast("/MiniParse", sendjson);
         }
 
         public void SendErrorJSON(string json)
         {
-            string sendjson = $"{{typeText:\"error\", detail:{{msgType:\"{SendMessageType.NetworkError}\", data:\"{json.JSONSafeString()}\"}}}}";
+            string sendjson = $"{{\"typeText\":\"error\", \"detail\":{{\"msgType\":\"{SendMessageType.NetworkError}\", \"data\":\"{json.JSONSafeString()}\"}}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
 
@@ -129,7 +129,7 @@ namespace ACTWebSocket_Plugin
         {
             currentZone = Convert.ToInt32(data[2], 16);
 
-            SendJSON(SendMessageType.ChangeZone, $"{{zoneID:\"{currentZone}\"}}");
+            SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
         }
 
         // 해루's Request : I want Player real name. don't need 'YOU'
@@ -138,7 +138,7 @@ namespace ACTWebSocket_Plugin
             myID = data[2];
             myName = data[3];
 
-            SendJSON(SendMessageType.SendCharName, $"{{charID:\"{myID}\", charName:\"{myName.JSONSafeString()}\"}}");
+            SendJSON(SendMessageType.SendCharName, $"{{\"charID\":\"{myID}\", \"charName\":\"{myName.JSONSafeString()}\"}}");
         }
 
         private void Ability(MessageType type, string[] data)
@@ -162,7 +162,7 @@ namespace ACTWebSocket_Plugin
                     c.CurrentHP = Convert.ToInt32(data[24]);
                     c.MaxHP = Convert.ToInt32(data[25]);
 
-                    SendJSON(SendMessageType.CombatantDataChange, $"{{charID:\"{data[2]}\", charName:\"{c.PlayerName.JSONSafeString()}\", charMaxHP:{c.CurrentHP}, charCurrentHP:{c.CurrentHP}, charJob:\"{c.PlayerJob}\"}}");
+                    SendJSON(SendMessageType.CombatantDataChange, $"{{\"charID\":\"{data[2]}\", \"charName\":\"{c.PlayerName.JSONSafeString()}\", \"charMaxHP\":{c.CurrentHP}, \"charCurrentHP\":{c.CurrentHP}, \"charJob\":\"{c.PlayerJob}\"}}");
                 }
             }
 
@@ -174,7 +174,7 @@ namespace ACTWebSocket_Plugin
                     c.CurrentHP = Convert.ToInt32(data[33]);
                     c.MaxHP = Convert.ToInt32(data[34]);
 
-                    SendJSON(SendMessageType.CombatantDataChange, $"{{charID:\"{data[6]}\", charName:\"{c.PlayerName.JSONSafeString()}\", charMaxHP:{c.CurrentHP}, charCurrentHP:{c.CurrentHP}, charJob:\"{c.PlayerJob}\"}}");
+                    SendJSON(SendMessageType.CombatantDataChange, $"{{\"charID\":\"{data[6]}\", \"charName\":\"{c.PlayerName.JSONSafeString()}\", \"charMaxHP\":{c.CurrentHP}, \"charCurrentHP\":{c.CurrentHP}, \"charJob\":\"{c.PlayerJob}\"}}");
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace ACTWebSocket_Plugin
 
         public void SendCombatantList()
         {
-            string jsonformat = "{{ playerID : {0}, playerName : \"{1}\", playerJob : \"{2}\", maxHP : {3}, maxMP : {4} }},";
+            string jsonformat = "{{ \"playerID\" : {0}, \"playerName\" : \"{1}\", \"playerJob\" : \"{2}\", \"maxHP\" : {3}, \"maxMP\" : {4} }},";
 
             StringBuilder sb = new StringBuilder();
             foreach(KeyValuePair<string, CombatData> kv in Combatants)
@@ -216,7 +216,7 @@ namespace ACTWebSocket_Plugin
 
             string result = "[" + sb.ToString() + "]";
 
-            SendJSON(SendMessageType.CombatantsList, $"{{ combatantList : {result} }}");
+            SendJSON(SendMessageType.CombatantsList, $"{{ \"combatantList\" : {result.Replace(",]", "]")} }}");
         }
 
         private void ACTExtension(bool isImport, LogLineEventArgs e)
@@ -514,16 +514,16 @@ namespace ACTWebSocket_Plugin
                 );
             }
 
-            if (!CombatantData.ExportVariables.ContainsKey("effectiveHeal"))
+            if (!CombatantData.ExportVariables.ContainsKey("absorbHeal"))
             {
                 CombatantData.ExportVariables.Add
                 (
-                    "effectiveHeal",
+                    "absorbHeal",
                     new CombatantData.TextExportFormatter
                     (
-                        "effectiveHeal",
-                        "effectiveHeal",
-                        "effectiveHeal",
+                        "absorbHeal",
+                        "absorbHeal",
+                        "absorbHeal",
                         (Data, ExtraFormat) =>
                         (
                             (
@@ -533,12 +533,6 @@ namespace ACTWebSocket_Plugin
                                 ).Sum
                                 (
                                     x => x.Value.Items.Where
-                                    (
-                                        y => y.Tags.ContainsKey("overheal")  
-                                    ).Sum
-                                    (
-                                        y => Convert.ToInt64(y.Tags["overheal"])  
-                                    ) - x.Value.Items.Where
                                     (
                                         y => y.DamageType == "Absorb"
                                     ).Sum
@@ -695,7 +689,7 @@ namespace ACTWebSocket_Plugin
             Task.WaitAll(encounterTask, combatantTask);
 
             var builder = new StringBuilder();
-            builder.Append("{typeText:\"encounter\", detail:{");
+            builder.Append("{\"typeText\": \"encounter\", \"detail\": {");
             builder.Append("\"Encounter\": {");
             var isFirst1 = true;
             foreach (var pair in encounter)
