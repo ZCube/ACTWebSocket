@@ -23,24 +23,29 @@ namespace ACTWebSocket_Plugin
         }
 
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
-        FFXIV_OverlayAPI overlayAPI;
+        public static FFXIV_OverlayAPI overlayAPI;
+        public HttpServer httpServer = null;
         HttpServer uiServer = null;
-        HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
         public string randomDir = "Test";
         internal IntPtr hwnd;
 
-        class EchoSocketBehavior : WebSocketBehavior
+        public class EchoSocketBehavior : WebSocketBehavior
         {
             public EchoSocketBehavior() { }
-            protected override async void OnOpen() { base.OnOpen(); }
+            protected override async void OnOpen()
+            {
+                base.OnOpen();
+            }
             protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
-            protected override async void OnMessage(MessageEventArgs e)
+            protected override void OnMessage(MessageEventArgs e)
             {
                 switch (e.Type)
                 {
                     case Opcode.Text:
+                        overlayAPI.ProcPrivateMsg(ID, Sessions, e.Data);
+                        break;
                     case Opcode.Binary:
                     case Opcode.Cont:
                     case Opcode.Close:
@@ -55,6 +60,7 @@ namespace ACTWebSocket_Plugin
 
         internal void StartUIServer()
         {
+
             StopUIServer();
             uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9991);
             uiServer.OnPost += (sender, e) =>

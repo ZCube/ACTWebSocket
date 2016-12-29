@@ -41,6 +41,32 @@ namespace ACTWebSocket_Plugin
             AttachACTEvent();
         }
 
+        public void ProcPrivateMsg(string id, WebSocketSharp.Server.WebSocketSessionManager Session, string data)
+        {
+            if(data != ".")
+            {
+                switch(data)
+                {
+                    case "RequestLastCombat":
+                        SendPrivMessage(id, CreateEncounterJsonData());
+                        break;
+                }
+            }
+        }
+
+        public void SendPrivMessage(string id, string text)
+        {
+            foreach(var v in core.httpServer.WebSocketServices.Hosts)
+            {
+                v.Sessions.SendTo(text, id);
+            }
+        }
+        
+        public void GetMessage(WebSocketSharp.MessageEventArgs e)
+        {
+            core.Broadcast("/MiniParse", $"{{\"typeText\":\"onMessage\", \"data\":\"{e.Data.JSONSafeString()}\"}}");
+        }
+
         public void SendJSON(SendMessageType type, string json)
         {
             string sendjson = $"{{\"typeText\":\"update\", \"detail\":{{\"msgType\":\"{type}\", \"data\":{json}}}}}";
@@ -53,6 +79,12 @@ namespace ACTWebSocket_Plugin
             string sendjson = $"{{\"typeText\":\"error\", \"detail\":{{\"msgType\":\"{SendMessageType.NetworkError}\", \"data\":\"{json.JSONSafeString()}\"}}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
+
+        public void SendLastCombat()
+        {
+            core.Broadcast("/MiniParse", CreateEncounterJsonData());
+        }
+
 
         #region FileIO
         public bool FileExists(string path)
@@ -840,7 +872,6 @@ namespace ACTWebSocket_Plugin
                 mciSendString(cmd, null, 0, IntPtr.Zero);
             }
         }
-
         #region IDisposable Support
         private bool disposedValue = false;
 
