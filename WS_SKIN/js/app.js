@@ -106,7 +106,7 @@ function api_skin_get_list(callback)
 
 function api_overlaywindow_new(json, callback)
 {
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_new",
+	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/req",
 		data: JSON.stringify(json),    success: function( data ) {
 			if(callback != null)
 			{
@@ -116,9 +116,9 @@ function api_overlaywindow_new(json, callback)
 	});
 }
 
-function api_overlaywindow_get_preference(json, callback)
+function api_overlaywindow_get(json, callback)
 {
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_get_preference",
+	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/res",
 		data: JSON.stringify(json),    success: function( data ) {
 			if(callback != null)
 			{
@@ -128,34 +128,9 @@ function api_overlaywindow_get_preference(json, callback)
 	});
 }
 
-function api_overlaywindow_update_preference(json, callback)
+function api_overlaywindow_update(json, callback)
 {
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_update_preference",
-		data: JSON.stringify(json),    success: function( data ) {
-			if(callback != null)
-			{
-				callback(data);
-			}
-		}
-	});
-}
-
-function api_overlaywindow_get_position(json, callback)
-{
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_get_position",
-		data: JSON.stringify(json),
-		success: function( data ) {
-			if(callback != null)
-			{
-				callback(data);
-			}
-		}
-	});
-}
-
-function api_overlaywindow_update_position(json, callback)
-{
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_update_position",
+	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/req",
 		data: JSON.stringify(json),    success: function( data ) {
 			if(callback != null)
 			{
@@ -167,7 +142,7 @@ function api_overlaywindow_update_position(json, callback)
 
 function api_overlaywindow_close(json, callback)
 {
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/overlaywindow_close",
+	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/close",
 		data: JSON.stringify(json),    success: function( data ) {
 			if(callback != null)
 			{
@@ -195,64 +170,165 @@ function getCurrentObject()
 	}
 	return obj;
 }
+
+
+var wsUri = "ws://localhost:9992/update/";
+var pageActive = true;
+function connectWebSocket(uri)
+{
+	websocket = new WebSocket(uri);
+	websocket.onmessage = function(evt) {
+		if (evt.data == ".")
+		{
+			// ping pong
+			websocket.send(".");
+		}
+		else
+		{
+			document.dispatchEvent(new CustomEvent('onOverlaySettingChanged', { detail: evt.data }));
+		}
+	};
+
+	//websocket.onopen = function(evt) { };
+	websocket.onclose = function(evt) { 
+		setTimeout(function(){connectWebSocket(uri)}, 5000);
+	};
+	websocket.onerror = function(evt) {
+		websocket.close();
+	};
+}    
+
+function disconnectWebSocket(){
+	pageActive = false;
+	websocket.close();
+};
+
+
+$(document).ready(function() {
+	pageActive = true;
+	connectWebSocket(wsUri);
+});
+
+if (document.addEventListener) {
+		window.onbeforeunload = function() {
+				disconnectWebSocket();
+		};
+		window.addEventListener("unload", function() {
+				disconnectWebSocket();
+		}, false);
+}
+document.addEventListener('onOverlaySettingChanged', onOverlaySettingChanged);
+window.addEventListener('message', function (e) 
+{
+	if (e.data.type === 'onOverlaySettingChanged') 
+	{
+		onOverlaySettingChanged(e.data);
+	}
+});
+// 변수 이름 변환 부분 추후 정리.
+var savedvar = [
+	"id",
+	"url",
+	"opacity",
+	"zoom",
+	"fps",
+	"clickthru",
+	"nonfocus",
+	"dragging",
+	"dragndrop",
+	"hide",
+	"resize",
+	"x",
+	"y",
+	"width",
+	"height"
+];
+var nativevar = [
+	"id",
+	"url",
+	"opacity",
+	"zoom",
+	"fps",
+	"Transparent",
+	"NoActivate",
+	"useDragFilter",
+	"useDragMove",
+	"hide",
+	"useResizeGrip",
+	"x",
+	"y",
+	"width",
+	"height"
+];
+var floatvar = [
+	"opacity",
+	"zoom",
+	];
+var intvar = [
+	"x",
+	"y",
+	"width",
+	"height",
+	"fps",
+];
+nameNativeToJSMap = {};
+nameJSToNativeMap = {};
+for(i=0;i<savedvar.length;++i)
+{
+	nameJSToNativeMap[savedvar[i]] = nativevar[i];
+	nameNativeToJSMap[nativevar[i]] = savedvar[i];
+}
+
+function JSONToDiv(index, obj)
+{
+	var selectedIndex = parseInt($(".list").attr("data-selected-index"));
+	$($(".list div")[index]).find("span")[0].innerText = obj["title"];
+	if(index == selectedIndex)
+	{
+		$("*[data-flag=overlay-title]").val(obj["title"]);
+		$("*[data-flag=overlay-id]").val(obj["id"]);
+		$("*[data-flag=overlay-url]").val(obj["url"]);
+	}
+	//obj["title"] = $($(".list div")[index]).find("span").html($("*[data-flag=overlay-title]").val());
+	for(var i in floatvar)
+	{
+		obj[floatvar[i]] = parseFloat(obj[floatvar[i]]) * 100.0;
+	}
+	for(var i in intvar)
+	{
+		obj[intvar[i]] = parseFloat(obj[intvar[i]]);
+	}
+	for(var i in savedvar)
+	{
+		if($("*[data-flag=overlay-"+savedvar[i]+"]").is("[data-checked]"))
+		{
+			$($(".list div")[index]).attr("data-"+savedvar[i], obj[nameJSToNativeMap[savedvar[i]]])
+			if(index == selectedIndex)
+			{
+				$("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked", obj[nameJSToNativeMap[savedvar[i]]]);
+			}
+			//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+		}
+		else
+		{
+			$($(".list div")[index]).attr("data-"+savedvar[i], obj[nameJSToNativeMap[savedvar[i]]]);
+			if(index == selectedIndex)
+			{
+				$("*[data-flag=overlay-"+savedvar[i]+"]").val(obj[nameJSToNativeMap[savedvar[i]]]);
+			}
+			//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+		}
+	}
+}
 // overlay window의 json으로 정리.
 function divToJSON(index)
 {
-	var savedvar = [
-		"url",
-		"opacity",
-		"zoom",
-		"fps",
-		"clickthru",
-		"nonfocus",
-		"dragging",
-		"dragndrop",
-		"hide",
-		"resize",
-		"x",
-		"y",
-		"width",
-		"height"
-	];
-	var nativevar = [
-		"url",
-		"opacity",
-		"zoom",
-		"fps",
-		"Transparent",
-		"NoActivate",
-		"useDragFilter",
-		"useDragMove",
-		"hide",
-		"useResizeGrip",
-		"x",
-		"y",
-		"width",
-		"height"
-	];
-	var floatvar = [
-		"opacity",
-		"zoom",
-		];
-	var intvar = [
-		"x",
-		"y",
-		"width",
-		"height",
-		"fps",
-	];
-	nameNativeToJSMap = {};
-	nameJSToNativeMap = {};
-	for(i=0;i<savedvar.length;++i)
-	{
-		nameJSToNativeMap[savedvar[i]] = nativevar[i];
-		nameNativeToJSMap[nativevar[i]] = savedvar[i];
-	}
 	var count = $(".list div").length;
 	var obj = {}
 	if(index < count && index >= 0)
 	{
 		obj["title"] = $($(".list div")[index]).find("span")[0].innerText;
+		obj["id"] = $("*[data-flag=overlay-id]").val();
 		obj["url"] = $("*[data-flag=overlay-url]").val();
 		//obj["title"] = $($(".list div")[index]).find("span").html($("*[data-flag=overlay-title]").val());
 		for(var i in savedvar)
@@ -280,6 +356,24 @@ function divToJSON(index)
 	return obj;
 }
 
+function onOverlaySettingChanged(e)
+{
+	try{
+		var obj = JSON.parse(e.detail);
+		var count = $(".list div").length;
+		for(var index=0;index<count;++index)
+		{
+			if (obj["id"] == $($(".list div")[index]).attr("data-id"))
+			{
+				JSONToDiv(index, obj);
+			}
+		}
+	}
+	catch(e)
+	{
+		alert(e);
+	}
+}
 function settingsTojson()
 {
 	var count = $(".list div").length;
@@ -362,9 +456,9 @@ $(document).ready(function(){
 	$(".setting *[data-id]").attr("disabled", "disabled");
 	
 	$(".listhead .newbtn").click(function(){
-		api_skin_get_list(function(data){
-			console.log(data.skins);
-		});
+		// api_skin_get_list(function(data){
+			// console.log(data.skins);
+		// });
 		if($(".newwindow").css("display") == "none")
 		{
 			$(".disableall").show();
@@ -399,40 +493,44 @@ $(document).ready(function(){
 		};
 		api_overlaywindow_new(obj, function(data){
 			console.log(JSON.stringify(data));
+			obj = data;
+			var html = "<div ";
+			html+='data-url="'+ obj["url"] +'"'
+				+' data-id="' + obj["id"] +'"'
+				+' data-opacity="' + obj["opacity"]*100 +'"'
+				+' data-zoom="' + obj["zoom"]*100 +'"'
+				+' data-fps="' + obj["fps"] +'"'
+				+' data-x="' + obj["x"] +'"'
+				+' data-y="' + obj["y"] +'"'
+				+' data-width="' + obj["width"] +'"'
+				+' data-height="' + obj["height"] +'"'
+				+' data-clickthru="' + (obj["Transparent"]?'true':'false') +'"'
+				+' data-nonfocus="' + (obj["NoActivate"]?'true':'false') +'"'
+				+' data-dragging="' + (obj["useDragFilter"]?'true':'false') +'"'
+				+' data-dragndrop="' + (obj["useDragMove"]?'true':'false') +'"'
+				+' data-hide="' + (obj["hide"]?'true':'false') +'"'
+				+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
+				;
+			
+			html+="><span>"+title+"</span></div>";
+			$(".list").append(html);
+			actAttach();
+			newOverlayWindow($(".list").length-1); // last window
+			$("*[data-flag=new-url]").val("about:blank");
+			$(".disableall").hide();
+			$(".newwindow").hide();
 		});
-		var html = "<div ";
-		html+='data-url="'+ url +'"'
-			+' data-opacity="' + obj["opacity"]*100 +'"'
-			+' data-zoom="' + obj["zoom"]*100 +'"'
-			+' data-fps="' + obj["fps"] +'"'
-			+' data-x="' + obj["x"] +'"'
-			+' data-y="' + obj["y"] +'"'
-			+' data-width="' + obj["width"] +'"'
-			+' data-height="' + obj["height"] +'"'
-			+' data-clickthru="' + (obj["Transparent"]?'true':'false') +'"'
-			+' data-nonfocus="' + (obj["NoActivate"]?'true':'false') +'"'
-			+' data-dragging="' + (obj["useDragFilter"]?'true':'false') +'"'
-			+' data-dragndrop="' + (obj["useDragMove"]?'true':'false') +'"'
-			+' data-hide="' + (obj["hide"]?'true':'false') +'"'
-			+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
-			;
-		
-		html+="><span>"+title+"</span></div>";
-		$(".list").append(html);
-		actAttach();
-		newOverlayWindow($(".list").length-1); // last window
-		$("*[data-flag=new-url]").val("about:blank");
-		$(".disableall").hide();
-		$(".newwindow").hide();
 	});
 
 	$("*[data-flag=overlay-open]").click(function(){
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
-		api_overlaywindow_update_preference(obj, function(data){
+		api_overlaywindow_update(obj, function(data){
 			if("error" in data)
 			{
 				console.log(JSON.stringify(data));
+				
+			
 			}
 		});
 	});
@@ -508,7 +606,7 @@ $(document).ready(function(){
 		}
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
-		api_overlaywindow_update_preference(obj, function(data){
+		api_overlaywindow_update(obj, function(data){
 			if("error" in data)
 			{
 				console.log(JSON.stringify(data));
@@ -524,7 +622,7 @@ $(document).ready(function(){
 		$(this).parent().parent().find(".valueview").html($(this).val()+$(this).attr("data-str"));
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
-		api_overlaywindow_update_preference(obj, function(data){
+		api_overlaywindow_update(obj, function(data){
 			if("error" in data)
 			{
 				console.log(JSON.stringify(data));

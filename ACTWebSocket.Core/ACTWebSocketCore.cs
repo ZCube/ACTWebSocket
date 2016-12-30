@@ -60,9 +60,8 @@ namespace ACTWebSocket_Plugin
 
         internal void StartUIServer()
         {
-
             StopUIServer();
-            uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9991);
+            uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9999);
             uiServer.OnPost += (sender, e) =>
             {
                 var req = e.Request;
@@ -95,52 +94,6 @@ namespace ACTWebSocket_Plugin
                     //if (o != null)
                     try
                     {
-
-                        if (path == "/api/loadsettings")
-                        {
-                            JObject ret = APILoadSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/savesettings")
-                        {
-                            JObject ret = APISaveSettings(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/skin_get_list")
-                        {
-                            JObject ret = APIOverlayWindow_GetSkinList(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_new")
-                        {
-                            JObject ret = APIOverlayWindow_New(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_preference")
-                        {
-                            JObject ret = APIOverlayWindow_GetPreference(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_preference")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePreference(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_get_position")
-                        {
-                            JObject ret = APIOverlayWindow_GetPosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_update_position")
-                        {
-                            JObject ret = APIOverlayWindow_UpdatePosition(o).Result;
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
-                        else if (path == "/api/overlaywindow_close")
-                        {
-                            JObject ret = APIOverlayWindowClose(o);
-                            res.WriteContent(Encoding.UTF8.GetBytes(ret.ToString()));
-                        }
                     }
                     catch(Exception error)
                     {
