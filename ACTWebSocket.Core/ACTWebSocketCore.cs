@@ -18,7 +18,6 @@ namespace ACTWebSocket_Plugin
     public partial class ACTWebSocketCore
     {
         public ACTWebSocketCore() {
-            StartUIServer();
             overlayAPI = new FFXIV_OverlayAPI(this);
         }
 
@@ -62,6 +61,7 @@ namespace ACTWebSocket_Plugin
         {
             StopUIServer();
             uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9999);
+            uiServer.ReuseAddress = true;
             uiServer.OnPost += (sender, e) =>
             {
                 var req = e.Request;
@@ -131,6 +131,7 @@ namespace ACTWebSocket_Plugin
             StopServer();
 
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
+            httpServer.ReuseAddress = true;
 
             // TODO : SSL
             //wssv = new WebSocketServer(System.Net.IPAddress.Parse(address), port, true);
