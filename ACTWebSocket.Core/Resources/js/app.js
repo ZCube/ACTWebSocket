@@ -702,12 +702,28 @@ $(document).ready(function(){
 				}
 				catch(ex)
 				{
-					
+					alert(ex);
 				}
-				main.buttonOn_Click();
+				try
+				{
+					main.startServer();
+				}
+				catch(ex)
+				{
+					alert(ex);
+				}
 			}
 			else
-				main.buttonOff_Click();
+			{
+				try
+				{
+					main.stopServer();
+				}
+				catch(ex)
+				{
+					alert(ex);
+				}
+			}
 		}
 	});
 
