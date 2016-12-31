@@ -543,54 +543,61 @@ $(document).ready(function(){
 	});
 
 	$("*[data-flag=new-add]").click(function(){
-		var url = $("*[data-flag=new-url]").val();
-		var title = $("*[data-flag=new-url]").val();
-		var obj = {
-			"Transparent": false,
-			"NoActivate": false,
-			"hide": false,
-			"useDragFilter": true,
-			"useDragMove": true,
-			"useResizeGrip": true,
-			"opacity": 1.0,
-			"zoom": 1.0,
-			"url": url,
-			"title": title,
-			"fps": 30.0,
-			"x": 0,
-			"y": 0,
-			"width": 300,
-			"height": 300
-		};
-		api_overlaywindow_new(obj, function(data){
-			console.log(JSON.stringify(data));
-			obj = data;
-			var html = "<div ";
-			html+='data-url="'+ obj["url"] +'"'
-				+' data-id="' + obj["id"] +'"'
-				+' data-opacity="' + obj["opacity"]*100 +'"'
-				+' data-zoom="' + obj["zoom"]*100 +'"'
-				+' data-fps="' + obj["fps"] +'"'
-				+' data-x="' + obj["x"] +'"'
-				+' data-y="' + obj["y"] +'"'
-				+' data-width="' + obj["width"] +'"'
-				+' data-height="' + obj["height"] +'"'
-				+' data-clickthru="' + (obj["Transparent"]?'true':'false') +'"'
-				+' data-nonfocus="' + (obj["NoActivate"]?'true':'false') +'"'
-				+' data-dragging="' + (obj["useDragFilter"]?'true':'false') +'"'
-				+' data-dragndrop="' + (obj["useDragMove"]?'true':'false') +'"'
-				+' data-hide="' + (obj["hide"]?'true':'false') +'"'
-				+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
-				;
-			
-			html+="><span>"+obj["title"]+"</span></div>";
-			$(".list").append(html);
-			actAttach();
-			newOverlayWindow($(".list").length-1); // last window
-			$("*[data-flag=new-url]").val("about:blank");
-			$(".disableall").hide();
-			$(".newwindow").hide();
-		});
+		try
+		{
+			var url = $("*[data-flag=new-url]").val();
+			var title = $("*[data-flag=new-url]").val();
+			var obj = {
+				"Transparent": false,
+				"NoActivate": false,
+				"hide": false,
+				"useDragFilter": true,
+				"useDragMove": true,
+				"useResizeGrip": true,
+				"opacity": 1.0,
+				"zoom": 1.0,
+				"url": url,
+				"title": title,
+				"fps": 30.0,
+				"x": 0,
+				"y": 0,
+				"width": 300,
+				"height": 300
+			};
+			api_overlaywindow_new(obj, function(data){
+				console.log(JSON.stringify(data));
+				obj = data;
+				var html = "<div ";
+				html+='data-url="'+ obj["url"] +'"'
+					+' data-id="' + obj["id"] +'"'
+					+' data-opacity="' + obj["opacity"]*100 +'"'
+					+' data-zoom="' + obj["zoom"]*100 +'"'
+					+' data-fps="' + obj["fps"] +'"'
+					+' data-x="' + obj["x"] +'"'
+					+' data-y="' + obj["y"] +'"'
+					+' data-width="' + obj["width"] +'"'
+					+' data-height="' + obj["height"] +'"'
+					+' data-clickthru="' + (obj["Transparent"]?'true':'false') +'"'
+					+' data-nonfocus="' + (obj["NoActivate"]?'true':'false') +'"'
+					+' data-dragging="' + (obj["useDragFilter"]?'true':'false') +'"'
+					+' data-dragndrop="' + (obj["useDragMove"]?'true':'false') +'"'
+					+' data-hide="' + (obj["hide"]?'true':'false') +'"'
+					+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
+					;
+				
+				html+="><span>"+obj["title"]+"</span></div>";
+				$(".list").append(html);
+				actAttach();
+				newOverlayWindow($(".list").length-1); // last window
+				$("*[data-flag=new-url]").val("about:blank");
+				$(".disableall").hide();
+				$(".newwindow").hide();
+			});
+		}
+		catch(ex)
+		{
+			alert(ex);
+		}
 	});
 
 	$("*[data-flag=overlay-open]").click(function(){

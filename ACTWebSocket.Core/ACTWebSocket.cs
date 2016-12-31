@@ -391,7 +391,12 @@ namespace ACTWebSocket_Plugin
 
         public void Init()
         {
-            MessageBox.Show("ACTWebSocket is Initialized :3");
+            // MessageBox.Show("ACTWebSocket is Initialized :3");
+        }
+
+        public void openDEV()
+        {
+            browser.ShowDevTools();
         }
 
         public void copyURL(string skinPath = "")
