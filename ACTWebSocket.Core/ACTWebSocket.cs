@@ -115,35 +115,10 @@ namespace ACTWebSocket_Plugin
             browser = new ChromiumWebBrowser("rsrc://localhost/Resources/MainForm.html");
 
             Controls.Add(browser);
+            browser.RegisterJsObject("main", this);
 
-
-            //panel1.Dock = DockStyle.Top;
-            //panel1.Height = 32;
-            //panel1.BringToFront();
-            //panel1.Click += Panel1_Click;
-            //panel1.MouseDown += Panel1_MouseDown;
-            //panel1.MouseUp += Panel1_MouseUp;
-            //panel1.MouseMove += Panel1_MouseMove;
-            //panel1.MaximumSize = new Size(Width - 48, 48);
-
-            //browser.SendToBack();
-            //browser.ConsoleMessage += Browser_ConsoleMessage;
-            //browser.MenuHandler = new CustomMenuHandler();
-            //browser.ContextMenu = new ContextMenu();
             browser.Dock = DockStyle.Fill;
 
-            //CEF = new CEFWorks(browser, this);
-
-            //wc = new WebClient();
-            //wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-            //wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-            //safejs = new SafeJSExecute(SafeJSExecuteAsync);
-            //try
-            //{
-            //    //Console.WriteLine(Monitor.Core.Utilities.JunctionPoint.GetTarget(actpath));
-            //    existact = true;
-            //}
-            //catch { }
         }
 
         ~ACTWebSocketMain()
@@ -357,71 +332,47 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/OnLogLineRead", logInfo.logLine);
         }
 
+        public UInt16 Port { get; set;  }
+        public String Hostname { get; set; }
+        public bool RandomURL { get; set; }
+        public bool LocalhostOnly { get; set; }
 
-        //private void StartServer()
-        //{
-        //    if (randomURL.Checked)
-        //    {
-        //        core.randomDir = Guid.NewGuid().ToString();
-        //    }
-        //    else
-        //    {
-        //        core.randomDir = null;
-        //    }
-        //    try
-        //    {
-        //        core.StartServer(localhostOnly.Checked ? "127.0.0.1" : "0.0.0.0", Convert.ToInt16(port.Text), hostname.Text.Trim());
-        //        localhostOnly.Enabled = false;
-        //        port.Enabled = false;
-        //        hostname.Enabled = false;
-        //        buttonOn.Enabled = false;
-        //        buttonOff.Enabled = true;
-        //        randomURL.Enabled = false;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        MessageBox.Show(e.Message);
-        //        core.StopServer();
-        //    }
-        //    //tabPage1
-        //}
+        private void StartServer()
+        {
+            if (RandomURL)
+            {
+                core.randomDir = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                core.randomDir = null;
+            }
+            try
+            {
+                core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Hostname);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                core.StopServer();
+            }
+        }
 
-        //private void StopServer()
-        //{
-        //    core.StopServer();
-        //    localhostOnly.Enabled = true;
-        //    port.Enabled = true;
-        //    hostname.Enabled = true;
-        //    buttonOn.Enabled = true;
-        //    buttonOff.Enabled = false;
-        //    randomURL.Enabled = true;
-        //}
+        private void StopServer()
+        {
+            core.StopServer();
+        }
 
-        //private void buttonOn_Click(object sender, EventArgs e)
-        //{
-        //    StartServer();
-        //}
+        private void buttonOn_Click(object sender, EventArgs e)
+        {
+            StartServer();
+        }
 
-        //private void buttonOff_Click(object sender, EventArgs e)
-        //{
-        //    StopServer();
-        //}
-
-        //private void port_KeyPress(object sender, KeyPressEventArgs e)
-        //{
-        //    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-        //        (e.KeyChar != '.'))
-        //    {
-        //        e.Handled = true;
-        //    }
-
-        //    // only allow one decimal point
-        //    if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
-        //    {
-        //        e.Handled = true;
-        //    }
-        //}
-
+        private void buttonOff_Click(object sender, EventArgs e)
+        {
+            StopServer();
+        }
+        
         string overlaySkinDirectory { get; set; }
         string pluginDirectory = "";
         private ChromiumWebBrowser browser;
@@ -446,103 +397,97 @@ namespace ACTWebSocket_Plugin
             return pluginDirectory;
         }
 
-        //private void textBox1_TextChanged(object sender, EventArgs e)
-        //{
-        //    if (core != null)
-        //    {
-        //        core.Config.SortKey = MiniParseSortKey.Text.Trim();
-        //    }
-        //}
+        public bool BeforeLogLineRead
+        {
+            get {
+                if (core != null)
+                {
+                    return core.Filters["/BeforeLogLineRead"];
+                }
+                return false;
+            }
+            set
+            {
+                if (core != null)
+                {
+                    core.Filters["/BeforeLogLineRead"] = value;
+                }
+            }
+        }
 
-        //private void MiniParseSortType_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (core != null)
-        //    {
-        //        core.Config.SortType = (MiniParseSortType)sortType.SelectedIndex;
-        //    }
-        //}
+        public bool OnLogLineRead
+        {
+            get
+            {
+                if (core != null)
+                {
+                    return core.Filters["/OnLogLineRead"];
+                }
+                return false;
+            }
+            set
+            {
+                if (core != null)
+                {
+                    core.Filters["/OnLogLineRead"] = value;
+                }
+            }
+        }
 
-        //private void LogLineReadUse_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (core != null)
-        //    {
-        //        core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
-        //    }
-        //}
+        public bool MiniParse 
+        {
+            get
+            {
+                if (core != null)
+                {
+                    return core.Filters["/MiniParse"];
+                }
+                return false;
+            }
+            set
+            {
+                if (core != null)
+                {
+                    core.Filters["/MiniParse"] = value;
+                }
+            }
+        }
 
-        //private void OnLogLineReadUse_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (core != null)
-        //    {
-        //        core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
-        //    }
-        //}
+        public String GetSkinList()
+        {
+            JObject o = new JObject();
+            foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
+            {
+                o.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
+            }
+            return o.ToString();
+        }
 
-        //private void MiniParseUse_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (core != null)
-        //    {
-        //        core.Filters["/MiniParse"] = MiniParseUse.Checked;
-        //    }
-        //}
-
-        //public void CloseAll()
-        //{
-        //    UpdateList(false);
-        //}
-
-        //public void UpdateList(bool updateInfo = true)
-        //{
-        //    listBox1.Items.Clear();
-        //    foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
-        //    {
-        //        listBox1.Items.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
-        //    }
-        //}
-
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    UpdateList();
-        //}
-
-        //private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        //{
-        //    copyURL_Click(sender, new EventArgs());
-        //}
-
-        //[DllImport("user32.dll", SetLastError = true)]
-        //public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-        //private void copyURL_Click(object sender, EventArgs e)
-        //{
-        //    string url = "";
-        //    if (localhostOnly.Checked)
-        //    {
-        //        url = "http://localhost:" + port.Text + "/";
-        //    }
-        //    else
-        //    {
-        //        url = "http://" + hostname.Text + ":" + port.Text + "/";
-        //    }
-        //    if (core.randomDir != null)
-        //    {
-        //        url += core.randomDir + "/";
-        //    }
-        //    if (listBox1.SelectedIndex >= 0)
-        //    {
-        //        string fullURL = url + Uri.EscapeDataString(listBox1.Items[listBox1.SelectedIndex].ToString());
-        //        fullURL = fullURL.Replace("%5C", "/");
-        //        Clipboard.SetText(fullURL);
-        //    }
-        //    else
-        //    {
-        //        Clipboard.SetText(url);
-        //    }
-        //}
-
-        //private void digitOnly_KeyPress(object sender, KeyPressEventArgs e)
-        //{
-        //    e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        //}
+        private void copyURL(String skinPath = "")
+        {
+            string url = "";
+            if (LocalhostOnly)
+            {
+                url = "http://localhost:" + Port + "/";
+            }
+            else
+            {
+                url = "http://" + Hostname + ":" + Port + "/";
+            }
+            if (core.randomDir != null)
+            {
+                url += core.randomDir + "/";
+            }
+            if (skinPath.Length > 0)
+            {
+                string fullURL = url + Uri.EscapeDataString(skinPath);
+                fullURL = fullURL.Replace("%5C", "/");
+                Clipboard.SetText(fullURL);
+            }
+            else
+            {
+                Clipboard.SetText(url);
+            }
+        }
     }
 }
