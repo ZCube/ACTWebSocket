@@ -27,6 +27,30 @@ namespace ACTWebSocket_Plugin
     }
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
+
+        string overlaySkinDirectory { get; set; }
+        string pluginDirectory = "";
+        private ChromiumWebBrowser browser;
+
+        public void SetSkinDir(string path)
+        {
+            overlaySkinDirectory = path;
+        }
+
+        public string GetSkinDir()
+        {
+            return overlaySkinDirectory;
+        }
+
+        public void SetPluginDirectory(string path)
+        {
+            pluginDirectory = path;
+        }
+
+        public string GetPluginDirectory()
+        {
+            return pluginDirectory;
+        }
         private ACTWebSocketCore core;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
@@ -113,7 +137,6 @@ namespace ACTWebSocket_Plugin
             browser.RegisterJsObject("main", this);
 
             browser.Dock = DockStyle.Fill;
-
         }
 
         ~ACTWebSocketMain()
@@ -125,7 +148,6 @@ namespace ACTWebSocket_Plugin
 
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
-        SettingsSerializer xmlSettings;
 
         #region IActPluginV1 Members
 
@@ -142,31 +164,6 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            CultureInfo ci = CultureInfo.InstalledUICulture;
-            string specName = "(none)";
-            try { specName = CultureInfo.CreateSpecificCulture(ci.Name).Name; } catch { }
-            if(specName == "ko-KR")
-            {
-                sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
-                {
-                    new KeyValuePair<string, MiniParseSortType>("정렬 안함", MiniParseSortType.None),
-                    new KeyValuePair<string, MiniParseSortType>("문자열 올림차순 정렬", MiniParseSortType.StringAscending),
-                    new KeyValuePair<string, MiniParseSortType>("문자열 내림차순 정렬", MiniParseSortType.StringDescending),
-                    new KeyValuePair<string, MiniParseSortType>("숫자 올림차순 정렬", MiniParseSortType.NumericAscending),
-                    new KeyValuePair<string, MiniParseSortType>("숫자 내림차순 정렬", MiniParseSortType.NumericDescending)
-                };
-            }
-            else
-            {
-                sortTypeDict = new List<KeyValuePair<string, MiniParseSortType>>()
-                {
-                    new KeyValuePair<string, MiniParseSortType>("DoNotSort", MiniParseSortType.None),
-                    new KeyValuePair<string, MiniParseSortType>("SortStringAscending", MiniParseSortType.StringAscending),
-                    new KeyValuePair<string, MiniParseSortType>("SortStringDescending", MiniParseSortType.StringDescending),
-                    new KeyValuePair<string, MiniParseSortType>("SortNumberAscending", MiniParseSortType.NumericAscending),
-                    new KeyValuePair<string, MiniParseSortType>("SortNumberDescending", MiniParseSortType.NumericDescending)
-                };
-            }
             if (core == null)
             {
                 core = new ACTWebSocketCore();
@@ -177,10 +174,6 @@ namespace ACTWebSocket_Plugin
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
-            xmlSettings = new SettingsSerializer(this);	// Create a new settings serializer and pass it this instance
-
-            //sortType.SelectedIndex = -1;
-            //sortType.DataSource = sortTypeDict;
             LoadSettings();
 
 
@@ -238,81 +231,19 @@ namespace ACTWebSocket_Plugin
 
         async void LoadSettings()
         {
-            //xmlSettings.AddControlSetting(port.Name, port);
-            //xmlSettings.AddControlSetting(localhostOnly.Name, localhostOnly);
-            //xmlSettings.AddControlSetting(autostart.Name, autostart);
-            //xmlSettings.AddControlSetting(hostname.Name, hostname);
-            //xmlSettings.AddControlSetting(MiniParseSortKey.Name, MiniParseSortKey);
-            //xmlSettings.AddControlSetting(sortType.Name, sortType);
-            //xmlSettings.AddControlSetting(MiniParseUse.Name, MiniParseUse);
-            //xmlSettings.AddControlSetting(BeforeLogLineReadUse.Name, BeforeLogLineReadUse);
-            //xmlSettings.AddControlSetting(randomURL.Name, randomURL);
-
             if (File.Exists(settingsFile))
             {
-                FileStream fs = new FileStream(settingsFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                XmlTextReader xReader = new XmlTextReader(fs);
-
-                try
-                {
-                    while (xReader.Read())
-                    {
-                        if (xReader.NodeType == XmlNodeType.Element)
-                        {
-                            if (xReader.LocalName == "SettingsSerializer")
-                            {
-                                xmlSettings.ImportFromXml(xReader);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lblStatus.Text = "Error loading settings: " + ex.Message;
-                }
-                xReader.Close();
             }
-
-            // validate
-            //try
-            //{
-            //    int p = Convert.ToInt16(port.Text);
-            //}
-            //catch (Exception e)
-            //{
-            //    port.Text = "10501";
-            //}
-
-            //if (hostname.Text.Length == 0)
-            //{
-            //    hostname.Text = "localhost";
-            //}
-            //UpdateList();
         }
 
         void SaveSettings()
         {
-            FileStream fs = new FileStream(settingsFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            XmlTextWriter xWriter = new XmlTextWriter(fs, Encoding.UTF8);
-            xWriter.Formatting = Formatting.Indented;
-            xWriter.Indentation = 1;
-            xWriter.IndentChar = '\t';
-            xWriter.WriteStartDocument(true);
-            xWriter.WriteStartElement("Config");    // <Config>
-            xWriter.WriteStartElement("SettingsSerializer");    // <Config><SettingsSerializer>
-            xmlSettings.ExportToXml(xWriter);   // Fill the SettingsSerializer XML
-            xWriter.WriteEndElement();  // </SettingsSerializer>
-            xWriter.WriteEndElement();  // </Config>
-            xWriter.WriteEndDocument(); // Tie up loose ends (shouldn't be any)
-            xWriter.Flush();    // Flush the file buffer to disk
-            xWriter.Close();
         }
         
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
-            //UpdateList();
         }
-
+        
         private void oFormActMain_BeforeLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
@@ -327,14 +258,15 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/OnLogLineRead", logInfo.logLine);
         }
 
-        public ushort Port { get; set; }
-        public ushort UPnPPort { get; set; }
+        #region Web JSObject Part
+        public int Port { get; set; }
+        public int UPnPPort { get; set; }
         public string Hostname { get; set; }
         public bool RandomURL { get; set; }
         public bool LocalhostOnly { get; set; }
         public bool UseUPNP { get; set; }
 
-        private void StartServer()
+        public void StartServer()
         {
             if(UseUPNP)
             {
@@ -344,6 +276,9 @@ namespace ACTWebSocket_Plugin
                     var cts = new CancellationTokenSource(10000); // 10secs
                     var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
+                    // not registered when first invoke...
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
                     await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
                 });
                 upnpTask.Start();
@@ -375,50 +310,16 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private void StopServer()
+        public void StopServer()
         {
             core.StopServer();
         }
-
-        public void buttonOn_Click()
-        {
-            StartServer();
-        }
-
-        public void buttonOff_Click()
-        {
-            StopServer();
-        }
-
+        
         public void consolelog(object s)
         {
             Console.WriteLine(s);
         }
         
-        string overlaySkinDirectory { get; set; }
-        string pluginDirectory = "";
-        private ChromiumWebBrowser browser;
-
-        public void SetSkinDir(string path)
-        {
-            overlaySkinDirectory = path;
-        }
-
-        public string GetSkinDir()
-        {
-            return overlaySkinDirectory;
-        }
-
-        public void SetPluginDirectory(string path)
-        {
-            pluginDirectory = path;
-        }
-
-        public string GetPluginDirectory()
-        {
-            return pluginDirectory;
-        }
-
         public bool BeforeLogLineRead
         {
             get {
@@ -493,7 +394,7 @@ namespace ACTWebSocket_Plugin
             MessageBox.Show("ACTWebSocket is Initialized :3");
         }
 
-        private void copyURL(string skinPath = "")
+        public void copyURL(string skinPath = "")
         {
             string url = "";
             if (LocalhostOnly)
@@ -519,5 +420,6 @@ namespace ACTWebSocket_Plugin
                 Clipboard.SetText(url);
             }
         }
+        #endregion Web JSObject Part End
     }
 }
