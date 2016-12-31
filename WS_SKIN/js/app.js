@@ -361,12 +361,39 @@ function onOverlaySettingChanged(e)
 	try{
 		var obj = JSON.parse(e.detail);
 		var count = $(".list div").length;
+		var find = false;
 		for(var index=0;index<count;++index)
 		{
 			if (obj["id"] == $($(".list div")[index]).attr("data-id"))
 			{
 				JSONToDiv(index, obj);
+				find = true;
+				break;
 			}
+		}
+		if(!find)
+		{
+			var html = "<div ";
+			html+='data-url="'+ obj["url"] +'"'
+				+' data-id="' + obj["id"] +'"'
+				+' data-opacity="' + obj["opacity"]*100 +'"'
+				+' data-zoom="' + obj["zoom"]*100 +'"'
+				+' data-fps="' + obj["fps"] +'"'
+				+' data-x="' + obj["x"] +'"'
+				+' data-y="' + obj["y"] +'"'
+				+' data-width="' + obj["width"] +'"'
+				+' data-height="' + obj["height"] +'"'
+				+' data-clickthru="' + (obj["Transparent"]?'true':'false') +'"'
+				+' data-nonfocus="' + (obj["NoActivate"]?'true':'false') +'"'
+				+' data-dragging="' + (obj["useDragFilter"]?'true':'false') +'"'
+				+' data-dragndrop="' + (obj["useDragMove"]?'true':'false') +'"'
+				+' data-hide="' + (obj["hide"]?'true':'false') +'"'
+				+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
+				;
+			
+			html+="><span>"+obj["title"]+"</span></div>";
+			$(".list").append(html);
+			actAttach();
 		}
 	}
 	catch(e)
@@ -512,7 +539,7 @@ $(document).ready(function(){
 				+' data-resize="' + (obj["useResizeGrip"]?'true':'false') +'"'
 				;
 			
-			html+="><span>"+title+"</span></div>";
+			html+="><span>"+obj["title"]+"</span></div>";
 			$(".list").append(html);
 			actAttach();
 			newOverlayWindow($(".list").length-1); // last window

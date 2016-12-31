@@ -446,12 +446,23 @@ namespace ACTWebSocket_Plugin
                 core.Config.SortKey = MiniParseSortKey.Text.Trim();
                 core.Config.SortType = (MiniParseSortType)sortType.SelectedIndex;
             }
-            if (autostart.Checked)
+            try
             {
-                StartServer();
+                core.StartUIServer();
+
+                if (autostart.Checked)
+                {
+                    StartServer();
+                }
+                else
+                {
+                    StopServer();
+                }
             }
-            else
+            catch(Exception e)
             {
+                MessageBox.Show(e.Message);
+                core.StopUIServer();
                 StopServer();
             }
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
