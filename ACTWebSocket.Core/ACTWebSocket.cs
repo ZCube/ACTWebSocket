@@ -34,6 +34,8 @@ namespace ACTWebSocket_Plugin
     using System.IO;
     using System.Reflection;
     using ACTWebSocket.Core.Classes.Interfaces;
+    using Open.Nat;
+    using System.Threading;
 
     public interface PluginDirectory
     {
@@ -337,13 +339,27 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/OnLogLineRead", logInfo.logLine);
         }
 
-        public UInt16 Port { get; set;  }
+        public UInt16 Port { get; set; }
+        public UInt16 UPnPPort { get; set; }
         public String Hostname { get; set; }
         public bool RandomURL { get; set; }
         public bool LocalhostOnly { get; set; }
+        public bool UseUPNP { get; set; }
 
         private void StartServer()
         {
+            if(UseUPNP)
+            {
+                Task upnpTask = new Task(async () =>
+                {
+                    var discoverer = new NatDiscoverer();
+                    var cts = new CancellationTokenSource(10000); // 10secs
+                    var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
+
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                });
+                upnpTask.Start();
+            }
             if (RandomURL)
             {
                 core.randomDir = Guid.NewGuid().ToString();
@@ -354,7 +370,14 @@ namespace ACTWebSocket_Plugin
             }
             try
             {
-                core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Hostname);
+                if (UseUPNP)
+                {
+                    core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname);
+                }
+                else
+                {
+                    core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname);
+                }
             }
             catch (Exception e)
             {
