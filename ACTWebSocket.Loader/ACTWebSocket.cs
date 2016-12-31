@@ -59,7 +59,7 @@ namespace ACTWebSocket_Plugin
 
         private void Initialize(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            pluginScreenSpace.Text = "오버레이 & 웹소켓";
+            pluginScreenSpace.Text = "오버레이 & 웹소켓 ";
             asmResolver.ExceptionOccured += (o, e) =>
             {
                 //logger.Log(LogLevel.Error, "AssemblyResolver: Error: {0}", e.Exception);
@@ -93,7 +93,7 @@ namespace ACTWebSocket_Plugin
 
             var m = new ACTWebSocketMain();
             string pluginDirectory = GetPluginDirectory();
-            m.SetSkinDir(System.IO.Path.Combine(Environment.CurrentDirectory, "OverlaySkin"));
+            m.SetSkinDir(Path.Combine(Environment.CurrentDirectory, "OverlaySkin"));
             m.SetPluginDirectory(pluginDirectory);
             m.InitPlugin(pluginScreenSpace, pluginStatusText);
             main = m;
@@ -110,7 +110,7 @@ namespace ACTWebSocket_Plugin
             var plugin = ActGlobals.oFormActMain.ActPlugins.Where(x => x.pluginObj == this).FirstOrDefault();
             if (plugin != null)
             {
-                return System.IO.Path.GetDirectoryName(plugin.pluginFile.FullName);
+                return Path.GetDirectoryName(plugin.pluginFile.FullName);
             }
             else
             {
