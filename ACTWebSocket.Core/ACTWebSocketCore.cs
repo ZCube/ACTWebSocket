@@ -154,11 +154,6 @@ namespace ACTWebSocket_Plugin
                 var req = e.Request;
             };
 
-            uiServer.OnPost += (sender, e) =>
-            {
-
-            };
-            
             httpServer.OnGet += (sender, e) =>
             {
                 var req = e.Request;

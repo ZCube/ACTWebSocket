@@ -259,14 +259,14 @@ namespace ACTWebSocket_Plugin
         }
 
         #region Web JSObject Part
-        public ushort Port { get; set; }
-        public ushort UPnPPort { get; set; }
+        public int Port { get; set; }
+        public int UPnPPort { get; set; }
         public string Hostname { get; set; }
         public bool RandomURL { get; set; }
         public bool LocalhostOnly { get; set; }
         public bool UseUPNP { get; set; }
 
-        private void StartServer()
+        public void StartServer()
         {
             if(UseUPNP)
             {
@@ -310,7 +310,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        private void StopServer()
+        public void StopServer()
         {
             core.StopServer();
         }
@@ -394,7 +394,7 @@ namespace ACTWebSocket_Plugin
             MessageBox.Show("ACTWebSocket is Initialized :3");
         }
 
-        private void copyURL(string skinPath = "")
+        public void copyURL(string skinPath = "")
         {
             string url = "";
             if (LocalhostOnly)
