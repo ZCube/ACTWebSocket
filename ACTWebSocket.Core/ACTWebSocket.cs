@@ -110,6 +110,11 @@ namespace ACTWebSocket_Plugin
             settings.CachePath = Settings.CEFBIN;
             settings.LogFile = Settings.LOGDIR + "\\debug.log";
 
+            CultureInfo ci = CultureInfo.InstalledUICulture;
+            string specName = "en";
+            try { specName = CultureInfo.CreateSpecificCulture(ci.Name).Name; } catch { }
+            settings.Locale = specName;
+
             Cef.Initialize(settings);
 
             browser = new ChromiumWebBrowser("rsrc://localhost/Resources/MainForm.html");
