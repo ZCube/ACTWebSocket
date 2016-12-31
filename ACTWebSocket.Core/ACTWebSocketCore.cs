@@ -126,7 +126,7 @@ namespace ACTWebSocket_Plugin
             Broadcast("/MiniParse", overlayAPI.CreateEncounterJsonData());
         }
 
-        internal void StartServer(string address, int port, string domain = null)
+        internal void StartServer(string address, int port, int extPort, string domain = null)
         {
             StopServer();
 
@@ -211,17 +211,17 @@ namespace ACTWebSocket_Plugin
                         host = domain;
                     }
 
-                    string host_port = host + ":" + port.ToString();
+                    string host_port = host + ":" + extPort.ToString();
                     if (context.User != null)
                     {
                         string username = context.User.Identity.Name;
                         NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
                         string password = cred.Password;
-                        host_port = username + ":" + password + "@" + host + ":" + port.ToString();
+                        host_port = username + ":" + password + "@" + host + ":" + extPort.ToString();
                     }
                     else
                     {
-                        host_port = host + ":" + port.ToString();
+                        host_port = host + ":" + extPort.ToString();
                     }
                     host_port += parent_path;
 
