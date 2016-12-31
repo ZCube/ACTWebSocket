@@ -3,6 +3,22 @@
 * {font-family:'Noto Sans KR';}
 * [data-checked] {cursor:pointer;}
 * [disabled] {cursor:default; color:#AAA;}
+* ::selection {background:rgba(161, 127, 255, .5); color:inherit; border:1px solid #A17FFF;}
+body 
+{
+  -webkit-user-select: none;
+     -moz-user-select: -moz-none;
+      -ms-user-select: none;
+          user-select: none;
+}
+input, textarea 
+{
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    -o-user-select: text;
+    -moz-user-select:text;
+}
 html, body{padding:0px; margin:0px; font-size:12px;}
 .disableall, .disablemenu {z-index:9999; position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:rgba(192, 192, 192, .5);}
 .wideswap {position:absolute; left:8px; top:8px; height:24px; width:24px; -webkit-mask-image:url(../img/wide.svg); background-color:#4D89C1; cursor:pointer; z-index:10001;}
