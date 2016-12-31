@@ -69,8 +69,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Advanced Combat Tracker">
-      <HintPath>c:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
+    <Reference Include="Advanced Combat Tracker, Version=3.3.0.254, Culture=neutral, PublicKeyToken=a946b61e93d97868, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CefSharp, Version=53.0.0.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>

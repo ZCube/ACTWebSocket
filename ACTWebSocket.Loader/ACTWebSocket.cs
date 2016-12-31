@@ -59,6 +59,7 @@ namespace ACTWebSocket_Plugin
 
         private void Initialize(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+            pluginScreenSpace.Text = "오버레이 & 웹소켓";
             asmResolver.ExceptionOccured += (o, e) =>
             {
                 //logger.Log(LogLevel.Error, "AssemblyResolver: Error: {0}", e.Exception);
