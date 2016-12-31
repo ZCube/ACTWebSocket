@@ -1,40 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using Advanced_Combat_Tracker;
-using System.IO;
-using System.Reflection;
 using System.Xml;
 
 namespace ACTWebSocket_Plugin
 {
+    using static ACTWebSocketCore;
     using ACTWebSocket.Core;
+    using ACTWebSocket.Core.Classes.Interfaces;
     using CefSharp;
     using CefSharp.WinForms;
     using Classes;
     using Newtonsoft.Json.Linq;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Net.Sockets;
-    using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
-    using System.Timers;
-    using WebSocketSharp;
-    using WebSocketSharp.Net;
-    using WebSocketSharp.Server;
-    using static ACTWebSocketCore;
-    using CefSharp;
-    using System.IO;
-    using System.Reflection;
-    using ACTWebSocket.Core.Classes.Interfaces;
     using Open.Nat;
+    using System.Globalization;
+    using System.IO;
+    using System.Threading.Tasks;
     using System.Threading;
 
     public interface PluginDirectory
@@ -131,10 +114,15 @@ namespace ACTWebSocket_Plugin
             });
             settings.BrowserSubprocessPath = Settings.CEFBRW;
             settings.LocalesDirPath = Settings.CEFLOC;
-            settings.ResourcesDirPath = Settings.CEFDIR;
             settings.UserDataPath = Settings.CEFUSR;
             settings.CachePath = Settings.CEFBIN;
             settings.LogFile = Settings.LOGDIR + "\\debug.log";
+
+            // 3264
+            if (Environment.Is64BitOperatingSystem)
+                settings.ResourcesDirPath = Settings.CEFDIR;
+            else
+                settings.ResourcesDirPath = Settings.CEFDIR64;
 
             CultureInfo ci = CultureInfo.InstalledUICulture;
             string specName = "en";
@@ -271,9 +259,9 @@ namespace ACTWebSocket_Plugin
         }
 
         #region Web JSObject Part
-        public UInt16 Port { get; set; }
-        public UInt16 UPnPPort { get; set; }
-        public String Hostname { get; set; }
+        public ushort Port { get; set; }
+        public ushort UPnPPort { get; set; }
+        public string Hostname { get; set; }
         public bool RandomURL { get; set; }
         public bool LocalhostOnly { get; set; }
         public bool UseUPNP { get; set; }
@@ -316,6 +304,7 @@ namespace ACTWebSocket_Plugin
             }
             catch (Exception e)
             {
+                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
                 MessageBox.Show(e.Message);
                 core.StopServer();
             }
@@ -324,6 +313,11 @@ namespace ACTWebSocket_Plugin
         private void StopServer()
         {
             core.StopServer();
+        }
+        
+        public void consolelog(object s)
+        {
+            Console.WriteLine(s);
         }
         
         public bool BeforeLogLineRead
@@ -382,17 +376,25 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        public String GetSkinList()
+        public void GetSkinList()
         {
+            string s = "<div data-url=\"\">{FILEURL}<div class=\"link\"></div><div class=\"select\"></div></div>";
             JObject o = new JObject();
             foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
             {
+                Console.WriteLine(file);
                 o.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
             }
-            return o.ToString();
+
+            //return o.ToString();
         }
 
-        private void copyURL(String skinPath = "")
+        public void Init()
+        {
+            MessageBox.Show("ACTWebSocket is Initialized :3");
+        }
+
+        private void copyURL(string skinPath = "")
         {
             string url = "";
             if (LocalhostOnly)

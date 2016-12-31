@@ -474,8 +474,52 @@ function saveOption()
 		}
 	}
 }
-$(document).ready(function(){
 
+function forceChange(obj)
+{
+	$(obj).attr("data-checked", $(obj).attr("data-checked")=="true"?"false":"true");
+	if($(obj).is("[data-status-off]") && $(obj).attr("data-checked") == "false")
+	{
+		$(obj).html($(obj).attr("data-status-off"));
+		if($(obj).is("[data-status-off-css]"))
+		{
+			$(obj).css(JSON.parse($(obj).attr("data-status-off-css").replace(/'/ig, "\"")));
+		}
+	}
+	else if($(obj).is("[data-status-on]") && $(obj).attr("data-checked") == "true")
+	{
+		$(obj).html($(obj).attr("data-status-on"));
+		if($(obj).is("[data-status-on-css]"))
+		{
+			$(obj).css(JSON.parse($(obj).attr("data-status-on-css").replace(/'/ig, "\"")));
+		}
+	}
+
+	if($(obj).is("[data-disableobject]"))
+	{
+		if($(obj).attr("data-checked")=="true")
+		{
+			var obj = JSON.parse($(obj).attr("data-disableobject").replace(/'/ig, "\""));
+			for(var i in obj.objects)
+			{
+				$("*[data-id=\""+obj.objects[i]+"\"]").attr("disabled","disabled");
+				$("*[data-flag=\""+obj.objects[i]+"\"]").attr("disabled","disabled");
+			}
+		}
+		else
+		{
+			var obj = JSON.parse($(obj).attr("data-disableobject").replace(/'/ig, "\""));
+			for(var i in obj.objects)
+			{
+				$("*[data-id=\""+obj.objects[i]+"\"]").removeAttr("disabled");
+				$("*[data-flag=\""+obj.objects[i]+"\"]").removeAttr("disabled");
+			}
+		}
+	}
+}
+
+$(document).ready(function(){
+	main.init();
 	setTimeout(function(){$(".left").css("transition", ".2s"); $(".wideswap").css("transition", ".2s");},1000)
 	
 	// 초기 로드 시 선택된 Overlay가 없으므로 disable 시킨다.
@@ -631,6 +675,7 @@ $(document).ready(function(){
 				}
 			}
 		}
+
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
 		api_overlaywindow_update(obj, function(data){
@@ -639,9 +684,30 @@ $(document).ready(function(){
 				console.log(JSON.stringify(data));
 			}
 		});
+
 		if($(this).parent().hasClass("setting"))
 		{
 			saveOption();
+		}
+
+		if($(this).attr("data-flag") == "serverstatus")
+		{
+			main.consolelog("server is "+($(this).attr("data-checked")=="true"?"stop now":"start now"));
+			if($(this).attr("data-checked") == "true")
+			{
+				try
+				{
+					main.host = $("*[data-flag=url]").val();
+					main.port = parseInt($("*[data-flag=port]").val());
+				}
+				catch(ex)
+				{
+					
+				}
+				main.buttonOn_Click();
+			}
+			else
+				main.buttonOff_Click();
 		}
 	});
 
