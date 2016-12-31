@@ -324,7 +324,7 @@ function JSONToDiv(index, obj)
 function divToJSON(index)
 {
 	var count = $(".list div").length;
-	var obj = {}
+	var obj = null;
 	if(index < count && index >= 0)
 	{
 		obj["title"] = $($(".list div")[index]).find("span")[0].innerText;
@@ -596,14 +596,17 @@ $(document).ready(function(){
 	$("*[data-flag=overlay-open]").click(function(){
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
-		api_overlaywindow_update(obj, function(data){
-			if("error" in data)
-			{
-				console.log(JSON.stringify(data));
+		if(obj != null)
+		{
+			api_overlaywindow_update(obj, function(data){
+				if("error" in data)
+				{
+					console.log(JSON.stringify(data));
+					
 				
-			
-			}
-		});
+				}
+			});
+		}
 	});
 
 	$("*[data-flag=overlay-delete]").click(function(){
@@ -678,12 +681,17 @@ $(document).ready(function(){
 
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
-		api_overlaywindow_update(obj, function(data){
-			if("error" in data)
-			{
-				console.log(JSON.stringify(data));
-			}
-		});
+		if(obj != null)
+		{
+			api_overlaywindow_update(obj, function(data){
+				if("error" in data)
+				{
+					console.log(JSON.stringify(data));
+					
+				
+				}
+			});
+		}
 
 		if($(this).parent().hasClass("setting"))
 		{
