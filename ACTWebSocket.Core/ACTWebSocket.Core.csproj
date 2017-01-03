@@ -7,8 +7,8 @@
     <ProjectGuid>{41EFD039-54EF-41B6-8737-1DA118AF2FE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ACTWebSocket.Core</RootNamespace>
-    <AssemblyName>ACTWebSocket.Core</AssemblyName>
+    <RootNamespace>ACTWebSocket_Plugin</RootNamespace>
+    <AssemblyName>ACTWebSocket_Plugin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

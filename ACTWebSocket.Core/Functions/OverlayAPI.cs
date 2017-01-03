@@ -14,8 +14,6 @@ namespace ACTWebSocket_Plugin
     public partial class FFXIV_OverlayAPI
     {
         ACTWebSocketCore core;
-        Dictionary<string, CombatData> Combatants = new Dictionary<string, CombatData>();
-
         public List<uint> partylist = new List<uint>();
         public int partyCount = 0;
 
@@ -272,44 +270,6 @@ namespace ACTWebSocket_Plugin
             SendJSON(SendMessageType.SendCharName, $"{{\"charID\":\"{myID}\", \"charName\":\"{myName.JSONSafeString()}\"}}");
         }
 
-        private void Ability(MessageType type, string[] data)
-        {
-            if (data.Length < 25)
-            {
-                InvalidLogRecive(data);
-            }
-
-            // SkillID = Convert.ToInt32(data[4], 16);
-
-            string[] ability = new string[16];
-            for (int index = 0; index < 16; ++index)
-                ability[index] = data[8 + index];
-
-            if (data.Length >= 26)
-            {
-                if (Combatants.ContainsKey(data[2]))
-                {
-                    CombatData c = Combatants[data[2]];
-                    c.CurrentHP = Convert.ToInt32(data[24]);
-                    c.MaxHP = Convert.ToInt32(data[25]);
-
-                    SendJSON(SendMessageType.CombatantDataChange, $"{{\"charID\":\"{data[2]}\", \"charName\":\"{c.PlayerName.JSONSafeString()}\", \"charMaxHP\":{c.CurrentHP}, \"charCurrentHP\":{c.CurrentHP}, \"charJob\":\"{c.PlayerJob}\"}}");
-                }
-            }
-
-            if (data.Length >= 35)
-            {
-                if (Combatants.ContainsKey(data[6]))
-                {
-                    CombatData c = Combatants[data[6]];
-                    c.CurrentHP = Convert.ToInt32(data[33]);
-                    c.MaxHP = Convert.ToInt32(data[34]);
-
-                    SendJSON(SendMessageType.CombatantDataChange, $"{{\"charID\":\"{data[6]}\", \"charName\":\"{c.PlayerName.JSONSafeString()}\", \"charMaxHP\":{c.CurrentHP}, \"charCurrentHP\":{c.CurrentHP}, \"charJob\":\"{c.PlayerJob}\"}}");
-                }
-            }
-        }
-
         private void UpdatePartyList(string[] data)
         {
             partylist = new List<uint>();
@@ -331,23 +291,6 @@ namespace ACTWebSocket_Plugin
 
         public void SendCombatantList()
         {
-            string jsonformat = "{{ \"playerID\" : {0}, \"playerName\" : \"{1}\", \"playerJob\" : \"{2}\", \"maxHP\" : {3}, \"maxMP\" : {4} }},";
-
-            StringBuilder sb = new StringBuilder();
-            foreach(KeyValuePair<string, CombatData> kv in Combatants)
-            {
-                sb.Append(
-                    string.Format(jsonformat,
-                    kv.Value.PlayerID,
-                    kv.Value.PlayerName.JSONSafeString(),
-                    kv.Value.PlayerJob,
-                    kv.Value.MaxHP,
-                    kv.Value.MaxMP));
-            }
-
-            string result = "[" + sb.ToString() + "]";
-
-            SendJSON(SendMessageType.CombatantsList, $"{{ \"combatantList\" : {result.Replace(",]", "]")} }}");
         }
 
         public void Log(LogLevel level, string format, params object[] args)
