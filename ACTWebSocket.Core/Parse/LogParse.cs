@@ -210,6 +210,21 @@ namespace ACTWebSocket_Plugin
                 }
             }
         }
+        public void ChangeZoneEvent(string[] data)
+        {
+            currentZone = Convert.ToInt32(data[2], 16);
+
+            SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
+        }
+
+        // 해루's Request : I want Player real name. don't need 'YOU'
+        public void DetectMyName(string[] data)
+        {
+            myID = data[2];
+            myName = data[3];
+
+            SendJSON(SendMessageType.SendCharName, $"{{\"charID\":\"{myID}\", \"charName\":\"{myName.JSONSafeString()}\"}}");
+        }
 
         public void InvaildLogLine(string[] data)
         {

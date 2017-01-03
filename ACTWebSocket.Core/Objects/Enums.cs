@@ -77,5 +77,6 @@
         CombatantsList = 4,
         NetworkError = 5,
         AddCombatant = 6,
+        RemoveCombatant = 7,
     }
 }

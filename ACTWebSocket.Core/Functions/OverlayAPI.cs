@@ -183,7 +183,6 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-
         #region FileIO
         public bool FileExists(string path)
         {
@@ -254,45 +253,6 @@ namespace ACTWebSocket_Plugin
         }
         #endregion
         
-        public void ChangeZoneEvent(string[] data)
-        {
-            currentZone = Convert.ToInt32(data[2], 16);
-
-            SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
-        }
-
-        // 해루's Request : I want Player real name. don't need 'YOU'
-        public void DetectMyName(string[] data)
-        {
-            myID = data[2];
-            myName = data[3];
-
-            SendJSON(SendMessageType.SendCharName, $"{{\"charID\":\"{myID}\", \"charName\":\"{myName.JSONSafeString()}\"}}");
-        }
-
-        private void UpdatePartyList(string[] data)
-        {
-            partylist = new List<uint>();
-            partyCount = Convert.ToInt32(data[2]);
-            for (int i = 3; i < data.Length; ++i)
-            {
-                uint id = Convert.ToUInt32(data[i], 16);
-                if (id < 0 && id != 0xE0000000)
-                {
-                    partylist.Add(id);
-                }
-            }
-        }
-
-        public void InvalidLogRecive(string[] data)
-        {
-            Log(LogLevel.Error, "Invalid Log Recived : <br>" + string.Join(":", data));
-        }
-
-        public void SendCombatantList()
-        {
-        }
-
         public void Log(LogLevel level, string format, params object[] args)
         {
             Log(level, string.Format(format, args));
