@@ -79,9 +79,11 @@ namespace ACTWebSocket_Plugin
 
                         if (!Combatants.ContainsKey(combatant.id))
                             Combatants.Add(combatant.id, combatant);
+                        SendJSON(SendMessageType.AddCombatant, $"{{id:{combatant.id}, job:{combatant.jobid}, level:{combatant.level}, max_hp:{combatant.max_hp}, max_mp:{combatant.max_mp}, owner_id:{combatant.owner_id} }}");
                         break;
                     case MessageType.RemoveCombatant:
                         Combatants.Remove(Convert.ToUInt32(data[2], 16));
+                        SendJSON(SendMessageType.RemoveCombatant, $"{{id:{Convert.ToUInt32(data[2], 16)}}}");
                         break;
                     case MessageType.AddBuff:
                         Combatants[Convert.ToUInt32(data[7], 16)].AddBuff(Convert.ToInt32(data[2], 16), Convert.ToInt32(data[4]));

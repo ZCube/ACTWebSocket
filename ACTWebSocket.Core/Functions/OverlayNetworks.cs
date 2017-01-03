@@ -10,16 +10,24 @@ namespace ACTWebSocket_Plugin
 {
     partial class FFXIV_OverlayAPI
     {
+        /// <summary>
+        /// 클라이언트(들)로 메세지를 전송합니다.
+        /// </summary>
+        /// <param name="type">전송될 Enum 타입입니다.</param>
+        /// <param name="json">전송될 JSON 입니다. JSON을 감싸는 중괄호를 포함해 작성합니다.</param>
         public void SendJSON(SendMessageType type, string json)
         {
-            string sendjson = $"{{\"typeText\":\"update\", \"detail\":{{\"msgType\":\"{type}\", \"data\":{json}}}}}";
+            string sendjson = $"{{\"type\":\"{type}\", \"detail\":{json}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
 
+        /// <summary>
+        /// 클라이언트(들)로 오류 메세지를 전송합니다.
+        /// </summary>
+        /// <param name="json">전송될 message입니다.</param>
         public void SendErrorJSON(string json)
         {
-            string sendjson = $"{{\"typeText\":\"error\", \"detail\":{{\"msgType\":\"{SendMessageType.NetworkError}\", \"data\":\"{json.JSONSafeString()}\"}}}}";
-            core.Broadcast("/MiniParse", sendjson);
+            SendJSON(SendMessageType.NetworkError, $"{{\"message\":\"{json.JSONSafeString()}\"}}");
         }
 
         public void SendLastCombat()
@@ -174,7 +182,7 @@ namespace ACTWebSocket_Plugin
             Task.WaitAll(encounterTask, combatantTask);
 
             var builder = new StringBuilder();
-            builder.Append("{\"typeText\": \"encounter\", \"detail\": {");
+            builder.Append("{\"type\": \"encounter\", \"detail\": {");
             builder.Append("\"Encounter\": {");
             var isFirst1 = true;
             foreach (var pair in encounter)
