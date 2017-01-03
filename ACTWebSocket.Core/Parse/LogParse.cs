@@ -14,7 +14,8 @@ namespace ACTWebSocket_Plugin
         public static List<uint> PartyList = new List<uint>();
         public static int CurrentZoneID = 0;
         public static uint CurrentPlayerID = 0;
-
+        public static string CurrentPlayerName = "YOU";
+        
         public void ParseData(string[] data, bool isImport)
         {
             if (data.Length < 2 || data == null)
@@ -52,7 +53,7 @@ namespace ACTWebSocket_Plugin
                             break;
                         }
                         CurrentZoneID = oLogEntry.ZoneID = Convert.ToInt32(data[2], 16);
-                        ChangeZoneEvent(data);
+                        SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
                         break;
                     case MessageType.ChangePrimaryPlayer:
                         if (data.Length < 4)
@@ -61,7 +62,8 @@ namespace ACTWebSocket_Plugin
                             break;
                         }
                         CurrentPlayerID = Convert.ToUInt32(data[2], 16);
-                        DetectMyName(data);
+                        CurrentPlayerName = data[3];
+                        SendJSON(SendMessageType.SendCharName, $"{{\"charID\":{CurrentPlayerID}, \"charName\":\"{CurrentPlayerName.JSONSafeString()}\"}}");
                         break;
                     case MessageType.AddCombatant:
                         if (data.Length < 7)
@@ -209,21 +211,6 @@ namespace ACTWebSocket_Plugin
                         break;
                 }
             }
-        }
-        public void ChangeZoneEvent(string[] data)
-        {
-            currentZone = Convert.ToInt32(data[2], 16);
-
-            SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
-        }
-
-        // 해루's Request : I want Player real name. don't need 'YOU'
-        public void DetectMyName(string[] data)
-        {
-            myID = data[2];
-            myName = data[3];
-
-            SendJSON(SendMessageType.SendCharName, $"{{\"charID\":\"{myID}\", \"charName\":\"{myName.JSONSafeString()}\"}}");
         }
 
         public void InvaildLogLine(string[] data)

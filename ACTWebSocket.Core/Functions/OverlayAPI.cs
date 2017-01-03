@@ -17,8 +17,6 @@ namespace ACTWebSocket_Plugin
         public List<uint> partylist = new List<uint>();
         public int partyCount = 0;
 
-        string myID = "00000000";
-        string myName = "You";
         string outD = CombatantData.DamageTypeDataOutgoingDamage;
         string outH = CombatantData.DamageTypeDataOutgoingHealing;
 
@@ -66,21 +64,21 @@ namespace ACTWebSocket_Plugin
                         break;
                     case "ReadFile":
                         if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{returndata:\""+ReadFile(arguments[1])+"\"}");
+                        SendPrivMessage(id, "{data:\""+ReadFile(arguments[1])+"\"}");
                         break;
                     case "GetImageBase64":
                         if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{returndata:\"" + GetImageBASE64(arguments[1]) + "\"}");
+                        SendPrivMessage(id, "{data:\"" + GetImageBASE64(arguments[1]) + "\"}");
                         break;
                     case "GetDirectoryNoLastSlash":
                         if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{returndata:\"" + GetDirectoryNoLastSlash(arguments[1]) + "\"}");
+                        SendPrivMessage(id, "{data:\"" + GetDirectoryNoLastSlash(arguments[1]) + "\"}");
                         break;
                     case "FileExists":
-                        SendPrivMessage(id, "{returndata:" + FileExists(arguments[1]) + "}");
+                        SendPrivMessage(id, "{data:" + FileExists(arguments[1]) + "}");
                         break;
                     case "DirectoryExists":
-                        SendPrivMessage(id, "{returndata:" + DirectoryExists(arguments[1]) + "}");
+                        SendPrivMessage(id, "{data:" + DirectoryExists(arguments[1]) + "}");
                         break;
                 }
             }
