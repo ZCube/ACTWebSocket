@@ -30,17 +30,22 @@
 				<div class="title" data-id="start-option">Start Option</div>
 				<div class="startoption">
 					<div data-id="autorun" data-flag="autorun" data-checked="true">Auto Running With ACT</div>
-					<div data-id="localhost" data-flag="localhost" data-checked="true">Localhost Only</div>
+					<div data-id="upnp" data-flag="upnp" data-checked="true">Use UPNP</div>
 					<div data-id="randurl" data-flag="randurl" data-checked="false">Random URL</div>
 					<div>
 						<div class="label" data-id="url">URL</div>
-						<select data-flag="url">
+						<input class="text" data-flag="hostname" value="localhost" selectBoxOptions="localhost"/>
+						<select data-flag="hostnames">
 							<option value="localhost">localhost</div>
 						</select>
 					</div>
 					<div>
 						<div class="label" data-id="port">Port</div>
 						<input class="input" data-flag="port" value="8080"/>
+					</div>
+					<div>
+						<div class="label" data-id="upnpport">UPnPPort</div>
+						<input class="input" data-flag="upnpport" value="8080"/>
 					</div>
 				</div>
 				<div class="title" data-id="server-status">Server Option</div>
@@ -81,7 +86,8 @@
 					<div style="position:absolute; right:5px; top:5px; left:5px; background:#FFF;">
 						<button style="right:5px; width:60px;" data-id="overlay-delete" data-flag="overlay-delete">Delete</button>
 						<button style="right:70px; width:60px;" data-id="overlay-reload" data-flag="overlay-reload">Reload</button>
-						<button style="right:135px; width:110px;" data-id="overlay-opendevtool" data-flag="overlay-opendevtool">Open DevTool</button>
+						<button style="right:135px; width:110px;" data-id="overlay-save" data-flag="overlay-save">Save</button>
+						<button style="right:200px; width:110px;" data-id="overlay-opendevtool" data-flag="overlay-opendevtool">Open DevTool</button>
 					</div>
 					<div>
 						<div class="label" data-id="overlay-title">Title</div>

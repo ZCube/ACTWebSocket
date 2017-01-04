@@ -67,43 +67,6 @@ function closeMenu()
 	$(".wideswap").css({"left":"8px"});
 }
 
-function api_loadsettings(callback)
-{
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/loadsettings",
-		data: "",    success: function( data ) {
-			if(callback != null)
-			{
-				callback(data);
-			}
-		}
-	});
-}
-
-function api_savesettings(json, callback)
-{
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/savesettings",
-		data: JSON.stringify(json),    success: function( data ) {
-			if(callback != null)
-			{
-				callback(data);
-			}
-		}
-	});
-}
-
-function api_skin_get_list(callback)
-{
-	$.ajax({type: "POST", dataType: "json", contentType: 'application/json; charset=UTF-8', url: "http://localhost:9991/api/skin_get_list",
-		data: "",
-		success: function( data ) {
-			if(callback != null)
-			{
-				callback(data);
-			}
-		}
-	});
-}
-
 function api_overlaywindow_set(json, callback)
 {
 	websocket.send(
@@ -274,6 +237,37 @@ for(i=0;i<savedvar.length;++i)
 	nameNativeToJSMap[nativevar[i]] = savedvar[i];
 }
 
+function JSONToDivPos(index, obj)
+{
+	var selectedIndex = parseInt($(".list").attr("data-selected-index"));
+	$($(".list div")[index]).find("span")[0].innerText = obj["title"];
+	for(var i in intvar)
+	{
+		obj[intvar[i]] = parseFloat(obj[intvar[i]]);
+	}
+	for(var i in intvar)
+	{
+		if($("*[data-flag=overlay-"+intvar[i]+"]").is("[data-checked]"))
+		{
+			$($(".list div")[index]).attr("data-"+intvar[i], obj[nameJSToNativeMap[intvar[i]]])
+			if(index == selectedIndex)
+			{
+				$("*[data-flag=overlay-"+intvar[i]+"]").attr("data-checked", obj[nameJSToNativeMap[intvar[i]]]);
+			}
+			//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+		}
+		else
+		{
+			$($(".list div")[index]).attr("data-"+intvar[i], obj[nameJSToNativeMap[intvar[i]]]);
+			if(index == selectedIndex)
+			{
+				$("*[data-flag=overlay-"+intvar[i]+"]").val(obj[nameJSToNativeMap[intvar[i]]]);
+			}
+			//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+		}
+	}
+}
+
 function JSONToDiv(index, obj)
 {
 	var selectedIndex = parseInt($(".list").attr("data-selected-index"));
@@ -320,6 +314,7 @@ function JSONToDiv(index, obj)
 // overlay window의 json으로 정리.
 function divToJSON(index)
 {
+	var selectedIndex = parseInt($(".list").attr("data-selected-index"));
 	var count = $(".list div").length;
 	var obj = null;
 	if(index < count && index >= 0)
@@ -333,12 +328,18 @@ function divToJSON(index)
 		{
 			if($("*[data-flag=overlay-"+savedvar[i]+"]").is("[data-checked]"))
 			{
-				//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+				if(index == selectedIndex)
+				{
+					$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").attr("data-checked")=="true"?"true":"false");
+				}
 				obj[nameJSToNativeMap[savedvar[i]]] = $($(".list div")[index]).attr("data-"+savedvar[i])=="true"?true:false;
 			}
 			else
 			{
-				//$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+				if(index == selectedIndex)
+				{
+					$($(".list div")[index]).attr("data-"+savedvar[i], $("*[data-flag=overlay-"+savedvar[i]+"]").val());
+				}
 				obj[nameJSToNativeMap[savedvar[i]]] = $($(".list div")[index]).attr("data-"+savedvar[i]);
 			}
 		}
@@ -352,6 +353,63 @@ function divToJSON(index)
 		}
 	}
 	return obj;
+}
+function addHostname(hostname)
+{
+	var html ="<option value=\""+hostname+"\">"+hostname+"</div>";
+	$("*[data-flag=hostnames]").append(html);
+}
+function updateWebsocketSettings()
+{
+	if(typeof main !== "undefined")
+	{
+		try{
+			main.port = parseInt($("*[data-flag=port]").val());
+			main.uPnPPort = parseInt($("*[data-flag=upnpport]").val());
+			main.hostname = $("*[data-flag=hostname]").val();
+			main.randomURL = $("*[data-flag=randurl]").attr("data-checked")=="true"?true:false;
+			main.useUPnP = $("*[data-flag=upnp]").attr("data-checked")=="true"?true:false;
+			main.autoRun = $("*[data-flag=autorun]").attr("data-checked")=="true"?true:false;
+		}
+		catch(e)
+		{
+			alert(e);
+		}
+  }
+}
+function setWebsocketSettings()
+{
+	if(typeof main !== "undefined")
+	{
+		try{
+			$("*[data-flag=port]").val(main.port);
+			$("*[data-flag=upnpport]").val(main.uPnPPort);
+			$("*[data-flag=hostname]").val(main.hostname);
+			$("*[data-flag=randurl]").attr("data-checked", main.randomURL?"true":"false");
+			$("*[data-flag=upnp]").attr("data-checked", main.useUPnP?"true":"false");
+			$("*[data-flag=autorun]").attr("data-checked", main.autoRun?"true":"false");
+		}
+		catch(e)
+		{
+			alert(e);
+		}
+  }
+}
+function Hex2Str(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+function update_all(vals)
+{
+	for(var key in vals)
+	{
+		var val = vals[key];
+		update(val);
+	}
 }
 
 function update(obj)
@@ -398,20 +456,53 @@ function update(obj)
 		alert(e);
 	}
 }
+function update_pos(obj)
+{
+	try{
+		var count = $(".list div").length;
+		var find = false;
+		for(var index=0;index<count;++index)
+		{
+			if (obj["id"] == $($(".list div")[index]).attr("data-id"))
+			{
+				JSONToDivPos(index, obj);
+				find = true;
+				break;
+			}
+		}
+	}
+	catch(e)
+	{
+		alert(e);
+	}
+}
 
 function onOverlaySettingChanged(e)
 {
 	try{
 		var obj = JSON.parse(e.detail);
 		var cmd = obj["cmd"];
-		if(cmd == "update" || cmd == "get")
+		if(cmd == "update")
+		{
+			var val = obj["value"];
+			update_pos(val);
+		}
+		if(cmd == "get" || cmd == "set")
 		{
 			var val = obj["value"];
 			update(val);
 		}
+		if(cmd == "close_all")
+		{
+			$(".list").empty();
+		}
 		if(cmd == "get_all")
 		{
 			var vals = obj["value"];
+			if(typeof main !== "undefined")
+			{
+				main.saveOverlaySettings(JSON.stringify(vals));
+			}
 			for(var key in vals)
 			{
 				var val = vals[key];
@@ -543,8 +634,23 @@ function forceChange(obj)
 }
 
 $(document).ready(function(){
+	{
+		$("*[data-flag=hostnames]").change(function() {
+			$("*[data-flag=hostname]").val($("*[data-flag=hostnames]").val());
+		});
+	}
 	if(typeof main !== "undefined")
-		main.init();
+	{
+		try{
+			$(".list").empty();
+			main.init();
+			setWebsocketSettings();
+		}
+		catch(e)
+		{
+			alert(e);
+		}
+	}
 	setTimeout(function(){$(".left").css("transition", ".2s"); $(".wideswap").css("transition", ".2s");},1000)
 	
 	// 초기 로드 시 선택된 Overlay가 없으므로 disable 시킨다.
@@ -608,7 +714,9 @@ $(document).ready(function(){
 			api_overlaywindow_set(obj);
 		}
 	});
-
+	$("*[data-flag=overlay-save]").click(function(){
+		api_overlaywindow_get_all();
+	});
 	$("*[data-flag=overlay-delete]").click(function(){
 		var index = parseInt($(".list").attr("data-selected-index"));
 		var obj = divToJSON(index);
@@ -699,8 +807,7 @@ $(document).ready(function(){
 				{
 					try
 					{
-						main.host = $("*[data-flag=url]").val();
-						main.port = parseInt($("*[data-flag=port]").val());
+						updateWebsocketSettings();
 					}
 					catch(ex)
 					{
