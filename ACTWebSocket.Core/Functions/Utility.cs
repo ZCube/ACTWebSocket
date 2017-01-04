@@ -57,6 +57,16 @@ namespace ACTWebSocket.Core
             return false;
         }
 
+        public static List<T> Distinct<T>(IEnumerable<T> source)
+        {
+            List<T> uniques = new List<T>();
+            foreach (T item in source)
+            {
+                if (!uniques.Contains(item)) uniques.Add(item);
+            }
+            return uniques;
+        }
+
         public static string Str2Hex(string strData)
         {
             string resultHex = string.Empty;
