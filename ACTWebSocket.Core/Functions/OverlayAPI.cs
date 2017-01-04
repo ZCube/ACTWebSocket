@@ -263,7 +263,7 @@ namespace ACTWebSocket_Plugin
             SendJSON(SendMessageType.ChangeZone, $"{{\"zoneID\":\"{currentZone}\"}}");
         }
 
-        // 해루's Request : I want Player real name. don't need 'YOU'
+        // 해루's Request : I need realname of Player, not 'YOU'.
         public void DetectMyName(string[] data)
         {
             myID = data[2];
