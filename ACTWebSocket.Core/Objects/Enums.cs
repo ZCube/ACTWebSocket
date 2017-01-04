@@ -75,6 +75,8 @@
         SendCharName = 2,
         CombatantDataChange = 3,
         CombatantsList = 4,
-        NetworkError = 90002,
+        NetworkError = 5,
+        AddCombatant = 6,
+        RemoveCombatant = 7,
     }
 }

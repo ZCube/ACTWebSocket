@@ -10,22 +10,24 @@ namespace ACTWebSocket_Plugin
 {
     partial class FFXIV_OverlayAPI
     {
-        public void GetMessage(WebSocketSharp.MessageEventArgs e)
-        {
-            core.Broadcast("/MiniParse", $"{{\"typeText\":\"onMessage\", \"data\":\"{e.Data.JSONSafeString()}\"}}");
-        }
-
+        /// <summary>
+        /// 클라이언트(들)로 메세지를 전송합니다.
+        /// </summary>
+        /// <param name="type">전송될 Enum 타입입니다.</param>
+        /// <param name="json">전송될 JSON 입니다. JSON을 감싸는 중괄호를 포함해 작성합니다.</param>
         public void SendJSON(SendMessageType type, string json)
         {
-            string sendjson = $"{{\"typeText\":\"update\", \"detail\":{{\"msgType\":\"{type}\", \"data\":{json}}}}}";
-
+            string sendjson = $"{{\"type\":\"{type}\", \"detail\":{json}}}";
             core.Broadcast("/MiniParse", sendjson);
         }
 
+        /// <summary>
+        /// 클라이언트(들)로 오류 메세지를 전송합니다.
+        /// </summary>
+        /// <param name="json">전송될 message입니다.</param>
         public void SendErrorJSON(string json)
         {
-            string sendjson = $"{{\"typeText\":\"error\", \"detail\":{{\"msgType\":\"{SendMessageType.NetworkError}\", \"data\":\"{json.JSONSafeString()}\"}}}}";
-            core.Broadcast("/MiniParse", sendjson);
+            SendJSON(SendMessageType.NetworkError, $"{{\"message\":\"{json.JSONSafeString()}\"}}");
         }
 
         public void SendLastCombat()
@@ -37,64 +39,7 @@ namespace ACTWebSocket_Plugin
         {
             string[] data = e.logLine.Split('|');
             MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
-
-            switch (messageType)
-            {
-                case MessageType.LogLine:
-                    if (Convert.ToInt32(data[2], 16) == 56)
-                    {
-                        ReadFFxivEcho(data[4]);
-                    }
-                    break;
-                case MessageType.ChangeZone:
-                    ChangeZoneEvent(data);
-                    break;
-                case MessageType.ChangePrimaryPlayer:
-                    DetectMyName(data);
-                    break;
-                case MessageType.AddCombatant:
-                    if (!Combatants.ContainsKey(data[2]))
-                    {
-                        CombatData cd = new CombatData();
-                        cd.PlayerID = Convert.ToUInt32(data[2], 16);
-                        cd.PlayerJob = Convert.ToUInt32(data[4], 16);
-                        cd.PlayerName = data[3];
-                        cd.MaxHP = cd.CurrentHP = Convert.ToInt64(data[5], 16);
-                        cd.MaxMP = cd.CurrentMP = Convert.ToInt64(data[6], 16);
-                        if (data[8] != "0")
-                        {
-                            cd.IsPet = true;
-                            cd.OwnerID = Convert.ToUInt32(data[8]);
-                        }
-                        Combatants.Add(data[2], cd);
-                        SendCombatantList();
-                    }
-                    break;
-                case MessageType.RemoveCombatant:
-                    if (Combatants.ContainsKey(data[2]))
-                    {
-                        Combatants.Remove(data[2]);
-                        SendCombatantList();
-                    }
-                    break;
-                case MessageType.PartyList:
-                    UpdatePartyList(data);
-                    break;
-                case MessageType.NetworkStartsCasting:
-                case MessageType.NetworkCancelAbility:
-                case MessageType.NetworkDoT:
-                case MessageType.NetworkDeath:
-                case MessageType.NetworkBuff:
-                case MessageType.NetworkTargetIcon:
-                case MessageType.NetworkRaidMarker:
-                case MessageType.NetworkTargetMarker:
-                case MessageType.NetworkBuffRemove:
-                    break;
-                case MessageType.NetworkAbility:
-                case MessageType.NetworkAOEAbility:
-                    Ability(messageType, data);
-                    break;
-            }
+            ParseData(data, isImport);
         }
 
         public List<KeyValuePair<CombatantData, Dictionary<string, string>>>
@@ -237,7 +182,7 @@ namespace ACTWebSocket_Plugin
             Task.WaitAll(encounterTask, combatantTask);
 
             var builder = new StringBuilder();
-            builder.Append("{\"typeText\": \"encounter\", \"detail\": {");
+            builder.Append("{\"type\": \"encounter\", \"detail\": {");
             builder.Append("\"Encounter\": {");
             var isFirst1 = true;
             foreach (var pair in encounter)

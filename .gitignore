@@ -8,3 +8,4 @@
 *.user
 /Dist/*
 *.orig
+/x86/*
