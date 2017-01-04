@@ -144,6 +144,7 @@ namespace ACTWebSocket_Plugin
                 parent_path = "/" + randomDir;
             }
 
+            httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/Communicate");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");

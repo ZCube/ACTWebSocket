@@ -147,10 +147,34 @@ namespace ACTWebSocket_Plugin
 
         private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
+            String strHostName = string.Empty;
+            strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+
+            List<String> addrs = new List<String>();
+            addrs.Add("127.0.0.1");
+            {
+                IPAddress[] addr = ipEntry.AddressList;
+                for (int i = 0; i < addr.Length; i++)
+                {
+                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        addrs.Add(addr[i].ToString());
+                }
+            }
             String ipaddress = Utility.GetExternalIp();
             if (ipaddress.Length > 0)
-                browser.ExecuteScriptAsync("addHostname(\"" + ipaddress + "\");");
-            browser.ExecuteScriptAsync("updateWebsocketSettings();");
+                addrs.Add(ipaddress);
+
+            addrs = Utility.Distinct<String>(addrs);
+            addrs.Sort();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var addr in addrs)
+            {
+                sb.Append("addHostname(\"" + addr + "\");");
+            }
+            sb.Append("updateWebsocketSettings();");
+            browser.ExecuteScriptAsync(sb.ToString());
         }
 
         ~ACTWebSocketMain()
@@ -309,6 +333,12 @@ namespace ACTWebSocket_Plugin
 
         void SaveSettings()
         {
+            browser.ExecuteScriptAsync("updateWebsocketSettings();main._SaveSettings();");
+        }
+
+        public void _SaveSettings()
+        {
+            browser.ExecuteScriptAsync("");
             JObject obj = new JObject();
             obj.Add("Port", Port);
             obj.Add("UPnPPort", UPnPPort);
@@ -372,12 +402,18 @@ namespace ACTWebSocket_Plugin
         {
             string[] data = e.logLine.Split('|');
 
-            if(Convert.ToInt32(data[0]) == 0)
+            try
             {
-                if(Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                if (Convert.ToInt32(data[0]) == 0)
                 {
-                    return;
+                    if (Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                    {
+                        return;
+                    }
                 }
+            }catch(Exception)
+            {
+                // TODO ?
             }
             core.Broadcast(url, e.logLine);
         }
@@ -409,21 +445,13 @@ namespace ACTWebSocket_Plugin
             }
 
             IPHostEntry hostEntry;
-
-            hostEntry = Dns.GetHostEntry(Hostname);
-
-            if (hostEntry.AddressList.Length == 0)
-            {
-                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
-                MessageBox.Show("Invalid Hostname");
-                core.StopServer();
-                return;
-            }
+            IPAddress address;
+            var addresses = Dns.GetHostAddresses(Hostname);
 
             bool localhostOnly = false;
-            for(int i=0;i< hostEntry.AddressList.Length;++i)
+            for(int i=0;i< addresses.Length;++i)
             {
-                var ip = hostEntry.AddressList[i];
+                var ip = addresses[i];
                 if (IPAddress.IsLoopback(ip))
                 {
                     localhostOnly = true;
@@ -452,10 +480,11 @@ namespace ACTWebSocket_Plugin
             }
             catch (Exception e)
             {
-                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
+                browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"true\"); forceChange('[data-flag=serverstatus]');");
                 MessageBox.Show(e.Message);
                 core.StopServer();
             }
+            browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"false\"); forceChange('[data-flag=serverstatus]');");
         }
 
         public void StopServer()
