@@ -402,12 +402,18 @@ namespace ACTWebSocket_Plugin
         {
             string[] data = e.logLine.Split('|');
 
-            if(Convert.ToInt32(data[0]) == 0)
+            try
             {
-                if(Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                if (Convert.ToInt32(data[0]) == 0)
                 {
-                    return;
+                    if (Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                    {
+                        return;
+                    }
                 }
+            }catch(Exception)
+            {
+                // TODO ?
             }
             core.Broadcast(url, e.logLine);
         }
@@ -439,21 +445,13 @@ namespace ACTWebSocket_Plugin
             }
 
             IPHostEntry hostEntry;
-
-            hostEntry = Dns.GetHostEntry(Hostname);
-
-            if (hostEntry.AddressList.Length == 0)
-            {
-                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
-                MessageBox.Show("Invalid Hostname");
-                core.StopServer();
-                return;
-            }
+            IPAddress address;
+            var addresses = Dns.GetHostAddresses(Hostname);
 
             bool localhostOnly = false;
-            for(int i=0;i< hostEntry.AddressList.Length;++i)
+            for(int i=0;i< addresses.Length;++i)
             {
-                var ip = hostEntry.AddressList[i];
+                var ip = addresses[i];
                 if (IPAddress.IsLoopback(ip))
                 {
                     localhostOnly = true;
