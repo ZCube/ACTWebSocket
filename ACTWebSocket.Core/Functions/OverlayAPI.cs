@@ -146,9 +146,9 @@ namespace ACTWebSocket_Plugin
 
                             break;
                         case "이동가능":
-                        case "dragable":
+                        case "draggable":
                             if (data.Length < 3) return;
-                            bool dragable = Convert.ToBoolean(data[2]);
+                            bool draggable = Convert.ToBoolean(data[2]);
 
                             break;
                         case "강조가능":
@@ -250,7 +250,7 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.TTS(speach);
         }
         #endregion
-        
+
         public void Log(LogLevel level, string format, params object[] args)
         {
             Log(level, string.Format(format, args));
