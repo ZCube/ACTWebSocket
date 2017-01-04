@@ -93,7 +93,7 @@ namespace ACTWebSocket_Plugin
                     (
                         "Last10DPS",
                         "Last 10 Seconds DPS",
-                        "Average DPS for last 10 seconds",
+                        "Average DPS for last 10 seconds.",
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
@@ -114,7 +114,7 @@ namespace ACTWebSocket_Plugin
                     (
                         "Last30DPS",
                         "Last 30 Seconds DPS",
-                        "Average DPS for last 30 seconds",
+                        "Average DPS for last 30 seconds.",
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
@@ -135,7 +135,7 @@ namespace ACTWebSocket_Plugin
                     (
                         "Last60DPS",
                         "Last 60 Seconds DPS",
-                        "Average DPS for last 60 seconds",
+                        "Average DPS for last 60 seconds.",
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
@@ -156,7 +156,7 @@ namespace ACTWebSocket_Plugin
                     (
                         "Last180DPS",
                         "Last 180 Seconds DPS",
-                        "Average DPS for last 180 seconds",
+                        "Average DPS for last 180 seconds.",
                         (Data, SelectiveAllies, Extra) =>
                         (SelectiveAllies.Sum
                             (
@@ -179,8 +179,8 @@ namespace ACTWebSocket_Plugin
                     new CombatantData.TextExportFormatter
                     (
                         "overHeal",
-                        "overHeal",
-                        "overHeal",
+                        "Overheal",
+                        "Amount of healing that made flood over 100% of health.",
                         (Data, ExtraFormat) =>
                         (
                             (
@@ -212,8 +212,8 @@ namespace ACTWebSocket_Plugin
                     new CombatantData.TextExportFormatter
                     (
                         "damageShield",
-                        "damageShield",
-                        "Healers DamageShield Skill Total Value",
+                        "Damage Shield",
+                        "Damage blocked by Shield skills of healer.",
                         (Data, ExtraFormat) =>
                         (
                             (
@@ -250,8 +250,8 @@ namespace ACTWebSocket_Plugin
                     new CombatantData.TextExportFormatter
                     (
                         "absorbHeal",
-                        "absorbHeal",
-                        "absorbHeal",
+                        "Healed by Absorbing",
+                        "Amount of heal, done by absorbing.",
                         (Data, ExtraFormat) =>
                         (
                             (
