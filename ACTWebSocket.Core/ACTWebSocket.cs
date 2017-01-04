@@ -480,10 +480,11 @@ namespace ACTWebSocket_Plugin
             }
             catch (Exception e)
             {
-                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
+                browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"true\"); forceChange('[data-flag=serverstatus]');");
                 MessageBox.Show(e.Message);
                 core.StopServer();
             }
+            browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"false\"); forceChange('[data-flag=serverstatus]');");
         }
 
         public void StopServer()

@@ -633,6 +633,29 @@ function forceChange(obj)
 	}
 }
 
+function startServer()
+{
+	if(typeof main !== "undefined")
+	{
+		try
+		{
+			updateWebsocketSettings();
+		}
+		catch(ex)
+		{
+			alert(ex);
+		}
+		try
+		{
+			main.startServer();
+		}
+		catch(ex)
+		{
+			alert(ex);
+		}
+	}
+}
+
 $(document).ready(function(){
 	{
 		$("*[data-flag=hostnames]").change(function() {
@@ -645,6 +668,10 @@ $(document).ready(function(){
 			$(".list").empty();
 			main.init();
 			setWebsocketSettings();
+			if(main.autoRun)
+			{
+				startServer();
+			}
 		}
 		catch(e)
 		{
@@ -803,25 +830,7 @@ $(document).ready(function(){
 				main.consolelog("server is "+($(this).attr("data-checked")=="true"?"stop now":"start now"));
 			if($(this).attr("data-checked") == "true")
 			{
-				if(typeof main !== "undefined")
-				{
-					try
-					{
-						updateWebsocketSettings();
-					}
-					catch(ex)
-					{
-						alert(ex);
-					}
-					try
-					{
-						main.startServer();
-					}
-					catch(ex)
-					{
-						alert(ex);
-					}
-				}
+				startServer();
 			}
 			else
 			{
