@@ -19,6 +19,7 @@ namespace ACTWebSocket_Plugin
     using System.IO;
     using System.Threading.Tasks;
     using System.Threading;
+    using System.Net;
 
     public interface PluginDirectory
     {
@@ -136,6 +137,7 @@ namespace ACTWebSocket_Plugin
             Cef.Initialize(settings);
 
             browser = new ChromiumWebBrowser("rsrc://localhost/Resources/MainForm.html");
+            browser.FrameLoadEnd += Browser_FrameLoadEnd;
 
             Controls.Add(browser);
             browser.RegisterJsObject("main", this);
@@ -143,15 +145,22 @@ namespace ACTWebSocket_Plugin
             browser.Dock = DockStyle.Fill;
         }
 
+        private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+            String ipaddress = Utility.GetExternalIp();
+            if (ipaddress.Length > 0)
+                browser.ExecuteScriptAsync("addHostname(\"" + ipaddress + "\");");
+            browser.ExecuteScriptAsync("updateWebsocketSettings();");
+        }
+
         ~ACTWebSocketMain()
         {
             SaveSettings();
         }
 
-        string overlayWindowPrefix = "_private_overlay_";
-
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
-        string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.xml");
+        string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.config.json");
+        string overlaySettingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\ACTWebSocket.overlay.json");
 
         #region IActPluginV1 Members
 
@@ -224,6 +233,7 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
 
             SaveSettings();
+            browser.ExecuteScriptAsync("api_overlaywindow_close_all();");
             lblStatus.Text = "Plugin Exited";
         }
 
@@ -237,17 +247,113 @@ namespace ACTWebSocket_Plugin
         {
             if (File.Exists(settingsFile))
             {
+                JObject obj = new JObject();
+                try {
+                    String s = File.ReadAllText(settingsFile);
+                    obj = JObject.Parse(s);
+                    JToken token;
+                    if (obj.TryGetValue("Port", out token))
+                    {
+                        Port = token.ToObject<int>();
+                    }
+                    else
+                    {
+                        Port = 10501;
+                    }
+                    if (obj.TryGetValue("UPnPPort", out token))
+                    {
+                        UPnPPort = token.ToObject<int>();
+                    }
+                    else
+                    {
+                        UPnPPort = Port;
+                    }
+                    if (obj.TryGetValue("Hostname", out token))
+                    {
+                        Hostname = token.ToObject<String>();
+                    }
+                    else
+                    {
+                        Hostname = "localhost";
+                    }
+                    if (obj.TryGetValue("RandomURL", out token))
+                    {
+                        RandomURL = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        RandomURL = false;
+                    }
+                    if (obj.TryGetValue("UseUPnP", out token))
+                    {
+                        UseUPnP = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        UseUPnP = false;
+                    }
+                    if (obj.TryGetValue("AutoRun", out token))
+                    {
+                        AutoRun = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        AutoRun = false;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
         }
 
         void SaveSettings()
         {
+            JObject obj = new JObject();
+            obj.Add("Port", Port);
+            obj.Add("UPnPPort", UPnPPort);
+            obj.Add("Hostname", Hostname);
+            obj.Add("RandomURL", RandomURL);
+            obj.Add("UseUPnP", UseUPnP);
+            obj.Add("AutoRun", AutoRun);
+            String s = obj.ToString();
+            File.WriteAllText(settingsFile, s);
         }
-        
+
+        public void LoadOverlaySettings()
+        {
+            if (File.Exists(settingsFile))
+            {
+                JObject obj = new JObject();
+                try
+                {
+                    String s = File.ReadAllText(overlaySettingsFile);
+                    obj = JObject.Parse(s);
+                    browser.ExecuteScriptAsync("update_all(JSON.parse(Hex2Str(\"" + Utility.Str2Hex(s) + "\")));");
+                }
+                catch (Exception e)
+                {
+                }
+            }
+        }
+
+        public void SaveOverlaySettings(String json)
+        {
+            try
+            {
+                JObject obj = JObject.Parse(json);
+                File.WriteAllText(overlaySettingsFile, obj.ToString());
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
         }
-        
+
         private void oFormActMain_BeforeLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
@@ -281,12 +387,12 @@ namespace ACTWebSocket_Plugin
         public int UPnPPort { get; set; }
         public string Hostname { get; set; }
         public bool RandomURL { get; set; }
-        public bool LocalhostOnly { get; set; }
-        public bool UseUPNP { get; set; }
+        public bool UseUPnP { get; set; }
+        public bool AutoRun { get; set; }
 
         public void StartServer()
         {
-            if(UseUPNP)
+            if(UseUPnP)
             {
                 Task upnpTask = new Task(async () =>
                 {
@@ -301,6 +407,30 @@ namespace ACTWebSocket_Plugin
                 });
                 upnpTask.Start();
             }
+
+            IPHostEntry hostEntry;
+
+            hostEntry = Dns.GetHostEntry(Hostname);
+
+            if (hostEntry.AddressList.Length == 0)
+            {
+                browser.ExecuteScriptAsync("forceChange('[data-flag=serverstatus]');");
+                MessageBox.Show("Invalid Hostname");
+                core.StopServer();
+                return;
+            }
+
+            bool localhostOnly = false;
+            for(int i=0;i< hostEntry.AddressList.Length;++i)
+            {
+                var ip = hostEntry.AddressList[i];
+                if (IPAddress.IsLoopback(ip))
+                {
+                    localhostOnly = true;
+                    break;
+                }
+            }
+            
             if (RandomURL)
             {
                 core.randomDir = Guid.NewGuid().ToString();
@@ -311,13 +441,13 @@ namespace ACTWebSocket_Plugin
             }
             try
             {
-                if (UseUPNP)
+                if (UseUPnP)
                 {
-                    core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname);
                 }
                 else
                 {
-                    core.StartServer(LocalhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname);
                 }
             }
             catch (Exception e)
@@ -409,6 +539,7 @@ namespace ACTWebSocket_Plugin
 
         public void Init()
         {
+            LoadOverlaySettings();
             // MessageBox.Show("ACTWebSocket is Initialized :3");
         }
 
@@ -420,11 +551,6 @@ namespace ACTWebSocket_Plugin
         public void copyURL(string skinPath = "")
         {
             string url = "";
-            if (LocalhostOnly)
-            {
-                url = "http://localhost:" + Port + "/";
-            }
-            else
             {
                 url = "http://" + Hostname + ":" + Port + "/";
             }
