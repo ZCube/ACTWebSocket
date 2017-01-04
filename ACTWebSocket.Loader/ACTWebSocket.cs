@@ -8,6 +8,7 @@ namespace ACTWebSocket_Plugin
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using ACTWebSocket_Plugin.Classes;
     public interface PluginDirectory
     {
         void SetPluginDirectory(string path);
@@ -16,25 +17,6 @@ namespace ACTWebSocket_Plugin
 
     public class ACTWebSocket : IActPluginV1
     {
-        // Environments
-        public static string[] ASMCHK = { "CefSharp", "CefSharp.Core", "CefSharp.WinForms" };
-        public static string APPDATA = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-        , EXECUTE = Application.ExecutablePath
-        , EXECUTE_CONF = EXECUTE.Append(".config")
-        , RESDIR = APPDATA.Append("\\Samhain")
-        , RUNDAT = DateTime.Now.ToString("yyyy.MM.dd")
-
-        // Directories
-        , LOGDIR = string.Join("\\", RESDIR, "logs")
-        , CEFDIR = string.Join("\\", RESDIR, "CEFSharp")
-        , CEFDIR64 = string.Join("\\", RESDIR, "CEFSharp64")
-        , CEFLOC = string.Join("\\", CEFDIR, "locales")
-        , PLUGINDIR = string.Join("\\", RESDIR, "Plugins")
-        , CEFUSR = string.Join("\\", CEFDIR, "UserData")
-        , CEFBIN = string.Join("\\", CEFDIR, "Caches")
-        , BINDIR = string.Join("\\", RESDIR, "bin")
-        , LIBDIR = string.Join("\\", RESDIR, "lib");
-
         public ACTWebSocket()
         {
 
@@ -44,7 +26,6 @@ namespace ACTWebSocket_Plugin
         }
         IActPluginV1 main = null;
         AssemblyResolver asmResolver = null;
-        #region IActPluginV1 Members
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
@@ -73,7 +54,7 @@ namespace ACTWebSocket_Plugin
             {
                 string asmFile = (args.Name.Contains(",") ? args.Name.Substring(0, args.Name.IndexOf(",")) : args.Name);
 
-                if (!ASMCHK.Contains(asmFile))
+                if (!Settings.ASMCHK.Contains(asmFile))
                 {
                     return null;
                 }
@@ -81,9 +62,9 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     if(Environment.Is64BitOperatingSystem)
-                        return Assembly.LoadFile(Path.Combine(CEFDIR64, asmFile + ".dll"));
+                        return Assembly.LoadFile(Path.Combine(Settings.CEFDIR64, asmFile + ".dll"));
                     else
-                        return Assembly.LoadFile(Path.Combine(CEFDIR, asmFile + ".dll"));
+                        return Assembly.LoadFile(Path.Combine(Settings.CEFDIR, asmFile + ".dll"));
                 }
                 catch
                 {
@@ -117,14 +98,5 @@ namespace ACTWebSocket_Plugin
                 throw new Exception();
             }
         }
-    }
-
-    public static class Extend
-    { 
-        public static string Append(this string s, string append)
-        {
-            return s + append;
-        }
-        #endregion
     }
 }

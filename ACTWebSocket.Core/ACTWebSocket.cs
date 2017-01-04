@@ -101,9 +101,13 @@ namespace ACTWebSocket_Plugin
             InitializeComponent();
             InitBrowser();
         }
+
+        public bool ChatFilter { get; set; }
+
         //CEFWorks CEF;
         public void InitBrowser()
         {
+            ChatFilter = false;
             CefLibraryHandle libraryLoader = new CefLibraryHandle(Settings.CEFLIB);
             CefSettings settings = new CefSettings();
 
@@ -354,14 +358,28 @@ namespace ACTWebSocket_Plugin
             bool isImport,
             LogLineEventArgs logInfo)
         {
-            core.Broadcast("/BeforeLogLineRead", logInfo.logLine);
+            FilterChatings("/BeforeLogLineRead", logInfo);
         }
 
         private void oFormActMain_OnLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
         {
-            core.Broadcast("/OnLogLineRead", logInfo.logLine);
+            FilterChatings("/OnLogLineRead", logInfo);
+        }
+
+        private void FilterChatings(string url, LogLineEventArgs e)
+        {
+            string[] data = e.logLine.Split('|');
+
+            if(Convert.ToInt32(data[0]) == 0)
+            {
+                if(Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                {
+                    return;
+                }
+            }
+            core.Broadcast(url, e.logLine);
         }
 
         #region Web JSObject Part
