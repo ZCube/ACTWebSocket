@@ -134,7 +134,6 @@ namespace ACTWebSocket_Plugin
                 var req = e.Request;
                 var res = e.Response;
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-
                 var path = req.RawUrl;
 
                 if(randomDir != null)
@@ -155,7 +154,10 @@ namespace ACTWebSocket_Plugin
                     path += "index.html";
 
                 path = Uri.UnescapeDataString(path);
-
+                Uri uri = new Uri("http://localhost" + path);
+                path = uri.AbsolutePath;
+                //uri.Query;
+                //uri.AbsolutePath;
                 var content = httpServer.GetFile(path);
 
                 if (content == null)
@@ -194,6 +196,7 @@ namespace ACTWebSocket_Plugin
                         host_port = host + ":" + extPort.ToString();
                     }
                     host_port += parent_path;
+                    res.SetCookie(new Cookie("HOST_PORT", host_port));
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
 
