@@ -108,6 +108,7 @@ namespace ACTWebSocket_Plugin
                     }
                     Combatant[pair.Key.Name] = o;
                 }
+                obj["Combatant"] = Combatant;
                 obj["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
             }
 
