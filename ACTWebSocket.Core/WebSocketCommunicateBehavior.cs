@@ -13,9 +13,11 @@ namespace ACTWebSocket_Plugin
     {
         public class WebSocketCommunicateBehavior : WebSocketBehavior
         {
+            FFXIV_OverlayAPI overlayAPI;
             public String id = null;
             public WebSocketCommunicateBehavior()
             {
+                overlayAPI = ACTWebSocketCore.overlayAPI;
                 id = Guid.NewGuid().ToString();
             }
             protected override async void OnOpen()
@@ -27,7 +29,7 @@ namespace ACTWebSocket_Plugin
                 base.OnClose(e);
             }
 
-            protected void Broadcast(String from, String type, JToken message)
+            public void Broadcast(String from, String type, JToken message)
             {
                 JObject obj = new JObject();
                 obj["type"] = "broadcast";
@@ -44,7 +46,7 @@ namespace ACTWebSocket_Plugin
                 }
             }
 
-            protected void Send(String from, String to, String type, JToken message)
+            public void Send(String from, String to, String type, JToken message)
             {
                 JObject obj = new JObject();
                 obj["type"] = "send";
@@ -99,6 +101,7 @@ namespace ACTWebSocket_Plugin
                                     t["after"] = to;
                                     Broadcast(id, "set_id", t);
                                 }
+                                overlayAPI.OnMessage(this, type, from, o);
                             }
                             catch (Exception ex)
                             {

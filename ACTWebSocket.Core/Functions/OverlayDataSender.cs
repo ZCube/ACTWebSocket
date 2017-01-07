@@ -5,49 +5,61 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace ACTWebSocket_Plugin
 {
     partial class FFXIV_OverlayAPI
     {
+        public struct ConfigStruct
+        {
+            public MiniParseSortType SortType;
+            public string SortKey;
+        }
+
+        public ConfigStruct Config;// { get; set; }
+
+        public static JObject updateStringCache = new JObject();
+        public static DateTime updateStringCacheLastUpdate;
+        public static readonly TimeSpan updateStringCacheExpireInterval = new TimeSpan(0, 0, 0, 0, 500); // 500 msec
+
         /// <summary>
         /// 클라이언트(들)로 메세지를 전송합니다.
         /// </summary>
         /// <param name="type">전송될 Enum 타입입니다.</param>
         /// <param name="json">전송될 JSON 입니다. JSON을 감싸는 중괄호를 포함해 작성합니다.</param>
-        public void SendJSON(SendMessageType type, string json)
+        public void SendJSON(SendMessageType type, JToken json)
         {
-            string sendjson = $"{{\"type\":\"{type}\", \"detail\":{json}}}";
-            core.Broadcast("/MiniParse", sendjson);
-        }
-
-        public void SendPrivMessage(string id, string text)
-        {
-            foreach (var v in core.httpServer.WebSocketServices.Hosts)
-            {
-                v.Sessions.SendTo(text, id);
-            }
+            core.Broadcast("/MiniParse", type.ToString(), json);
         }
 
         /// <summary>
         /// 클라이언트(들)로 오류 메세지를 전송합니다.
         /// </summary>
         /// <param name="json">전송될 message입니다.</param>
-        public void SendErrorJSON(string json)
+        public void SendErrorJSON(JToken json)
         {
-            SendJSON(SendMessageType.NetworkError, $"{{\"message\":\"{json.JSONSafeString()}\"}}");
+            core.Broadcast("/MiniParse", "Error", json);
         }
 
         public void SendLastCombat()
         {
-            core.Broadcast("/MiniParse", CreateEncounterJsonData());
+            core.Broadcast("/MiniParse", "CombatData", CreateEncounterJsonData());
         }
 
         private void ACTExtension(bool isImport, LogLineEventArgs e)
         {
             string[] data = e.logLine.Split('|');
             MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
-            ParseData(data, isImport);
+            try
+            {
+                ParseData(data, isImport);
+            }
+            catch(Exception err)
+            {
+                // 예외처리 필요.
+                SendErrorJSON(err.Message);
+            }
         }
 
         public List<KeyValuePair<CombatantData, Dictionary<string, string>>>
@@ -156,22 +168,20 @@ namespace ACTWebSocket_Plugin
                 prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
                 prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
 
-                core.Broadcast("/MiniParse", CreateEncounterJsonData());
+                core.Broadcast("/MiniParse", "CombatData", CreateEncounterJsonData());
             }
         }
 
-        public string CreateEncounterJsonData()
+        internal JObject CreateEncounterJsonData()
         {
-
-            if (DateTime.Now -
-                ACTWebSocketCore.updateStringCacheLastUpdate < ACTWebSocketCore.updateStringCacheExpireInterval)
+            if (DateTime.Now - updateStringCacheLastUpdate < updateStringCacheExpireInterval)
             {
-                return ACTWebSocketCore.updateStringCache;
+                return updateStringCache;
             }
 
             if (!ACTWebSocketCore.CheckIsActReady())
             {
-                return "";
+                return new JObject();
             }
 
             var allies = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
@@ -185,67 +195,85 @@ namespace ACTWebSocket_Plugin
             var combatantTask = Task.Run(() =>
             {
                 combatant = GetCombatantList(allies);
-                core.SortCombatantList(combatant);
+                SortCombatantList(combatant);
             });
             Task.WaitAll(encounterTask, combatantTask);
 
-            var builder = new StringBuilder();
-            builder.Append("{\"type\": \"encounter\", \"detail\": {");
-            builder.Append("\"Encounter\": {");
-            var isFirst1 = true;
-            foreach (var pair in encounter)
+            JObject obj = new JObject();
             {
-                if (isFirst1)
+                JObject Encounter = new JObject();
+                foreach (var pair in encounter)
                 {
-                    isFirst1 = false;
+                    Encounter[pair.Key] = pair.Value.ReplaceNaN();
                 }
-                else
+                obj["Encounter"] = Encounter;
+                JObject Combatant = new JObject();
+                foreach (var pair in combatant)
                 {
-                    builder.Append(",");
+                    JObject o = new JObject();
+                    foreach (var pair2 in pair.Value)
+                    {
+                        o[pair2.Key] = pair2.Value.ReplaceNaN();
+                    }
+                    Combatant[pair.Key.Name] = o;
                 }
-                var valueString = pair.Value.ReplaceNaN().JSONSafeString();
-                builder.AppendFormat("\"{0}\":\"{1}\"", pair.Key.JSONSafeString(), valueString);
+                obj["Combatant"] = Combatant;
+                obj["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
             }
-            builder.Append("},");
-            builder.Append("\"Combatant\": {");
-            var isFirst2 = true;
-            foreach (var pair in combatant)
+
+            updateStringCache = obj;
+            updateStringCacheLastUpdate = DateTime.Now;
+
+            return obj;
+        }
+
+        public void SortCombatantList(List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant)
+        {
+            if (Config.SortType == MiniParseSortType.NumericAscending ||
+                Config.SortType == MiniParseSortType.NumericDescending)
             {
-                if (isFirst2)
+                combatant.Sort((x, y) =>
                 {
-                    isFirst2 = false;
-                }
-                else
-                {
-                    builder.Append(",");
-                }
-                builder.AppendFormat("\"{0}\": {{", pair.Key.Name.JSONSafeString());
-                var isFirst3 = true;
-                foreach (var pair2 in pair.Value)
-                {
-                    if (isFirst3)
+                    int result = 0;
+                    if (x.Value.ContainsKey(Config.SortKey) &&
+                        y.Value.ContainsKey(Config.SortKey))
                     {
-                        isFirst3 = false;
+                        double xValue, yValue;
+                        double.TryParse(x.Value[Config.SortKey].Replace("%", ""), out xValue);
+                        double.TryParse(y.Value[Config.SortKey].Replace("%", ""), out yValue);
+
+                        result = xValue.CompareTo(yValue);
+
+                        if (Config.SortType == MiniParseSortType.NumericDescending)
+                        {
+                            result *= -1;
+                        }
                     }
-                    else
-                    {
-                        builder.Append(",");
-                    }
-                    var valueString = pair2.Value.ReplaceNaN().JSONSafeString();
-                    builder.AppendFormat("\"{0}\":\"{1}\"", pair2.Key.JSONSafeString(), valueString);
-                }
-                builder.Append("}");
+
+                    return result;
+                });
             }
-            builder.Append("},");
-            builder.AppendFormat("\"isActive\": {0}", ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active ? "true" : "false");
-            builder.Append("}}");
+            else if (
+                Config.SortType == MiniParseSortType.StringAscending ||
+                Config.SortType == MiniParseSortType.StringDescending)
+            {
+                combatant.Sort((x, y) =>
+                {
+                    int result = 0;
+                    if (x.Value.ContainsKey(Config.SortKey) &&
+                        y.Value.ContainsKey(Config.SortKey))
+                    {
+                        result = x.Value[Config.SortKey].CompareTo(y.Value[Config.SortKey]);
 
+                        if (Config.SortType == MiniParseSortType.StringDescending)
+                        {
+                            result *= -1;
+                        }
+                    }
 
-            var result = builder.ToString();
-            ACTWebSocketCore.updateStringCache = result;
-            ACTWebSocketCore.updateStringCacheLastUpdate = DateTime.Now;
-
-            return result;
+                    return result;
+                });
+            }
         }
     }
 }

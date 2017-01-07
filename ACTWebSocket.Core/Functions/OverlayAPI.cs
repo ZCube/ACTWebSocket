@@ -10,6 +10,7 @@ using ACTWebSocket_Plugin.Classes;
 
 namespace ACTWebSocket_Plugin
 {
+    using Newtonsoft.Json.Linq;
     using System.Threading.Tasks;
     public partial class FFXIV_OverlayAPI
     {
@@ -36,17 +37,16 @@ namespace ACTWebSocket_Plugin
             AttachACTEvent();
         }
 
-        public void ProcPrivateMsg(string id, WebSocketSharp.Server.WebSocketSessionManager Session, string data)
+        public void OnMessage(ACTWebSocketCore.WebSocketCommunicateBehavior session, string type, string id, JObject message)
         {
-            if(data != ".")
+            try
             {
-                string[] arguments = data.SplitStr(" ", StringSplitOptions.RemoveEmptyEntries);
-                switch(data)
+                switch (type)
                 {
                     // Send Last Combat Data
                     case "RequestLastCombat":
                     case "RequestLastCombatData":
-                        SendPrivMessage(id, CreateEncounterJsonData());
+                        session.Send(id, id, "CombatData", CreateEncounterJsonData());
                         break;
                     // E END
                     case "RequestEnd":
@@ -55,40 +55,64 @@ namespace ACTWebSocket_Plugin
                         break;
                     // DBM?
                     case "GetFileList":
-                        if (arguments.Length < 2) return;
-                        SendPrivMessage(id, ListToJSON(GetFiles(arguments[1])));
+                        {
+                            String arg = ((JToken)message).ToObject<string>();
+                            session.Send(id, id, "FileList", ListToJSON(GetFiles(arg)));
+                        }
                         break;
                     case "GetDirectoryList":
-                        if (arguments.Length < 2) return;
-                        SendPrivMessage(id, ListToJSON(GetDirectories(arguments[1])));
+                        {
+                            String arg = ((JToken)message).ToObject<string>();
+                            session.Send(id, id, "DirectoryList", ListToJSON(GetDirectories(arg)));
+                        }
                         break;
-                    case "ReadFile":
-                        if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{data:\""+ReadFile(arguments[1])+"\"}");
-                        break;
-                    case "GetImageBase64":
-                        if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{data:\"" + GetImageBASE64(arguments[1]) + "\"}");
-                        break;
+                        // TODO : Security !
+                    //case "ReadFile":
+                    //    {
+                    //        String arg = ((JToken)message).ToObject<string>();
+                    //        session.Send(id, id, "File", ReadFile(arg));
+                    //    }
+                    //    break;
+                    //case "GetImageBase64":
+                    //    {
+                    //        String arg = ((JToken)message).ToObject<string>();
+                    //        session.Send(id, id, "ImageBase64", GetImageBASE64(arg));
+                    //    }
+                    //    break;
                     case "GetDirectoryNoLastSlash":
-                        if (arguments.Length < 2) return;
-                        SendPrivMessage(id, "{data:\"" + GetDirectoryNoLastSlash(arguments[1]) + "\"}");
+                        {
+                            String arg = ((JToken)message).ToObject<string>();
+                            session.Send(id, id, "GetDirectoryNoLastSlash", GetDirectoryNoLastSlash(arg));
+                        }
                         break;
                     case "FileExists":
-                        SendPrivMessage(id, "{data:" + FileExists(arguments[1]) + "}");
+                        {
+                            String arg = ((JToken)message).ToObject<string>();
+                            session.Send(id, id, "FileExists", FileExists(arg));
+                        }
                         break;
                     case "DirectoryExists":
-                        SendPrivMessage(id, "{data:" + DirectoryExists(arguments[1]) + "}");
+                        {
+                            String arg = ((JToken)message).ToObject<string>();
+                            session.Send(id, id, "DirectoryExists", DirectoryExists(arg));
+                        }
                         break;
                 }
             }
+            catch(Exception e)
+            {
+                session.Send(id, id, "Error", e.Message);
+            }
         }
-
-        public string ListToJSON(string[] s)
+        
+        public JObject ListToJSON(string[] s)
         {
-            string sr = string.Format("[\"{0}\"]", string.Join("\",\"", s));
-            sr = "{returndata:" + sr.JSONSafeString() + "}";
-            return sr;
+            JObject obj = new JObject();
+            foreach(string a in s)
+            {
+                obj.Add(a);
+            }
+            return obj;
         }
 
         // DBM?...
