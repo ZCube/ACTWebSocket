@@ -213,8 +213,6 @@ namespace ACTWebSocket_Plugin
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             LoadSettings();
 
-
-
             //if (core != null)
             //{
             //    core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
@@ -324,6 +322,30 @@ namespace ACTWebSocket_Plugin
                     {
                         AutoRun = false;
                     }
+                    if (obj.TryGetValue("BeforeLogLineRead", out token))
+                    {
+                        BeforeLogLineRead = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        BeforeLogLineRead = false;
+                    }
+                    if (obj.TryGetValue("OnLogLineRead", out token))
+                    {
+                        OnLogLineRead = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        OnLogLineRead = false;
+                    }
+                    if (obj.TryGetValue("MiniParse", out token))
+                    {
+                        MiniParse = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        MiniParse = false;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -346,6 +368,9 @@ namespace ACTWebSocket_Plugin
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
             obj.Add("AutoRun", AutoRun);
+            obj.Add("BeforeLogLineRead", BeforeLogLineRead);
+            obj.Add("OnLogLineRead", OnLogLineRead);
+            obj.Add("MiniParse", MiniParse);
             String s = obj.ToString();
             File.WriteAllText(settingsFile, s);
         }
@@ -415,7 +440,7 @@ namespace ACTWebSocket_Plugin
             {
                 // TODO ?
             }
-            core.Broadcast(url, e.logLine);
+            core.Broadcast(url, "Chat", e.logLine);
         }
 
         #region Web JSObject Part
@@ -428,7 +453,12 @@ namespace ACTWebSocket_Plugin
 
         public void StartServer()
         {
-            if(UseUPnP)
+
+            core.Filters["/BeforeLogLineRead"] = true;
+            core.Filters["/OnLogLineRead"] = true;
+            core.Filters["/MiniParse"] = true;
+
+            if (UseUPnP)
             {
                 Task upnpTask = new Task(async () =>
                 {

@@ -388,6 +388,9 @@ function setWebsocketSettings()
 			$("*[data-flag=randurl]").attr("data-checked", main.randomURL?"true":"false");
 			$("*[data-flag=upnp]").attr("data-checked", main.useUPnP?"true":"false");
 			$("*[data-flag=autorun]").attr("data-checked", main.autoRun?"true":"false");
+			$("*[data-flag=beforeloglineread]").attr("data-checked", main.beforeLogLineRead?"true":"false");
+			$("*[data-flag=onloglineread]").attr("data-checked", main.onLogLineRead?"true":"false");
+			$("*[data-flag=miniparse ]").attr("data-checked", main.miniParse?"true":"false");
 		}
 		catch(e)
 		{

@@ -17,7 +17,8 @@ namespace ACTWebSocket_Plugin
 {
     public partial class ACTWebSocketCore
     {
-        public ACTWebSocketCore() {
+        public ACTWebSocketCore()
+        {
             overlayAPI = new FFXIV_OverlayAPI(this);
         }
 
@@ -29,33 +30,6 @@ namespace ACTWebSocket_Plugin
         Timer pingTimer = null;
         public string randomDir = "Test";
         internal IntPtr hwnd;
-
-        public class EchoSocketBehavior : WebSocketBehavior
-        {
-            public EchoSocketBehavior() { }
-            protected override async void OnOpen()
-            {
-                base.OnOpen();
-            }
-            protected override void OnClose(CloseEventArgs e) { base.OnClose(e); }
-            protected override void OnMessage(MessageEventArgs e)
-            {
-                switch (e.Type)
-                {
-                    case Opcode.Text:
-                        overlayAPI.ProcPrivateMsg(ID, Sessions, e.Data);
-                        break;
-                    case Opcode.Binary:
-                    case Opcode.Cont:
-                    case Opcode.Close:
-                    case Opcode.Ping:
-                    case Opcode.Pong:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
 
         internal void StartUIServer()
         {
@@ -123,7 +97,7 @@ namespace ACTWebSocket_Plugin
         void InitUpdate()
         {
             System.Threading.Thread.Sleep(1000);
-            Broadcast("/MiniParse", overlayAPI.CreateEncounterJsonData());
+            Broadcast("/MiniParse", "CombatData", overlayAPI.CreateEncounterJsonData());
         }
 
         internal void StartServer(string address, int port, int extPort, string domain = null)
@@ -145,9 +119,9 @@ namespace ACTWebSocket_Plugin
             }
 
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/Communicate");
-            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/MiniParse");
-            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/BeforeLogLineRead");
-            httpServer.AddWebSocketService<EchoSocketBehavior>(parent_path + "/OnLogLineRead");
+            httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/MiniParse");
+            httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/BeforeLogLineRead");
+            httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/OnLogLineRead");
             
             httpServer.RootPath = overlaySkinDirectory;
             httpServer.OnConnect += (sender, e) =>
@@ -267,7 +241,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    overlayAPI.Update();
+                    Update();
                 }
                 catch (Exception ex)
                 {
@@ -306,7 +280,7 @@ namespace ACTWebSocket_Plugin
 
         }
 
-        internal void Broadcast(string v, string text)
+        internal void Broadcast(string v, string type, JToken message)
         {
             if (httpServer != null)
             {
@@ -322,7 +296,12 @@ namespace ACTWebSocket_Plugin
                     {
                         if (s.Path.CompareTo(parent_path + v) == 0)
                         {
-                            s.Sessions.Broadcast(text);
+                            JObject obj = new JObject();
+                            obj["type"] = "broadcast";
+                            obj["msgtype"] = type;
+                            obj["msg"] = message;
+                            String str = obj.ToString();
+                            s.Sessions.Broadcast(str);
                         }
                     }
                 }
