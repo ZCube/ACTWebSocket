@@ -74,21 +74,6 @@
       <HintPath>C:\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CefSharp, Version=53.0.0.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\ADMIN\AppData\Roaming\Samhain\CEFSharp64\CefSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="CefSharp.Core, Version=53.0.0.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\ADMIN\AppData\Roaming\Samhain\CEFSharp64\CefSharp.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="CefSharp.WinForms, Version=53.0.0.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\ADMIN\AppData\Roaming\Samhain\CEFSharp64\CefSharp.WinForms.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="MimeTypeMap, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediaTypeMap.2.1.0.0\lib\net40\MimeTypeMap.dll</HintPath>
       <Private>True</Private>
@@ -123,9 +108,6 @@
     <Compile Include="ACTWebSocketCore_MiniParse.cs" />
     <Compile Include="ACTWebSocket_Overlay.cs" />
     <Compile Include="Classes\CombatData.cs" />
-    <Compile Include="Classes\Interfaces\CefSharpSchemeHandler.cs" />
-    <Compile Include="Classes\Interfaces\CefSharpSchemeHandlerFactory.cs" />
-    <Compile Include="Classes\Interfaces\CustomMenuHandler.cs" />
     <Compile Include="Classes\MP3.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\StaticAPI.cs" />

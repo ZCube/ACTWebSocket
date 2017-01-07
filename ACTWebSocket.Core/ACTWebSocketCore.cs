@@ -28,7 +28,7 @@ namespace ACTWebSocket_Plugin
         HttpServer uiServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
-        public string randomDir = "Test";
+        public string randomDir = null;
         internal IntPtr hwnd;
 
         internal void StartUIServer()
@@ -153,9 +153,9 @@ namespace ACTWebSocket_Plugin
                 if (path == "/")
                     path += "index.html";
 
-                path = Uri.UnescapeDataString(path);
                 Uri uri = new Uri("http://localhost" + path);
                 path = uri.AbsolutePath;
+                path = Uri.UnescapeDataString(path);
                 //uri.Query;
                 //uri.AbsolutePath;
                 var content = httpServer.GetFile(path);

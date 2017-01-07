@@ -9,9 +9,6 @@ namespace ACTWebSocket_Plugin
 {
     using static ACTWebSocketCore;
     using ACTWebSocket.Core;
-    using ACTWebSocket.Core.Classes.Interfaces;
-    using CefSharp;
-    using CefSharp.WinForms;
     using Classes;
     using Newtonsoft.Json.Linq;
     using Open.Nat;
@@ -31,7 +28,16 @@ namespace ACTWebSocket_Plugin
 
         string overlaySkinDirectory { get; set; }
         string pluginDirectory = "";
-        private ChromiumWebBrowser browser;
+        private ComboBox hostnames;
+        private Label label2;
+        private TextBox uPnPPort;
+        private Button buttonRefresh;
+        private Label label1;
+        private ListBox skinList;
+        private GroupBox groupBox1;
+        private Button buttonAddURL;
+        private Button buttonURL;
+        private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
         {
@@ -53,6 +59,23 @@ namespace ACTWebSocket_Plugin
             return pluginDirectory;
         }
         private ACTWebSocketCore core;
+        private TextBox port;
+        private CheckBox autostart;
+        private CheckBox MiniParseUse;
+        private CheckBox BeforeLogLineReadUse;
+        private CheckBox UPNPUse;
+        private CheckBox OnLogLineReadUse;
+        private Button buttonOff;
+        private Button buttonOn;
+        private CheckBox randomURL;
+        private Label label13;
+        private GroupBox startoption;
+        private GroupBox hostdata;
+        private Label label15;
+        private Label label14;
+        private GroupBox othersets;
+        private GroupBox serverStatus;
+        private Button copyURL;
         #region Designer Created Code (Avoid editing)
         /// <summary> 
         /// Required designer variable.
@@ -81,14 +104,268 @@ namespace ACTWebSocket_Plugin
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ACTWebSocketMain));
+            this.port = new System.Windows.Forms.TextBox();
+            this.autostart = new System.Windows.Forms.CheckBox();
+            this.MiniParseUse = new System.Windows.Forms.CheckBox();
+            this.BeforeLogLineReadUse = new System.Windows.Forms.CheckBox();
+            this.OnLogLineReadUse = new System.Windows.Forms.CheckBox();
+            this.buttonOff = new System.Windows.Forms.Button();
+            this.buttonOn = new System.Windows.Forms.Button();
+            this.UPNPUse = new System.Windows.Forms.CheckBox();
+            this.randomURL = new System.Windows.Forms.CheckBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.startoption = new System.Windows.Forms.GroupBox();
+            this.hostdata = new System.Windows.Forms.GroupBox();
+            this.hostnames = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.uPnPPort = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.othersets = new System.Windows.Forms.GroupBox();
+            this.chatFilter = new System.Windows.Forms.CheckBox();
+            this.serverStatus = new System.Windows.Forms.GroupBox();
+            this.copyURL = new System.Windows.Forms.Button();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.skinList = new System.Windows.Forms.ListBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonAddURL = new System.Windows.Forms.Button();
+            this.buttonURL = new System.Windows.Forms.Button();
+            this.startoption.SuspendLayout();
+            this.hostdata.SuspendLayout();
+            this.othersets.SuspendLayout();
+            this.serverStatus.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // port
+            // 
+            resources.ApplyResources(this.port, "port");
+            this.port.Name = "port";
+            this.port.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.port_KeyPress);
+            // 
+            // autostart
+            // 
+            resources.ApplyResources(this.autostart, "autostart");
+            this.autostart.BackColor = System.Drawing.Color.Transparent;
+            this.autostart.Name = "autostart";
+            this.autostart.UseVisualStyleBackColor = false;
+            // 
+            // MiniParseUse
+            // 
+            resources.ApplyResources(this.MiniParseUse, "MiniParseUse");
+            this.MiniParseUse.BackColor = System.Drawing.Color.Transparent;
+            this.MiniParseUse.Checked = true;
+            this.MiniParseUse.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MiniParseUse.Name = "MiniParseUse";
+            this.MiniParseUse.UseVisualStyleBackColor = false;
+            this.MiniParseUse.CheckedChanged += new System.EventHandler(this.MiniParseUse_CheckedChanged);
+            // 
+            // BeforeLogLineReadUse
+            // 
+            resources.ApplyResources(this.BeforeLogLineReadUse, "BeforeLogLineReadUse");
+            this.BeforeLogLineReadUse.BackColor = System.Drawing.Color.Transparent;
+            this.BeforeLogLineReadUse.Name = "BeforeLogLineReadUse";
+            this.BeforeLogLineReadUse.UseVisualStyleBackColor = false;
+            this.BeforeLogLineReadUse.CheckedChanged += new System.EventHandler(this.BeforeLogLineReadUse_CheckedChanged);
+            // 
+            // OnLogLineReadUse
+            // 
+            resources.ApplyResources(this.OnLogLineReadUse, "OnLogLineReadUse");
+            this.OnLogLineReadUse.BackColor = System.Drawing.Color.Transparent;
+            this.OnLogLineReadUse.Name = "OnLogLineReadUse";
+            this.OnLogLineReadUse.UseVisualStyleBackColor = false;
+            this.OnLogLineReadUse.CheckedChanged += new System.EventHandler(this.OnLogLineReadUse_CheckedChanged);
+            // 
+            // buttonOff
+            // 
+            resources.ApplyResources(this.buttonOff, "buttonOff");
+            this.buttonOff.Name = "buttonOff";
+            this.buttonOff.UseVisualStyleBackColor = true;
+            this.buttonOff.Click += new System.EventHandler(this.buttonOff_Click);
+            // 
+            // buttonOn
+            // 
+            resources.ApplyResources(this.buttonOn, "buttonOn");
+            this.buttonOn.Name = "buttonOn";
+            this.buttonOn.UseVisualStyleBackColor = true;
+            this.buttonOn.Click += new System.EventHandler(this.buttonOn_Click);
+            // 
+            // UPNPUse
+            // 
+            resources.ApplyResources(this.UPNPUse, "UPNPUse");
+            this.UPNPUse.BackColor = System.Drawing.Color.Transparent;
+            this.UPNPUse.Checked = true;
+            this.UPNPUse.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UPNPUse.Name = "UPNPUse";
+            this.UPNPUse.UseVisualStyleBackColor = false;
+            // 
+            // randomURL
+            // 
+            resources.ApplyResources(this.randomURL, "randomURL");
+            this.randomURL.BackColor = System.Drawing.Color.Transparent;
+            this.randomURL.Name = "randomURL";
+            this.randomURL.UseVisualStyleBackColor = false;
+            // 
+            // label13
+            // 
+            this.label13.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.Name = "label13";
+            // 
+            // startoption
+            // 
+            this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.UPNPUse);
+            this.startoption.Controls.Add(this.randomURL);
+            this.startoption.Controls.Add(this.autostart);
+            resources.ApplyResources(this.startoption, "startoption");
+            this.startoption.Name = "startoption";
+            this.startoption.TabStop = false;
+            // 
+            // hostdata
+            // 
+            this.hostdata.BackColor = System.Drawing.Color.Transparent;
+            this.hostdata.Controls.Add(this.hostnames);
+            this.hostdata.Controls.Add(this.label2);
+            this.hostdata.Controls.Add(this.uPnPPort);
+            this.hostdata.Controls.Add(this.label15);
+            this.hostdata.Controls.Add(this.label14);
+            this.hostdata.Controls.Add(this.port);
+            resources.ApplyResources(this.hostdata, "hostdata");
+            this.hostdata.Name = "hostdata";
+            this.hostdata.TabStop = false;
+            // 
+            // hostnames
+            // 
+            this.hostnames.FormattingEnabled = true;
+            resources.ApplyResources(this.hostnames, "hostnames");
+            this.hostnames.Name = "hostnames";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Name = "label2";
+            // 
+            // uPnPPort
+            // 
+            resources.ApplyResources(this.uPnPPort, "uPnPPort");
+            this.uPnPPort.Name = "uPnPPort";
+            this.uPnPPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.port_KeyPress);
+            // 
+            // label15
+            // 
+            resources.ApplyResources(this.label15, "label15");
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.Name = "label15";
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Name = "label14";
+            // 
+            // othersets
+            // 
+            this.othersets.BackColor = System.Drawing.Color.Transparent;
+            this.othersets.Controls.Add(this.chatFilter);
+            this.othersets.Controls.Add(this.BeforeLogLineReadUse);
+            this.othersets.Controls.Add(this.OnLogLineReadUse);
+            this.othersets.Controls.Add(this.MiniParseUse);
+            resources.ApplyResources(this.othersets, "othersets");
+            this.othersets.Name = "othersets";
+            this.othersets.TabStop = false;
+            // 
+            // chatFilter
+            // 
+            resources.ApplyResources(this.chatFilter, "chatFilter");
+            this.chatFilter.BackColor = System.Drawing.Color.Transparent;
+            this.chatFilter.Name = "chatFilter";
+            this.chatFilter.UseVisualStyleBackColor = false;
+            this.chatFilter.CheckedChanged += new System.EventHandler(this.chatFilter_CheckedChanged);
+            // 
+            // serverStatus
+            // 
+            this.serverStatus.Controls.Add(this.buttonOn);
+            this.serverStatus.Controls.Add(this.buttonOff);
+            resources.ApplyResources(this.serverStatus, "serverStatus");
+            this.serverStatus.Name = "serverStatus";
+            this.serverStatus.TabStop = false;
+            // 
+            // copyURL
+            // 
+            resources.ApplyResources(this.copyURL, "copyURL");
+            this.copyURL.Name = "copyURL";
+            this.copyURL.UseVisualStyleBackColor = true;
+            this.copyURL.Click += new System.EventHandler(this.copyURL_Click);
+            // 
+            // buttonRefresh
+            // 
+            resources.ApplyResources(this.buttonRefresh, "buttonRefresh");
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // skinList
+            // 
+            resources.ApplyResources(this.skinList, "skinList");
+            this.skinList.FormattingEnabled = true;
+            this.skinList.Name = "skinList";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.skinList);
+            this.groupBox1.Controls.Add(this.label1);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // buttonAddURL
+            // 
+            resources.ApplyResources(this.buttonAddURL, "buttonAddURL");
+            this.buttonAddURL.Name = "buttonAddURL";
+            this.buttonAddURL.UseVisualStyleBackColor = true;
+            this.buttonAddURL.Click += new System.EventHandler(this.buttonAddURL_Click);
+            // 
+            // buttonURL
+            // 
+            resources.ApplyResources(this.buttonURL, "buttonURL");
+            this.buttonURL.Name = "buttonURL";
+            this.buttonURL.UseVisualStyleBackColor = true;
+            this.buttonURL.Click += new System.EventHandler(this.buttonURL_Click);
             // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.buttonURL);
+            this.Controls.Add(this.buttonAddURL);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.buttonRefresh);
+            this.Controls.Add(this.copyURL);
+            this.Controls.Add(this.serverStatus);
+            this.Controls.Add(this.othersets);
+            this.Controls.Add(this.hostdata);
+            this.Controls.Add(this.startoption);
+            this.Controls.Add(this.label13);
             resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
+            this.startoption.ResumeLayout(false);
+            this.startoption.PerformLayout();
+            this.hostdata.ResumeLayout(false);
+            this.hostdata.PerformLayout();
+            this.othersets.ResumeLayout(false);
+            this.othersets.PerformLayout();
+            this.serverStatus.ResumeLayout(false);
+            this.serverStatus.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -102,79 +379,10 @@ namespace ACTWebSocket_Plugin
             InitBrowser();
         }
 
-        public bool ChatFilter { get; set; }
 
-        //CEFWorks CEF;
         public void InitBrowser()
         {
             ChatFilter = false;
-            CefLibraryHandle libraryLoader = new CefLibraryHandle(Settings.CEFLIB);
-            CefSettings settings = new CefSettings();
-
-
-            settings.RegisterScheme(new CefCustomScheme
-            {
-                SchemeName = CefSharpSchemeHandlerFactory.SchemeName,
-                SchemeHandlerFactory = new CefSharpSchemeHandlerFactory()
-            });
-            settings.BrowserSubprocessPath = Settings.CEFBRW;
-            settings.LocalesDirPath = Settings.CEFLOC;
-            settings.UserDataPath = Settings.CEFUSR;
-            settings.CachePath = Settings.CEFBIN;
-            settings.LogFile = Settings.LOGDIR + "\\debug.log";
-
-            // 3264
-            if (Environment.Is64BitOperatingSystem)
-                settings.ResourcesDirPath = Settings.CEFDIR;
-            else
-                settings.ResourcesDirPath = Settings.CEFDIR64;
-
-            CultureInfo ci = CultureInfo.InstalledUICulture;
-            string specName = "en";
-            try { specName = CultureInfo.CreateSpecificCulture(ci.Name).Name; } catch { }
-            settings.Locale = specName;
-
-            Cef.Initialize(settings);
-
-            browser = new ChromiumWebBrowser("rsrc://localhost/Resources/MainForm.html");
-            browser.FrameLoadEnd += Browser_FrameLoadEnd;
-
-            Controls.Add(browser);
-            browser.RegisterJsObject("main", this);
-
-            browser.Dock = DockStyle.Fill;
-        }
-
-        private void Browser_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
-        {
-            String strHostName = string.Empty;
-            strHostName = Dns.GetHostName();
-            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
-
-            List<String> addrs = new List<String>();
-            addrs.Add("127.0.0.1");
-            {
-                IPAddress[] addr = ipEntry.AddressList;
-                for (int i = 0; i < addr.Length; i++)
-                {
-                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        addrs.Add(addr[i].ToString());
-                }
-            }
-            String ipaddress = Utility.GetExternalIp();
-            if (ipaddress.Length > 0)
-                addrs.Add(ipaddress);
-
-            addrs = Utility.Distinct<String>(addrs);
-            addrs.Sort();
-
-            StringBuilder sb = new StringBuilder();
-            foreach (var addr in addrs)
-            {
-                sb.Append("addHostname(\"" + addr + "\");");
-            }
-            sb.Append("updateWebsocketSettings();");
-            browser.ExecuteScriptAsync(sb.ToString());
         }
 
         ~ACTWebSocketMain()
@@ -212,34 +420,45 @@ namespace ACTWebSocket_Plugin
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             LoadSettings();
+            BeforeLogLineReadUse.Checked = BeforeLogLineRead;
+            OnLogLineReadUse.Checked = OnLogLineRead;
+            MiniParseUse.Checked = MiniParse;
+            UPNPUse.Checked = UseUPnP;
+            randomURL.Checked = RandomURL;
+            chatFilter.Checked = ChatFilter;
+            autostart.Checked = AutoRun;
+            StopServer();
 
-            //if (core != null)
-            //{
-            //    core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
-            //    core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
-            //    core.Filters["/MiniParse"] = MiniParseUse.Checked;
-            //    core.Config.SortKey = MiniParseSortKey.Text.Trim();
-            //    core.Config.SortType = (MiniParseSortType)sortType.SelectedIndex;
-            //}
-            //try
-            //{
-            //    core.StartUIServer();
+            if (core != null)
+            {
+                core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
+                core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
+                core.Filters["/MiniParse"] = MiniParseUse.Checked;
+                // not configurable ?
+                core.Config.SortKey = "encdps";
+                core.Config.SortType = MiniParseSortType.NumericAscending;
+            }
 
-            //    if (autostart.Checked)
-            //    {
-            //        StartServer();
-            //    }
-            //    else
-            //    {
-            //        StopServer();
-            //    }
-            //}
-            //catch(Exception e)
-            //{
-            //    MessageBox.Show(e.Message);
-            //    core.StopUIServer();
-            //    StopServer();
-            //}
+            try
+            {
+                core.StartUIServer();
+
+                if (autostart.Checked)
+                {
+                    StartServer();
+                }
+                else
+                {
+                    StopServer();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                core.StopUIServer();
+                StopServer();
+            }
+
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
             ActGlobals.oFormActMain.BeforeLogLineRead += oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += oFormActMain_OnLogLineRead;
@@ -255,7 +474,7 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
 
             SaveSettings();
-            browser.ExecuteScriptAsync("api_overlaywindow_close_all();");
+            //browser.ExecuteScriptAsync("api_overlaywindow_close_all();");
             lblStatus.Text = "Plugin Exited";
         }
 
@@ -330,6 +549,14 @@ namespace ACTWebSocket_Plugin
                     {
                         BeforeLogLineRead = false;
                     }
+                    if (obj.TryGetValue("ChatFilter", out token))
+                    {
+                        ChatFilter = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        ChatFilter = false;
+                    }
                     if (obj.TryGetValue("OnLogLineRead", out token))
                     {
                         OnLogLineRead = token.ToObject<bool>();
@@ -346,21 +573,27 @@ namespace ACTWebSocket_Plugin
                     {
                         MiniParse = false;
                     }
+                    if(obj.TryGetValue("SkinURLList", out token))
+                    {
+                        SkinURLList.Clear();
+                        buttonRefresh_Click(null, null);
+                        foreach (var a in token.Values<string>())
+                        {
+                            SkinURLList.Add(a);
+                            skinList.Items.Add(a);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
                 }
+                hostnames.Text = Hostname;
             }
         }
 
         void SaveSettings()
         {
-            browser.ExecuteScriptAsync("updateWebsocketSettings();main._SaveSettings();");
-        }
-
-        public void _SaveSettings()
-        {
-            browser.ExecuteScriptAsync("");
+            UpdateFormSettings();
             JObject obj = new JObject();
             obj.Add("Port", Port);
             obj.Add("UPnPPort", UPnPPort);
@@ -371,42 +604,46 @@ namespace ACTWebSocket_Plugin
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
             obj.Add("OnLogLineRead", OnLogLineRead);
             obj.Add("MiniParse", MiniParse);
+            obj.Add("ChatFilter", ChatFilter);
+            JArray skins = new JArray();
+            foreach (string a in SkinURLList)
+            {
+                skins.Add(a);
+            }
+            obj.Add("SkinURLList", skins);
             String s = obj.ToString();
             File.WriteAllText(settingsFile, s);
         }
 
-        public void LoadOverlaySettings()
-        {
-            if (File.Exists(settingsFile))
-            {
-                JObject obj = new JObject();
-                try
-                {
-                    String s = File.ReadAllText(overlaySettingsFile);
-                    obj = JObject.Parse(s);
-                    browser.ExecuteScriptAsync("update_all(JSON.parse(Hex2Str(\"" + Utility.Str2Hex(s) + "\")));");
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        }
-
-        public void SaveOverlaySettings(String json)
-        {
-            try
-            {
-                JObject obj = JObject.Parse(json);
-                File.WriteAllText(overlaySettingsFile, obj.ToString());
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
+            String strHostName = string.Empty;
+            strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+
+            List<String> addrs = new List<String>();
+            addrs.Add("127.0.0.1");
+            {
+                IPAddress[] addr = ipEntry.AddressList;
+                for (int i = 0; i < addr.Length; i++)
+                {
+                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        addrs.Add(addr[i].ToString());
+                }
+            }
+            String ipaddress = Utility.GetExternalIp();
+            if (ipaddress.Length > 0)
+                addrs.Add(ipaddress);
+
+            addrs = Utility.Distinct<String>(addrs);
+            addrs.Sort();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var addr in addrs)
+            {
+                hostnames.Items.Add(addr);
+            }
+            buttonRefresh_Click(sender, e);
         }
 
         private void oFormActMain_BeforeLogLineRead(
@@ -447,13 +684,33 @@ namespace ACTWebSocket_Plugin
         public int Port { get; set; }
         public int UPnPPort { get; set; }
         public string Hostname { get; set; }
-        public bool RandomURL { get; set; }
+
+        public bool RandomURL
+        {
+            get
+            {
+                return core == null || core.randomDir != null;
+            }
+            set
+            {
+                if (value)
+                {
+                    core.randomDir = Guid.NewGuid().ToString();
+                }
+                else
+                {
+                    core.randomDir = null;
+                }
+            }
+        }
+
         public bool UseUPnP { get; set; }
         public bool AutoRun { get; set; }
+        public bool ChatFilter { get; set; }
+        public List<String> SkinURLList = new List<String>();
 
         public void StartServer()
         {
-
             core.Filters["/BeforeLogLineRead"] = true;
             core.Filters["/OnLogLineRead"] = true;
             core.Filters["/MiniParse"] = true;
@@ -510,18 +767,38 @@ namespace ACTWebSocket_Plugin
             }
             catch (Exception e)
             {
-                browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"true\"); forceChange('[data-flag=serverstatus]');");
                 MessageBox.Show(e.Message);
-                core.StopServer();
+                StopServer();
             }
-            browser.ExecuteScriptAsync("$('[data-flag=serverstatus]').attr(\"data-checked\", \"false\"); forceChange('[data-flag=serverstatus]');");
+            //BeforeLogLineReadUse.Enabled = false;
+            //OnLogLineReadUse.Enabled = false;
+            //MiniParseUse.Enabled = false;
+            //chatFilter.Enabled = false;
+            UPNPUse.Enabled = false;
+            randomURL.Enabled = false;
+            buttonOn.Enabled = false;
+            port.Enabled = false;
+            uPnPPort.Enabled = false;
+            hostnames.Enabled = false;
+            buttonOff.Enabled = true;
         }
 
         public void StopServer()
         {
             core.StopServer();
+            //BeforeLogLineReadUse.Enabled = true;
+            //OnLogLineReadUse.Enabled = true;
+            //MiniParseUse.Enabled = true;
+            //chatFilter.Enabled = true;
+            UPNPUse.Enabled = true;
+            randomURL.Enabled = true;
+            buttonOn.Enabled = true;
+            port.Enabled = true;
+            uPnPPort.Enabled = true;
+            hostnames.Enabled = true;
+            buttonOff.Enabled = false;
         }
-        
+
         public void consolelog(object s)
         {
             Console.WriteLine(s);
@@ -583,51 +860,200 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        public void GetSkinList()
+        public List<string> GetSkinList()
         {
-            string s = "<div data-url=\"\">{FILEURL}<div class=\"link\"></div><div class=\"select\"></div></div>";
-            JObject o = new JObject();
+            List<string> list = new List<string>();
             foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
             {
-                Console.WriteLine(file);
-                o.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
+                list.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
             }
-
-            //return o.ToString();
+            return list;
         }
-
-        public void Init()
-        {
-            LoadOverlaySettings();
-            // MessageBox.Show("ACTWebSocket is Initialized :3");
-        }
-
-        public void openDEV()
-        {
-            browser.ShowDevTools();
-        }
-
-        public void copyURL(string skinPath = "")
+        
+        public void copyURLPath(string skinPath = "")
         {
             string url = "";
             {
-                url = "http://" + Hostname + ":" + Port + "/";
+                url = "://" + Hostname + ":" + Port + "/";
             }
             if (core.randomDir != null)
             {
                 url += core.randomDir + "/";
             }
-            if (skinPath.Length > 0)
+            if (skinPath.ToLower().StartsWith("http"))
             {
-                string fullURL = url + Uri.EscapeDataString(skinPath);
-                fullURL = fullURL.Replace("%5C", "/");
-                Clipboard.SetText(fullURL);
+                try
+                {
+                    Uri uri = new Uri(skinPath + "?HOST_PORT=" + "ws" + url);
+                    Clipboard.SetText(uri.ToString());
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
             }
             else
             {
-                Clipboard.SetText(url);
+                if (skinPath.Length > 0)
+                {
+                    try
+                    {
+                        string fullURL = "http" + url + Uri.EscapeDataString(skinPath);
+                        fullURL = fullURL.Replace("%5C", "/");
+                        Clipboard.SetText(fullURL);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                else
+                {
+                    Clipboard.SetText(url);
+                }
             }
         }
         #endregion Web JSObject Part End
+
+        private void UpdateFormSettings()
+        {
+            BeforeLogLineRead = BeforeLogLineReadUse.Checked;
+            OnLogLineRead = OnLogLineReadUse.Checked;
+            MiniParse = MiniParseUse.Checked;
+            UseUPnP = UPNPUse.Checked;
+            RandomURL = randomURL.Checked;
+            ChatFilter = chatFilter.Checked;
+            AutoRun = autostart.Checked;
+            Hostname = hostnames.Text;
+            try
+            {
+                Port = Convert.ToInt32(port.Text);
+            }
+            catch(Exception ex)
+            {
+                Port = 10501;
+                port.Text = Port.ToString();
+            }
+            try
+            {
+                UPnPPort = Convert.ToInt32(uPnPPort.Text);
+            }
+            catch (Exception ex)
+            {
+                UPnPPort = Port;
+                uPnPPort.Text = UPnPPort.ToString();
+            }
+        }
+
+        private void buttonOn_Click(object sender, EventArgs e)
+        {
+            UpdateFormSettings();
+            StartServer();
+        }
+
+        private void buttonOff_Click(object sender, EventArgs e)
+        {
+            StopServer();
+        }
+
+        private void port_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            // only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        public static string ShowDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 150,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
+            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
+            Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+
+        private void buttonAddURL_Click(object sender, EventArgs e)
+        {
+            string url = ShowDialog("Add URL", "Add URL").Trim() ;
+            SkinURLList.Add(url);
+            skinList.Items.Add(url);
+        }
+
+        private void buttonURL_Click(object sender, EventArgs e)
+        {
+            if(skinList.SelectedIndex >=0)
+            {
+                string url = skinList.Items[skinList.SelectedIndex].ToString();
+                SkinURLList.Remove(url);
+                skinList.Items.RemoveAt(skinList.SelectedIndex);
+            }
+        }
+
+        private void copyURL_Click(object sender, EventArgs e)
+        {
+            if (skinList.SelectedIndex >= 0)
+            {
+                string url = skinList.Items[skinList.SelectedIndex].ToString();
+                copyURLPath(url);
+            }
+            else
+            {
+                copyURLPath();
+            }
+        }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            List<string> list =  GetSkinList();
+            foreach(var u in list)
+            {
+                int idx = skinList.Items.IndexOf(u);
+                if(idx <0)
+                {
+                    skinList.Items.Add(u);
+                }
+            }
+        }
+
+        private void MiniParseUse_CheckedChanged(object sender, EventArgs e)
+        {
+            MiniParse = MiniParseUse.Checked;
+        }
+
+        private void OnLogLineReadUse_CheckedChanged(object sender, EventArgs e)
+        {
+            OnLogLineRead = OnLogLineReadUse.Checked;
+        }
+
+        private void BeforeLogLineReadUse_CheckedChanged(object sender, EventArgs e)
+        {
+            BeforeLogLineRead = BeforeLogLineReadUse.Checked;
+        }
+
+        private void chatFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            ChatFilter = chatFilter.Checked;
+        }
     }
 }
