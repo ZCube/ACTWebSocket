@@ -22,54 +22,7 @@
 				-->
 			</div>
 		</div>
-		<div class="wideswap" data-checked="true"></div>
-		<div class="disableall" style="display:none;" onclick="$(this).hide(); $('.newwindow').hide();"></div>
-		<div class="disablemenu" style="display:none;" onclick="$(this).hide(); closeMenu();"></div>
-		<div class="left">
-			<div class="serverset">
-				<div class="title" data-id="start-option">Start Option</div>
-				<div class="startoption">
-					<div data-id="autorun" data-flag="autorun" data-checked="true">Auto Running With ACT</div>
-					<div data-id="upnp" data-flag="upnp" data-checked="true">Use UPNP</div>
-					<div data-id="randurl" data-flag="randurl" data-checked="false">Random URL</div>
-					<div>
-						<div class="label" data-id="url">URL</div>
-						<input class="text" data-flag="hostname" value="localhost" selectBoxOptions="localhost"/>
-						<select data-flag="hostnames">
-							<option value="localhost">localhost</div>
-						</select>
-					</div>
-					<div>
-						<div class="label" data-id="port">Port</div>
-						<input class="input" data-flag="port" value="8080"/>
-					</div>
-					<div>
-						<div class="label" data-id="upnpport">UPnPPort</div>
-						<input class="input" data-flag="upnpport" value="8080"/>
-					</div>
-				</div>
-				<div class="title" data-id="server-status">Server Option</div>
-				<div class="startoption">
-					<div data-id="miniparse" data-flag="miniparse" data-checked="true">Use Mini Parse</div>
-					<div data-id="onloglineread" data-flag="onloglineread" data-checked="false">Use OnLogLineRead</div>
-					<div data-id="beforeloglineread" data-flag="beforeloglineread" data-checked="false">Use BeforeLogLineRead</div>
-				</div>
-				<div class="title" data-id="miniparseset">Mini Parse Setting</div>
-				<div class="startoption">
-					<button onclick="main.openDEV();">Open DevTool</button>
-				</div>
-			</div>
-		</div>
 		<div class="body">
-			<div class="top" data-id-ext="serverstatus" data-flag="serverstatus" 
-			data-status-off="Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>" 
-			data-status-off-css="{'background-color':'#744'}" 
-			data-status-on="Server Status : Running <span style='color:rgba(255,255,255,.5);'> (Stop at Click)</span>"
-			data-status-on-css="{'background-color':'#474'}" 
-			data-disableobject="{'objects':['localhost', 'randurl', 'miniparse', 'onloglineread', 'beforeloglineread', 'miniparseSortkey', 'miniparseSorttype', 'url', 'port']}"
-			data-checked="false" onclick="">
-				Server Status : Stoped <span style='color:rgba(255,255,255,.5);'> (Run at Click)</span>
-			</div>
 			<div class="center">
 				<div class="listhead">
 					<span data-id="overlays">Overlays</span>

@@ -21,32 +21,12 @@ input, textarea
 }
 html, body{padding:0px; margin:0px; font-size:12px;}
 .disableall, .disablemenu {z-index:9999; position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:rgba(192, 192, 192, .5);}
-.wideswap {position:absolute; left:8px; top:8px; height:24px; width:24px; -webkit-mask-image:url(../img/wide.svg); background-color:#4D89C1; cursor:pointer; z-index:10001;}
-.wideswap[data-checked=true] {-webkit-mask-image:url(../img/gear.svg);}
-.left {position:fixed; left:-261px; top:0px; bottom:0px; width:260px; padding-top:20px; z-index:99; background:#FFF;  z-index:10000;}
-
-.left>.serverset {position:absolute; width:260px; height:80px;}
-.left>.serverset>.title {font-size:16px; font-weight:bold; text-align:center; margin-top:5px; margin-bottom:5px;}
-.left>.serverset>.startoption {padding:10px; padding-top:2px; padding-bottom:2px;}
-.left>.serverset>.startoption>div {height:24px; line-height:24px;}
-.left>.serverset>.startoption>div[data-checked] {padding-left:28px;}
-.left>.serverset>.startoption>div[data-checked=true][disabled]:after {background:#AAA;}
-.left>.serverset>.startoption>div[data-checked=false]:after {float:left; margin-left:-24px;  margin-top:4px;width:18px; height:18px; background:#DDD; content:' '; border-radius:4px;}
-.left>.serverset>.startoption>div[data-checked=true]:after {float:left; margin-left:-24px;  margin-top:4px;width:18px; height:18px; background:#4D89C1; content:'✓'; border-radius:4px; line-height:18px; font-weight:bold; text-align:center; color:#FFF;}
-.left>.serverset>.startoption>div>.label {float:left; width:60px; text-align:right;}
-.left>.serverset>.startoption>div>input {float:left; width:156px; padding:2px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:16px; font-size:12px;}
-.left>.serverset>.startoption>div>select {float:left; width:162px; padding:0px; margin:0px; border:1px solid #DDD; border-radius:4px; margin-left:10px; height:22px; font-size:12px;}
 
 .body {position:fixed; left:0px; top:0px; bottom:0px; right:0px; background:#FFF;}
 
-.body>.console {bottom:0px; left:0px; right:0px; top:90px; border-top:1px solid #E5E5E5; position:absolute; display:none;}
+.body>.console {bottom:0px; left:0px; right:0px; top:0px; border-top:1px solid #E5E5E5; position:absolute; display:none;}
 
-.body>.top {position:absolute; height:50px; top:40px; left:0px; right:0px; background:#744; padding-left:45px; line-height:50px; color:#FFF; font-size:18px;}
-.body>.top[data-checked=false] {background-image:url(../img/off.svg); background-repeat:no-repeat; background-position:8px 10px; background-size:32px 32px; }
-.body>.top[data-checked=true] {background-image:url(../img/on.svg); background-repeat:no-repeat; background-position:8px 9px; background-size:32px 32px; }
-.body>.top>span {font-size:14px;}
-
-.body>.center {position:absolute; left:0px; top:90px; bottom:0px; right:0px;}
+.body>.center {position:absolute; left:0px; top:0px; bottom:0px; right:0px;}
 .body>.center>.listhead {position:absolute; left:0px; top:0px; height:40px; line-height:40px; padding-left:15px; font-size:18px; font-weight:bold; width:265px; border-bottom:1px solid #E5E5E5;}
 .body>.center>.listhead>svg {cursor:pointer; width:24px; height:24px; position:absolute; right:12px; top:8px; border-radius:50%; fill:#4D89C1;}
 .body>.center>.listhead>svg:hover {fill:#2061A1;}

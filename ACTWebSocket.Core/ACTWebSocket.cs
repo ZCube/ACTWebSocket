@@ -571,7 +571,7 @@ namespace ACTWebSocket_Plugin
                     }
                     else
                     {
-                        MiniParse = false;
+                        MiniParse = true;
                     }
                     if(obj.TryGetValue("SkinURLList", out token))
                     {
@@ -807,9 +807,15 @@ namespace ACTWebSocket_Plugin
         public bool BeforeLogLineRead
         {
             get {
-                if (core != null)
+                try
                 {
-                    return core.Filters["/BeforeLogLineRead"];
+                    if (core != null)
+                    {
+                        return core.Filters["/BeforeLogLineRead"];
+                    }
+                }
+                catch(Exception)
+                {
                 }
                 return false;
             }
@@ -826,9 +832,15 @@ namespace ACTWebSocket_Plugin
         {
             get
             {
-                if (core != null)
+                try
                 {
-                    return core.Filters["/OnLogLineRead"];
+                    if (core != null)
+                    {
+                        return core.Filters["/OnLogLineRead"];
+                    }
+                }
+                catch (Exception)
+                {
                 }
                 return false;
             }
@@ -845,11 +857,17 @@ namespace ACTWebSocket_Plugin
         {
             get
             {
-                if (core != null)
+                try
                 {
-                    return core.Filters["/MiniParse"];
+                    if (core != null)
+                    {
+                        return core.Filters["/MiniParse"];
+                    }
                 }
-                return false;
+                catch (Exception)
+                {
+                }
+                return true;
             }
             set
             {
