@@ -21,6 +21,14 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/MiniParse", sendjson);
         }
 
+        public void SendPrivMessage(string id, string text)
+        {
+            foreach (var v in core.httpServer.WebSocketServices.Hosts)
+            {
+                v.Sessions.SendTo(text, id);
+            }
+        }
+
         /// <summary>
         /// 클라이언트(들)로 오류 메세지를 전송합니다.
         /// </summary>

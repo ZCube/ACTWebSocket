@@ -173,14 +173,6 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        public void SendPrivMessage(string id, string text)
-        {
-            foreach(var v in core.httpServer.WebSocketServices.Hosts)
-            {
-                v.Sessions.SendTo(text, id);
-            }
-        }
-
         #region FileIO
         public bool FileExists(string path)
         {
