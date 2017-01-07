@@ -1,4 +1,5 @@
 ﻿using Advanced_Combat_Tracker;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,59 +90,29 @@ namespace ACTWebSocket_Plugin
             });
             Task.WaitAll(encounterTask, combatantTask);
 
-            var builder = new StringBuilder();
-            builder.Append("{");
-            builder.Append("\"Encounter\": {");
-            var isFirst1 = true;
-            foreach (var pair in encounter)
+            JObject obj = new JObject();
             {
-                if (isFirst1)
+                JObject Encounter = new JObject();
+                foreach (var pair in encounter)
                 {
-                    isFirst1 = false;
+                    Encounter[pair.Key] = pair.Value.ReplaceNaN();
                 }
-                else
+                obj["Encounder"] = Encounter;
+                JObject Combatant = new JObject();
+                foreach (var pair in combatant)
                 {
-                    builder.Append(",");
-                }
-                var valueString = pair.Value.ReplaceNaN().JSONSafeString();
-                builder.AppendFormat("\"{0}\":\"{1}\"", pair.Key.JSONSafeString(), valueString);
-            }
-            builder.Append("},");
-            builder.Append("\"Combatant\": {");
-            var isFirst2 = true;
-            foreach (var pair in combatant)
-            {
-                if (isFirst2)
-                {
-                    isFirst2 = false;
-                }
-                else
-                {
-                    builder.Append(",");
-                }
-                builder.AppendFormat("\"{0}\": {{", pair.Key.Name.JSONSafeString());
-                var isFirst3 = true;
-                foreach (var pair2 in pair.Value)
-                {
-                    if (isFirst3)
+                    JObject o = new JObject();
+                    foreach (var pair2 in pair.Value)
                     {
-                        isFirst3 = false;
+                        o[pair2.Key] = pair2.Value.ReplaceNaN();
                     }
-                    else
-                    {
-                        builder.Append(",");
-                    }
-                    var valueString = pair2.Value.ReplaceNaN().JSONSafeString();
-                    builder.AppendFormat("\"{0}\":\"{1}\"", pair2.Key.JSONSafeString(), valueString);
+                    Combatant[pair.Key.Name] = o;
                 }
-                builder.Append("}");
+                obj["Combatant"] = Combatant;
+                obj["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
             }
-            builder.Append("},");
-            builder.AppendFormat("\"isActive\": {0}", ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active ? "true" : "false");
-            builder.Append("}");
 
-
-            var result = builder.ToString();
+            var result = obj.ToString();
             updateStringCache = result;
             updateStringCacheLastUpdate = DateTime.Now;
 
