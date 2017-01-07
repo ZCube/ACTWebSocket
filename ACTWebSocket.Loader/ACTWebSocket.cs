@@ -8,7 +8,6 @@ namespace ACTWebSocket_Plugin
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using ACTWebSocket_Plugin.Classes;
     public interface PluginDirectory
     {
         void SetPluginDirectory(string path);
@@ -30,29 +29,11 @@ namespace ACTWebSocket_Plugin
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
             string pluginDirectory = GetPluginDirectory();
-
-            var directories = new List<string>();
-            directories.Add(pluginDirectory);
-            asmResolver = new AssemblyResolver(directories);
-
-            Initialize(pluginScreenSpace, pluginStatusText);
-        }
-
-        private void Initialize(TabPage pluginScreenSpace, Label pluginStatusText)
-        {
-            pluginScreenSpace.Text = "오버레이 & 웹소켓 ";
-            asmResolver.ExceptionOccured += (o, e) =>
-            {
-                //logger.Log(LogLevel.Error, "AssemblyResolver: Error: {0}", e.Exception);
-            };
-            asmResolver.AssemblyLoaded += (o, e) =>
-            {
-                //logger.Log(LogLevel.Debug, "AssemblyResolver: Loaded: {0}", e.LoadedAssembly.FullName);
-            };
-
             AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs args)
             {
                 string asmFile = (args.Name.Contains(",") ? args.Name.Substring(0, args.Name.IndexOf(",")) : args.Name);
+
+                Console.WriteLine(">>>>>>>>>>>>>>>>>>" + Path.Combine(Settings.CEFDIR, asmFile + ".dll"));
 
                 if (!Settings.ASMCHK.Contains(asmFile))
                 {
@@ -61,7 +42,7 @@ namespace ACTWebSocket_Plugin
 
                 try
                 {
-                    if(Environment.Is64BitOperatingSystem)
+                    if (Environment.Is64BitOperatingSystem)
                         return Assembly.LoadFile(Path.Combine(Settings.CEFDIR64, asmFile + ".dll"));
                     else
                         return Assembly.LoadFile(Path.Combine(Settings.CEFDIR, asmFile + ".dll"));
@@ -70,6 +51,24 @@ namespace ACTWebSocket_Plugin
                 {
                     return null;
                 }
+            };
+            var directories = new List<string>();
+            directories.Add(pluginDirectory);
+            asmResolver = new AssemblyResolver(directories);
+            Initialize(pluginScreenSpace, pluginStatusText);
+        }
+
+        private void Initialize(TabPage pluginScreenSpace, Label pluginStatusText)
+        {
+
+            pluginScreenSpace.Text = "오버레이 & 웹소켓 ";
+            asmResolver.ExceptionOccured += (o, e) =>
+            {
+                //logger.Log(LogLevel.Error, "AssemblyResolver: Error: {0}", e.Exception);
+            };
+            asmResolver.AssemblyLoaded += (o, e) =>
+            {
+                //logger.Log(LogLevel.Debug, "AssemblyResolver: Loaded: {0}", e.LoadedAssembly.FullName);
             };
 
             var m = new ACTWebSocketMain();
