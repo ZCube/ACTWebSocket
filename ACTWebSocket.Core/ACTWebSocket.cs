@@ -32,11 +32,9 @@ namespace ACTWebSocket_Plugin
         private Label label2;
         private TextBox uPnPPort;
         private Button buttonRefresh;
-        private Label label1;
-        private ListBox skinList;
-        private GroupBox groupBox1;
         private Button buttonAddURL;
         private Button buttonURL;
+        private ListView skinList;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -68,7 +66,6 @@ namespace ACTWebSocket_Plugin
         private Button buttonOff;
         private Button buttonOn;
         private CheckBox randomURL;
-        private Label label13;
         private GroupBox startoption;
         private GroupBox hostdata;
         private Label label15;
@@ -113,7 +110,6 @@ namespace ACTWebSocket_Plugin
             this.buttonOn = new System.Windows.Forms.Button();
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.startoption = new System.Windows.Forms.GroupBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
             this.hostnames = new System.Windows.Forms.ComboBox();
@@ -126,16 +122,13 @@ namespace ACTWebSocket_Plugin
             this.serverStatus = new System.Windows.Forms.GroupBox();
             this.copyURL = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.skinList = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonAddURL = new System.Windows.Forms.Button();
             this.buttonURL = new System.Windows.Forms.Button();
+            this.skinList = new System.Windows.Forms.ListView();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
             this.serverStatus.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -206,12 +199,6 @@ namespace ACTWebSocket_Plugin
             this.randomURL.BackColor = System.Drawing.Color.Transparent;
             this.randomURL.Name = "randomURL";
             this.randomURL.UseVisualStyleBackColor = false;
-            // 
-            // label13
-            // 
-            this.label13.BackColor = System.Drawing.Color.White;
-            resources.ApplyResources(this.label13, "label13");
-            this.label13.Name = "label13";
             // 
             // startoption
             // 
@@ -307,26 +294,6 @@ namespace ACTWebSocket_Plugin
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.Color.White;
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // skinList
-            // 
-            resources.ApplyResources(this.skinList, "skinList");
-            this.skinList.FormattingEnabled = true;
-            this.skinList.Name = "skinList";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.skinList);
-            this.groupBox1.Controls.Add(this.label1);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
-            // 
             // buttonAddURL
             // 
             resources.ApplyResources(this.buttonAddURL, "buttonAddURL");
@@ -341,31 +308,35 @@ namespace ACTWebSocket_Plugin
             this.buttonURL.UseVisualStyleBackColor = true;
             this.buttonURL.Click += new System.EventHandler(this.buttonURL_Click);
             // 
+            // skinList
+            // 
+            resources.ApplyResources(this.skinList, "skinList");
+            this.skinList.MultiSelect = false;
+            this.skinList.Name = "skinList";
+            this.skinList.UseCompatibleStateImageBehavior = false;
+            this.skinList.View = System.Windows.Forms.View.List;
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.skinList);
             this.Controls.Add(this.buttonURL);
             this.Controls.Add(this.buttonAddURL);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.copyURL);
             this.Controls.Add(this.serverStatus);
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
-            this.Controls.Add(this.label13);
             resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
-            this.startoption.PerformLayout();
             this.hostdata.ResumeLayout(false);
             this.hostdata.PerformLayout();
             this.othersets.ResumeLayout(false);
-            this.othersets.PerformLayout();
             this.serverStatus.ResumeLayout(false);
             this.serverStatus.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1020,19 +991,21 @@ namespace ACTWebSocket_Plugin
 
         private void buttonURL_Click(object sender, EventArgs e)
         {
-            if(skinList.SelectedIndex >=0)
+            if (skinList.SelectedItems == null) return;
+            if(skinList.SelectedItems.Count >=0)
             {
-                string url = skinList.Items[skinList.SelectedIndex].ToString();
+                string url = skinList.SelectedItems[0].Text;
                 SkinURLList.Remove(url);
-                skinList.Items.RemoveAt(skinList.SelectedIndex);
+                skinList.Items.RemoveAt(skinList.SelectedItems[0].Index);
             }
         }
 
         private void copyURL_Click(object sender, EventArgs e)
         {
-            if (skinList.SelectedIndex >= 0)
+            if (skinList.SelectedItems == null) return;
+            if (skinList.SelectedItems.Count >= 0)
             {
-                string url = skinList.Items[skinList.SelectedIndex].ToString();
+                string url = skinList.SelectedItems[0].Text;
                 copyURLPath(url);
             }
             else
@@ -1046,8 +1019,7 @@ namespace ACTWebSocket_Plugin
             List<string> list =  GetSkinList();
             foreach(var u in list)
             {
-                int idx = skinList.Items.IndexOf(u);
-                if(idx <0)
+                if(skinList.Items.Find(u, false).Length < 0)
                 {
                     skinList.Items.Add(u);
                 }
