@@ -2,6 +2,8 @@
 ![N|Solid](https://raw.githubusercontent.com/laiglinne-ff/ACTWebSocket/master/logo.png)
 WebSocket Plugin for Advanced Combat Tracker v3
 
+[![Build Status](https://zcube.kr:8181/jenkins/buildStatus/icon?job=ACTWebSocket)](https://zcube.kr:8181/jenkins/job/ACTWebSocket/)
+
 ## 기능 ##
 
 1. 간이 웹서버.
