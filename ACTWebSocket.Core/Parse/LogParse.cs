@@ -57,7 +57,7 @@ namespace ACTWebSocket_Plugin
                         SendJSON(SendMessageType.ChangeZone,
                             JObject.FromObject(new
                             {
-                                zoneID = currentZone
+                                zoneID = CurrentZoneID
                             }));
                         break;
                     case MessageType.ChangePrimaryPlayer:
@@ -83,6 +83,7 @@ namespace ACTWebSocket_Plugin
                         }
                         Combatant combatant = new Combatant();
                         combatant.id = Convert.ToUInt32(data[2], 16);
+                        combatant.name = data[3];
                         combatant.jobid = Convert.ToByte(data[4], 16);
                         combatant.level = Convert.ToByte(data[5], 16);
                         combatant.max_hp = Convert.ToInt32(data[6], 16);
