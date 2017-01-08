@@ -407,7 +407,7 @@ namespace ACTWebSocket_Plugin
                 core.Filters["/MiniParse"] = MiniParseUse.Checked;
                 // not configurable ?
                 core.Config.SortKey = "encdps";
-                core.Config.SortType = MiniParseSortType.NumericAscending;
+                core.Config.SortType = MiniParseSortType.NumericDescending;
             }
 
             try
