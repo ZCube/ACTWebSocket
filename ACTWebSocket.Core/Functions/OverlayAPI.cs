@@ -28,6 +28,9 @@ namespace ACTWebSocket_Plugin
         protected long currentZone = 0L;
         public FFXIV_OverlayAPI(ACTWebSocketCore core)
         {
+            Config.SortKey = "encdps";
+            Config.SortType = MiniParseSortType.NumericAscending;
+
             this.core = core;
 
             outD = CombatantData.DamageTypeDataOutgoingDamage;

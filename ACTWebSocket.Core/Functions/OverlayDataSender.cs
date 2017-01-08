@@ -18,7 +18,7 @@ namespace ACTWebSocket_Plugin
         }
 
         public ConfigStruct Config;// { get; set; }
-
+        
         public static JObject updateStringCache = new JObject();
         public static DateTime updateStringCacheLastUpdate;
         public static readonly TimeSpan updateStringCacheExpireInterval = new TimeSpan(0, 0, 0, 0, 500); // 500 msec

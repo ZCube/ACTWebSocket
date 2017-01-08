@@ -122,16 +122,17 @@ function connectWebSocket(uri)
 {
 	websocket = new WebSocket(uri);
 	websocket.onopen = function(evt) {
-		//$(".list").empty();
-		//api_overlaywindow_close_all();
-		var count = $(".list div").length;
-		var objs = {};
-		for(var i = 0; i<count;++i)
-		{
-			var obj = divToJSON(i)
-			objs[obj["id"]] = obj;
-		}
-		api_overlaywindow_set_all(objs);
+		$(".list").empty();
+		api_overlaywindow_get_all();
+		// //api_overlaywindow_close_all();
+		// var count = $(".list div").length;
+		// var objs = {};
+		// for(var i = 0; i<count;++i)
+		// {
+			// var obj = divToJSON(i)
+			// objs[obj["id"]] = obj;
+		// }
+		// api_overlaywindow_set_all(objs);
 	}
 	websocket.onmessage = function(evt) {
 		if (evt.data == ".")
@@ -359,45 +360,6 @@ function addHostname(hostname)
 	var html ="<option value=\""+hostname+"\">"+hostname+"</div>";
 	$("*[data-flag=hostnames]").append(html);
 }
-function updateWebsocketSettings()
-{
-	if(typeof main !== "undefined")
-	{
-		try{
-			main.port = parseInt($("*[data-flag=port]").val());
-			main.uPnPPort = parseInt($("*[data-flag=upnpport]").val());
-			main.hostname = $("*[data-flag=hostname]").val();
-			main.randomURL = $("*[data-flag=randurl]").attr("data-checked")=="true"?true:false;
-			main.useUPnP = $("*[data-flag=upnp]").attr("data-checked")=="true"?true:false;
-			main.autoRun = $("*[data-flag=autorun]").attr("data-checked")=="true"?true:false;
-		}
-		catch(e)
-		{
-			alert(e);
-		}
-  }
-}
-function setWebsocketSettings()
-{
-	if(typeof main !== "undefined")
-	{
-		try{
-			$("*[data-flag=port]").val(main.port);
-			$("*[data-flag=upnpport]").val(main.uPnPPort);
-			$("*[data-flag=hostname]").val(main.hostname);
-			$("*[data-flag=randurl]").attr("data-checked", main.randomURL?"true":"false");
-			$("*[data-flag=upnp]").attr("data-checked", main.useUPnP?"true":"false");
-			$("*[data-flag=autorun]").attr("data-checked", main.autoRun?"true":"false");
-			$("*[data-flag=beforeloglineread]").attr("data-checked", main.beforeLogLineRead?"true":"false");
-			$("*[data-flag=onloglineread]").attr("data-checked", main.onLogLineRead?"true":"false");
-			$("*[data-flag=miniparse ]").attr("data-checked", main.miniParse?"true":"false");
-		}
-		catch(e)
-		{
-			alert(e);
-		}
-  }
-}
 function Hex2Str(hexx) {
     var hex = hexx.toString();//force conversion
     var str = '';
@@ -502,10 +464,6 @@ function onOverlaySettingChanged(e)
 		if(cmd == "get_all")
 		{
 			var vals = obj["value"];
-			if(typeof main !== "undefined")
-			{
-				main.saveOverlaySettings(JSON.stringify(vals));
-			}
 			for(var key in vals)
 			{
 				var val = vals[key];
@@ -636,50 +594,18 @@ function forceChange(obj)
 	}
 }
 
-function startServer()
-{
-	if(typeof main !== "undefined")
-	{
-		try
-		{
-			updateWebsocketSettings();
-		}
-		catch(ex)
-		{
-			alert(ex);
-		}
-		try
-		{
-			main.startServer();
-		}
-		catch(ex)
-		{
-			alert(ex);
-		}
-	}
-}
-
 $(document).ready(function(){
 	{
 		$("*[data-flag=hostnames]").change(function() {
 			$("*[data-flag=hostname]").val($("*[data-flag=hostnames]").val());
 		});
 	}
-	if(typeof main !== "undefined")
+	try{
+		$(".list").empty();
+	}
+	catch(e)
 	{
-		try{
-			$(".list").empty();
-			main.init();
-			setWebsocketSettings();
-			if(main.autoRun)
-			{
-				startServer();
-			}
-		}
-		catch(e)
-		{
-			alert(e);
-		}
+		alert(e);
 	}
 	setTimeout(function(){$(".left").css("transition", ".2s"); $(".wideswap").css("transition", ".2s");},1000)
 	
@@ -726,7 +652,7 @@ $(document).ready(function(){
 				"height": 300
 			};
 			api_overlaywindow_set(obj);
-			$("*[data-flag=new-url]").val("about:blank");
+			$("*[data-flag=new-url]").val("");
 			$(".disableall").hide();
 			$(".newwindow").hide();
 		}
@@ -825,30 +751,6 @@ $(document).ready(function(){
 		if($(this).parent().hasClass("setting"))
 		{
 			saveOption();
-		}
-
-		if($(this).attr("data-flag") == "serverstatus")
-		{
-			if(typeof main !== "undefined")
-				main.consolelog("server is "+($(this).attr("data-checked")=="true"?"stop now":"start now"));
-			if($(this).attr("data-checked") == "true")
-			{
-				startServer();
-			}
-			else
-			{
-				if(typeof main !== "undefined")
-				{
-					try
-					{
-						main.stopServer();
-					}
-					catch(ex)
-					{
-						alert(ex);
-					}
-				}
-			}
 		}
 	});
 
