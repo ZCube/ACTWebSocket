@@ -175,21 +175,13 @@ class ActWebSocketImpl extends ActWebsocketInterface
 	//broadcast(type, msg)
 	onRecvMessage(e)
 	{
-		console.log(e);
 	}
 	
 	onBroadcastMessage(e)
 	{
-		console.log(e);
 		if(e.detail.msgtype == "CombatData")
 		{
 			document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
 		}
 	}
 };
-
-var webs = null;
-$(document).ready(function() {
-	webs = new ActWebSocketImpl(wsUri);
-	webs.connect();
-});
