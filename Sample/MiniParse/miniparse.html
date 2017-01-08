@@ -75,7 +75,8 @@
         }
 
     </style>
-	<script src="jquery-2.1.1.min.js"></script>
+    <script src="jquery-2.1.1.min.js"></script>
+    <script src="actwebsocket.js"></script>
     <script>
 
         //
@@ -351,50 +352,42 @@
         }
 /* ACTWebSocket  Begin */
 
-  var wsUri = "ws://@HOST_PORT@/MiniParse";
-  var pageActive = true;
-  function connectWebSocket(uri)
-  {
-    websocket = new WebSocket(uri);
-    websocket.onmessage = function(evt) {
-      if (evt.data == ".")
-      {
-        // ping pong
-        websocket.send(".");
-      }
-      else
-      {
-        document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: JSON.parse(evt.data) }));
-      }
-    };
+class WebSocketImpl extends ActWebsocketInterface
+{
+	constructor(uri, path = "MiniParse") {
+		super(uri, path);
+	}
+	//send(to, type, msg)
+	//broadcast(type, msg)
+	onRecvMessage(e)
+	{
+		console.log(e);
+	}
+	
+	onBroadcastMessage(e)
+	{
+		console.log(e);
+		if(e.detail.msgtype == "CombatData")
+		{
+			document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
+		}
+	}
+};
 
-    //websocket.onopen = function(evt) { };
-    websocket.onclose = function(evt) { 
-      setTimeout(function(){connectWebSocket(uri)}, 5000);
-    };
-    websocket.onerror = function(evt) {
-      websocket.close();
-    };
-  }    
+var webs = null;
 
-  function disconnectWebSocket(){
-    pageActive = false;
-    websocket.close();
-  };
-
-
-  $(document).ready(function() {
-    pageActive = true;
-    connectWebSocket(wsUri);
-  });
-  if (document.addEventListener) {
-      window.onbeforeunload = function() {
-          disconnectWebSocket();
-      };
-      window.addEventListener("unload", function() {
-          disconnectWebSocket();
-      }, false);
-  }
+$(document).ready(function() {
+	webs = new websocketImpl(wsUri);
+	webs.connect();
+});
+if (document.addEventListener) {
+window.onbeforeunload = function() {
+webs.close();
+};
+window.addEventListener("unload", function() {
+webs.close();
+}, false);
+}
 /* ACTWebSocket  End */
     </script>
 </head>

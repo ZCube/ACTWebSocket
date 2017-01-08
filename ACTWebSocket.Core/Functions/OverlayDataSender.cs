@@ -50,9 +50,9 @@ namespace ACTWebSocket_Plugin
         private void ACTExtension(bool isImport, LogLineEventArgs e)
         {
             string[] data = e.logLine.Split('|');
-            MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
             try
             {
+                MessageType messageType = (MessageType)Convert.ToInt32(data[0]);
                 ParseData(data, isImport);
             }
             catch(Exception err)
