@@ -202,6 +202,17 @@ namespace ACTWebSocket_Plugin
 
                             Combatants[target].cur_tp = Convert.ToInt32(data[28]);
                             Combatants[target].max_tp = Convert.ToInt32(data[29]);
+                            SendJSON(SendMessageType.AbilityUse,
+                                JObject.FromObject(new
+                                {
+                                    id = target,
+                                    cur_hp = Convert.ToInt32(data[24]),
+                                    max_hp = Convert.ToInt32(data[25]),
+                                    cur_mp = Convert.ToInt32(data[26]),
+                                    max_mp = Convert.ToInt32(data[27]),
+                                    cur_tp = Convert.ToInt32(data[28]),
+                                    max_tp = Convert.ToInt32(data[29]),
+                                }));
                         }
 
                         if (data.Length >= 41 &&  Combatants.ContainsKey(actor))
@@ -214,6 +225,17 @@ namespace ACTWebSocket_Plugin
 
                             Combatants[actor].cur_tp = Convert.ToInt32(data[37]);
                             Combatants[actor].max_tp = Convert.ToInt32(data[38]);
+                            SendJSON(SendMessageType.AbilityUse,
+                                JObject.FromObject(new
+                                {
+                                    id = actor,
+                                    cur_hp = Convert.ToInt32(data[33]),
+                                    max_hp = Convert.ToInt32(data[34]),
+                                    cur_mp = Convert.ToInt32(data[35]),
+                                    max_mp = Convert.ToInt32(data[36]),
+                                    cur_tp = Convert.ToInt32(data[37]),
+                                    max_tp = Convert.ToInt32(data[38]),
+                                }));
                         }
                         break;
                     case MessageType.PartyList:
