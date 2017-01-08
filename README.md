@@ -2,6 +2,8 @@
 ![N|Solid](https://raw.githubusercontent.com/laiglinne-ff/ACTWebSocket/master/logo.png)
 WebSocket Plugin for Advanced Combat Tracker v3
 
+[![Build Status](https://zcube.kr:8181/jenkins/buildStatus/icon?job=ACTWebSocket)](https://zcube.kr:8181/jenkins/job/ACTWebSocket/)
+
 ## 기능 ##
 
 1. 간이 웹서버.
@@ -155,6 +157,10 @@ LogLine을 수정함으로 이 플러그인 먼저 로드 되는지 후에 로�
 ## 해야할 일 ##
 
 1. 웹서버의 보안관련 문제 개선
+
+## Binary ##
+
+nonstable trunk head : [download](https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1)
 
 ## License ##
 
