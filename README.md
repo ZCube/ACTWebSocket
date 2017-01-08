@@ -57,9 +57,9 @@ WebSocket Plugin for Advanced Combat Tracker v3
   };
   
   var webs = null;
-  
+  var wsUri = "ws://@HOST_PORT@/MiniParse";
   $(document).ready(function() {
-      webs = new websocketImpl(wsUri);
+      webs = new WebSocketImpl(wsUri);
       webs.connect();
   });
   if (document.addEventListener) {
