@@ -28,7 +28,7 @@ namespace ACTWebSocket_Plugin
         HttpServer uiServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
-        public string randomDir = "Test";
+        public string randomDir = null;
         internal IntPtr hwnd;
 
         internal void StartUIServer()
@@ -134,7 +134,6 @@ namespace ACTWebSocket_Plugin
                 var req = e.Request;
                 var res = e.Response;
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-
                 var path = req.RawUrl;
 
                 if(randomDir != null)
@@ -154,8 +153,11 @@ namespace ACTWebSocket_Plugin
                 if (path == "/")
                     path += "index.html";
 
+                Uri uri = new Uri("http://localhost" + path);
+                path = uri.AbsolutePath;
                 path = Uri.UnescapeDataString(path);
-
+                //uri.Query;
+                //uri.AbsolutePath;
                 var content = httpServer.GetFile(path);
 
                 if (content == null)
@@ -194,6 +196,7 @@ namespace ACTWebSocket_Plugin
                         host_port = host + ":" + extPort.ToString();
                     }
                     host_port += parent_path;
+                    res.SetCookie(new Cookie("HOST_PORT", host_port));
 
                     content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
 

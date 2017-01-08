@@ -28,30 +28,8 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+
             string pluginDirectory = GetPluginDirectory();
-            AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs args)
-            {
-                string asmFile = (args.Name.Contains(",") ? args.Name.Substring(0, args.Name.IndexOf(",")) : args.Name);
-
-                Console.WriteLine(">>>>>>>>>>>>>>>>>>" + Path.Combine(Settings.CEFDIR, asmFile + ".dll"));
-
-                if (!Settings.ASMCHK.Contains(asmFile))
-                {
-                    return null;
-                }
-
-                try
-                {
-                    if (Environment.Is64BitOperatingSystem)
-                        return Assembly.LoadFile(Path.Combine(Settings.CEFDIR64, asmFile + ".dll"));
-                    else
-                        return Assembly.LoadFile(Path.Combine(Settings.CEFDIR, asmFile + ".dll"));
-                }
-                catch
-                {
-                    return null;
-                }
-            };
             var directories = new List<string>();
             directories.Add(pluginDirectory);
             asmResolver = new AssemblyResolver(directories);
@@ -61,7 +39,7 @@ namespace ACTWebSocket_Plugin
         private void Initialize(TabPage pluginScreenSpace, Label pluginStatusText)
         {
 
-            pluginScreenSpace.Text = "오버레이 & 웹소켓 ";
+            pluginScreenSpace.Text = "ACTWebSocket";
             asmResolver.ExceptionOccured += (o, e) =>
             {
                 //logger.Log(LogLevel.Error, "AssemblyResolver: Error: {0}", e.Exception);
