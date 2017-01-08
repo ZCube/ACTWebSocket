@@ -33,6 +33,24 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/MiniParse", type.ToString(), json);
         }
 
+        public void SendFirstConnData(string id, WebSocketSharp.Server.WebSocketSessionManager session)
+        {
+            if (CurrentPlayerID != 0)
+            {
+                JObject mychar = JObject.FromObject(new
+                {
+                    type = "broadcast",
+                    msgtype = SendMessageType.SendCharName.ToString(),
+                    msg = JObject.FromObject(new
+                    {
+                        charID = CurrentPlayerID,
+                        charName = CurrentPlayerName
+                    })
+                });
+                session.SendTo(mychar.ToString(), id);
+            }
+        }
+
         /// <summary>
         /// 클라이언트(들)로 오류 메세지를 전송합니다.
         /// </summary>
