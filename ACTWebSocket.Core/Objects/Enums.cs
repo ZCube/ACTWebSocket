@@ -78,5 +78,6 @@
         NetworkError = 5,
         AddCombatant = 6,
         RemoveCombatant = 7,
+        AbilityUse = 8,
     }
 }
