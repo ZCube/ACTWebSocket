@@ -26,104 +26,52 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
 ## HTML에 적용하는 샘플 코드 ##
 
-1. ACT LogLine을 OverlayPlugin의 SendMessage로 보내는 것을 웹소켓으로 구현한 예
+1. Overlay MiniParse에 보내는 것을 웹소켓으로 구현한 예
 ``` javascript
   ...
-  var wsUri = "ws://@HOST_PORT@/BeforeLogLineRead";
-  var pageActive = true;
-  function connectWebSocket(uri)
+  <script src="actwebsocket.js"></script>
+
+  ...
+  /* ACTWebSocket  Begin */
+  
+  class WebSocketImpl extends ActWebsocketInterface
   {
-    websocket = new WebSocket(uri);
-    websocket.onmessage = function(evt) {
-      if (evt.data == ".")
-      {
-        // ping pong
-        websocket.send(".");
+      constructor(uri, path = "MiniParse") {
+          super(uri, path);
       }
-      else
+      //send(to, type, msg)
+      //broadcast(type, msg)
+      onRecvMessage(e)
       {
-        document.dispatchEvent(new CustomEvent('onBroadcastMessageReceive', { detail: evt.data }));
+          console.log(e);
       }
-    };
-
-    //websocket.onopen = function(evt) { };
-    websocket.onclose = function(evt) { 
-      if(pageActive)
+  
+      onBroadcastMessage(e)
       {
-        setTimeout(function(){connectWebSocket(uri)}, 5000);
+          console.log(e);
+          if (e.detail.msgtype == "CombatData")
+          {
+              document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
+          }
       }
-    };
-    websocket.onerror = function(evt) {
-      websocket.close();
-    };
-  }
-
-  function disconnectWebSocket(){
-    pageActive = false;
-    websocket.close();
   };
-
-  $(document).ready(function() {
-    pageActive = true;
-    connectWebSocket(wsUri);
-  });
-  if (document.addEventListener) {
-      window.onbeforeunload = function() {
-          disconnectWebSocket();
-      };
-      window.addEventListener("unload", function() {
-          disconnectWebSocket();
-      }, false);
-  }
-  ...
-```    
-
-2. Overlay MiniParse에 보내는 것을 웹소켓으로 구현한 예
-``` javascript
-  ...
+  
+  var webs = null;
   var wsUri = "ws://@HOST_PORT@/MiniParse";
-  var pageActive = true;
-  function connectWebSocket(uri)
-  {
-    websocket = new WebSocket(uri);
-    websocket.onmessage = function(evt) {
-      if (evt.data == ".")
-      {
-        // ping pong
-        websocket.send(".");
-      }
-      else
-      {
-        document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: JSON.parse(evt.data) }));
-      }
-    };
-
-    //websocket.onopen = function(evt) { };
-    websocket.onclose = function(evt) { 
-      setTimeout(function(){connectWebSocket(uri)}, 5000);
-    };
-    websocket.onerror = function(evt) {
-      websocket.close();
-    };
-  }    
-
-  function disconnectWebSocket(){
-    pageActive = false;
-    websocket.close();
-  };
-
   $(document).ready(function() {
-    pageActive = true;
-    connectWebSocket(wsUri);
+      webs = new WebSocketImpl(wsUri);
+      webs.connect();
   });
   if (document.addEventListener) {
       window.onbeforeunload = function() {
-          disconnectWebSocket();
+          webs.close();
       };
       window.addEventListener("unload", function() {
-          disconnectWebSocket();
+          webs.close();
       }, false);
   }
+  
+  /* ACTWebSocket  End */
   ...
 ```
 

@@ -1019,7 +1019,15 @@ namespace ACTWebSocket_Plugin
             List<string> list =  GetSkinList();
             foreach(var u in list)
             {
-                if(skinList.Items.Find(u, false).Length < 0)
+                bool find = false;
+                for(int i=0;i<skinList.Items.Count;++i)
+                {
+                    if(skinList.Items[i].Text == u)
+                    {
+                        find = true;
+                    }
+                }
+                if(!find)
                 {
                     skinList.Items.Add(u);
                 }
