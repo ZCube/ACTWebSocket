@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using ACTWebSocket_Plugin.Parse;
+using static ACTWebSocket_Plugin.ACTWebSocketCore;
 
 namespace ACTWebSocket_Plugin
 {
@@ -34,36 +35,29 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/MiniParse", type.ToString(), json);
         }
 
-        public void SendFirstConnData(string id, WebSocketSharp.Server.WebSocketSessionManager session)
+        public void SendFirstConnData(string id, WebSocketCommunicateBehavior session)
         {
             // 플레이어 아이디 전송
             if (CurrentPlayerID != 0)
             {
-                JObject mychar = JObject.FromObject(new
-                {
-                    type = "broadcast",
-                    msgtype = SendMessageType.SendCharName.ToString(),
-                    msg = JObject.FromObject(new
+                session.Send(session.id, SendMessageType.SendCharName.ToString(),
+                //session.Broadcast(SendMessageType.SendCharName.ToString(),
+                    JObject.FromObject(new
                     {
                         charID = CurrentPlayerID,
                         charName = CurrentPlayerName
-                    })
-                });
-                session.SendTo(mychar.ToString(), id);
+                    }));
             }
 
             // 지역 전송
             if (CurrentZoneID != 0)
             {
-                session.SendTo(JObject.FromObject(new
-                {
-                    type = "broadcast",
-                    msgtype = SendMessageType.ChangeZone.ToString(),
-                    msg = JObject.FromObject(new
+                session.Send(session.id, SendMessageType.ChangeZone.ToString(),
+                //session.Broadcast(SendMessageType.ChangeZone.ToString(),
+                    JObject.FromObject(new
                     {
                         zoneID = CurrentZoneID
-                    })
-                }).ToString(), id);
+                    }));
             }
 
             // 오브젝트 목록 전송
@@ -72,11 +66,8 @@ namespace ACTWebSocket_Plugin
                 foreach(KeyValuePair<uint, Combatant> c in Combatants)
                 {
                     Combatant combatant = c.Value;
-                    session.SendTo(JObject.FromObject(new
-                    {
-                        type = "broadcast",
-                        msgtype = SendMessageType.AddCombatant.ToString(),
-                        msg = JObject.FromObject(new
+                    session.Send(session.id, SendMessageType.AddCombatant.ToString(),
+                        JObject.FromObject(new
                         {
                             id = combatant.id,
                             name = combatant.name,
@@ -85,8 +76,7 @@ namespace ACTWebSocket_Plugin
                             max_hp = combatant.max_hp,
                             max_mp = combatant.max_mp,
                             owner_id = combatant.owner_id,
-                        })
-                    }).ToString(), id);
+                        }));
                 }
             }
         }
@@ -102,7 +92,7 @@ namespace ACTWebSocket_Plugin
 
         public void SendLastCombat()
         {
-            core.Broadcast("/MiniParse", "CombatData", CreateEncounterJsonData());
+            core.Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), CreateEncounterJsonData());
         }
 
         private void ACTExtension(bool isImport, LogLineEventArgs e)
@@ -226,7 +216,7 @@ namespace ACTWebSocket_Plugin
                 prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
                 prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
 
-                core.Broadcast("/MiniParse", "CombatData", CreateEncounterJsonData());
+                core.Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), CreateEncounterJsonData());
             }
         }
 

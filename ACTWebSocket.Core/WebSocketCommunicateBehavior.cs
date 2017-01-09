@@ -25,19 +25,46 @@ namespace ACTWebSocket_Plugin
             {
                 base.OnOpen();
             }
+
             protected override void OnClose(CloseEventArgs e)
             {
                 base.OnClose(e);
             }
 
-            public void Broadcast(String from, String type, JToken message)
+            public static JObject GenMessage(String type, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                obj["type"] = "broadcast";
-                obj["from"] = from;
-                obj["msgtype"] = type;
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
                 obj["msg"] = message;
-                String str = obj.ToString();
+                return obj;
+            }
+
+            public static JObject GenMessage(String type, String from, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
+                obj["from"] = from;
+                obj["msg"] = message;
+                return obj;
+            }
+
+            public static JObject GenMessage(String type, String from, String to, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
+                obj["from"] = from;
+                obj["to"] = to;
+                obj["msg"] = message;
+                return obj;
+            }
+
+            public void Broadcast(String from, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                String str = GenMessage("broadcast", from, msgtype, message).ToString();
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id != from)
@@ -47,15 +74,37 @@ namespace ACTWebSocket_Plugin
                 }
             }
 
-            public void Send(String from, String to, String type, JToken message)
+            public void Broadcast(String msgtype, JToken message)
+            {
+                String from = id;
+                String str = GenMessage("broadcast", from, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id != from)
+                    {
+                        s.Send(str);
+                    }
+                }
+            }
+
+            public void Send(String to, String msgtype, JToken message)
+            {
+                String from = id;
+                String str = GenMessage("send", from, to, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id == to)
+                    {
+                        s.Send(str);
+                        break;
+                    }
+                }
+            }
+
+            public void Send(String from, String to, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                obj["type"] = "send";
-                obj["msgtype"] = type;
-                obj["from"] = from;
-                obj["to"] = to;
-                obj["msg"] = message;
-                String str = obj.ToString();
+                String str = GenMessage("send", from, to, msgtype, message).ToString();
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id == to)
@@ -76,7 +125,7 @@ namespace ACTWebSocket_Plugin
                             {
                                 if(isfirst)
                                 {
-                                    overlayAPI.SendFirstConnData(ID, Sessions);
+                                    overlayAPI.SendFirstConnData(ID, this);
                                     isfirst = false;
                                 }
                                 return;

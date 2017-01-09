@@ -53,7 +53,7 @@ namespace ACTWebSocket_Plugin
                 prevEndDateTime = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.EndTime;
                 prevEncounterActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
 
-                Broadcast("/MiniParse", "CombatData", overlayAPI.CreateEncounterJsonData());
+                Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), overlayAPI.CreateEncounterJsonData());
             }
         }
 

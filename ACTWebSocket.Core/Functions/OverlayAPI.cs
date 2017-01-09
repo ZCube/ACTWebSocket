@@ -49,7 +49,7 @@ namespace ACTWebSocket_Plugin
                     // Send Last Combat Data
                     case "RequestLastCombat":
                     case "RequestLastCombatData":
-                        session.Send(id, id, "CombatData", CreateEncounterJsonData());
+                        session.Send(id, id, SendMessageType.CombatData.ToString(), CreateEncounterJsonData());
                         break;
                     // E END
                     case "RequestEnd":

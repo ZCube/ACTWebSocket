@@ -97,7 +97,7 @@ namespace ACTWebSocket_Plugin
         void InitUpdate()
         {
             System.Threading.Thread.Sleep(1000);
-            Broadcast("/MiniParse", "CombatData", overlayAPI.CreateEncounterJsonData());
+            Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), overlayAPI.CreateEncounterJsonData());
         }
 
         internal void StartServer(string address, int port, int extPort, string domain = null)
