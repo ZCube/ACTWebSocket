@@ -21,7 +21,7 @@ namespace ACTWebSocket_Plugin
 
         public ConfigStruct Config;// { get; set; }
         
-        public static JObject updateStringCache = new JObject();
+        public static JObject updateStringCache = null;
         public static DateTime updateStringCacheLastUpdate;
         public static readonly TimeSpan updateStringCacheExpireInterval = new TimeSpan(0, 0, 0, 0, 500); // 500 msec
 
@@ -37,6 +37,18 @@ namespace ACTWebSocket_Plugin
 
         public void OnOpen(string id, WebSocketCommunicateBehavior session)
         {
+            // 마지막 전투 전송
+            if (updateStringCache != null)
+            {
+                session.SendTo(JObject.FromObject(new
+                {
+                    type = "broadcast",
+                    msgtype = SendMessageType.CombatData.ToString(),
+                    msg = updateStringCache,
+                    isActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active
+                }).ToString(), id);
+            }
+
             // 플레이어 아이디 전송
             if (CurrentPlayerID != 0)
             {
