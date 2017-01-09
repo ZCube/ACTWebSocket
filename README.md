@@ -102,6 +102,10 @@ LogLine을 수정함으로 이 플러그인 먼저 로드 되는지 후에 로�
 1. external/websocket-sharp를 빌드후 dll 파일을 external 디렉토리에 복사
 2. ACTWebSocket.sln으로 빌드.
 
+## 경로 ##
+
+* Skin Directory : [ACT 경로]/OverlaySkin
+
 ## 해야할 일 ##
 
 1. 웹서버의 보안관련 문제 개선
