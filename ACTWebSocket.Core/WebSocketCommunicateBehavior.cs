@@ -16,14 +16,38 @@ namespace ACTWebSocket_Plugin
             FFXIV_OverlayAPI overlayAPI;
             public String id = null;
             private bool isfirst = true;
+            public Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>> handle = new Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>>();
             public WebSocketCommunicateBehavior()
             {
                 overlayAPI = ACTWebSocketCore.overlayAPI;
                 id = Guid.NewGuid().ToString();
+                handle["broadcast"] = (session, o) => {
+                    String from = id;
+                    JToken msg = o["msg"].ToString();
+                    String msgtype = o["msgtype"].ToString();
+                    Broadcast(from, msgtype, msg);
+                };
+                handle["send"] = (session, o) => {
+                    String from = id;
+                    JToken msg = o["msg"].ToString();
+                    String msgtype = o["msgtype"].ToString();
+                    Broadcast(from, msgtype, msg);
+                };
+                handle["set_id"] = (session, o) => {
+                    String before = id;
+                    id = o["id"].ToString();
+                    String to = id;
+                    JObject t = new JObject();
+                    t["before"] = before;
+                    t["after"] = to;
+                    Broadcast(id, "set_id", t);
+                };
+                overlayAPI.InstallMessageHandle(ref handle);
             }
             protected override async void OnOpen()
             {
                 base.OnOpen();
+                overlayAPI.OnOpen(id, this);
             }
 
             protected override void OnClose(CloseEventArgs e)
@@ -123,11 +147,6 @@ namespace ACTWebSocket_Plugin
                         {
                             if (e.Data.StartsWith("."))
                             {
-                                if(isfirst)
-                                {
-                                    overlayAPI.SendFirstConnData(ID, this);
-                                    isfirst = false;
-                                }
                                 return;
                             }
 
@@ -135,31 +154,14 @@ namespace ACTWebSocket_Plugin
                             {
                                 JObject o = JObject.Parse(e.Data);
                                 String type = o["type"].ToString();
-                                String from = id;
-                                if (type == "broadcast")
+                                try
                                 {
-                                    JToken msg = o["msg"].ToString();
-                                    String msgtype = o["msgtype"].ToString();
-                                    Broadcast(from, msgtype, msg);
+                                    handle[type](this, o);
                                 }
-                                if (type == "send")
+                                catch (Exception ex)
                                 {
-                                    JToken msg = o["msg"];
-                                    String to = o["to"].ToString();
-                                    String msgtype = o["msgtype"].ToString();
-                                    Send(from, to, msgtype, msg);
+                                    Send(this.id, this.id, "Error", ex.Message);
                                 }
-                                if (type == "set_id")
-                                {
-                                    String before = id;
-                                    id = o["id"].ToString();
-                                    String to = id;
-                                    JObject t = new JObject();
-                                    t["before"] = before;
-                                    t["after"] = to;
-                                    Broadcast(id, "set_id", t);
-                                }
-                                overlayAPI.OnMessage(this, type, from, o);
                             }
                             catch (Exception ex)
                             {

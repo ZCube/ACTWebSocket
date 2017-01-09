@@ -35,7 +35,7 @@ namespace ACTWebSocket_Plugin
             core.Broadcast("/MiniParse", type.ToString(), json);
         }
 
-        public void SendFirstConnData(string id, WebSocketCommunicateBehavior session)
+        public void OnOpen(string id, WebSocketCommunicateBehavior session)
         {
             // 플레이어 아이디 전송
             if (CurrentPlayerID != 0)
