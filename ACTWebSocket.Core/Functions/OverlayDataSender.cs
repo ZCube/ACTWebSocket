@@ -43,7 +43,8 @@ namespace ACTWebSocket_Plugin
                 {
                     type = "broadcast",
                     msgtype = SendMessageType.CombatData.ToString(),
-                    msg = updateStringCache
+                    msg = updateStringCache,
+                    isActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active
                 }).ToString(), id);
             }
 
