@@ -80,5 +80,6 @@
         RemoveCombatant = 7,
         AbilityUse = 8,
         DoTHoT = 9,
+        CombatData = 10,
     }
 }
