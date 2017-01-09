@@ -139,6 +139,20 @@ namespace ACTWebSocket_Plugin
                 }
             }
 
+            public void Send(String type, String from, String to, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                String str = GenMessage(type, from, to, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id == to)
+                    {
+                        s.Send(str);
+                        break;
+                    }
+                }
+            }
+
             protected override void OnMessage(MessageEventArgs e)
             {
                 switch (e.Type)

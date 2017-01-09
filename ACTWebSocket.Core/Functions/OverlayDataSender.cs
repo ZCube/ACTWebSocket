@@ -40,19 +40,19 @@ namespace ACTWebSocket_Plugin
             // 마지막 전투 전송
             if (updateStringCache != null)
             {
-                session.SendTo(JObject.FromObject(new
-                {
-                    type = "broadcast",
-                    msgtype = SendMessageType.CombatData.ToString(),
-                    msg = updateStringCache,
-                    isActive = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active
-                }).ToString(), id);
+                // isActive Update
+                updateStringCache["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
+
+                session.Send("broadcast", null, session.id, SendMessageType.CombatData.ToString(),
+                //session.Broadcast(SendMessageType.CombatData.ToString(),
+                    updateStringCache
+                    );
             }
 
             // 플레이어 아이디 전송
             if (CurrentPlayerID != 0)
             {
-                session.Send(session.id, SendMessageType.SendCharName.ToString(),
+                session.Send("broadcast", null, session.id, SendMessageType.SendCharName.ToString(),
                 //session.Broadcast(SendMessageType.SendCharName.ToString(),
                     JObject.FromObject(new
                     {
@@ -64,7 +64,7 @@ namespace ACTWebSocket_Plugin
             // 지역 전송
             if (CurrentZoneID != 0)
             {
-                session.Send(session.id, SendMessageType.ChangeZone.ToString(),
+                session.Send("broadcast", null, session.id, SendMessageType.ChangeZone.ToString(),
                 //session.Broadcast(SendMessageType.ChangeZone.ToString(),
                     JObject.FromObject(new
                     {
@@ -78,7 +78,7 @@ namespace ACTWebSocket_Plugin
                 foreach(KeyValuePair<uint, Combatant> c in Combatants)
                 {
                     Combatant combatant = c.Value;
-                    session.Send(session.id, SendMessageType.AddCombatant.ToString(),
+                    session.Send("broadcast", null, session.id, SendMessageType.AddCombatant.ToString(),
                         JObject.FromObject(new
                         {
                             id = combatant.id,
