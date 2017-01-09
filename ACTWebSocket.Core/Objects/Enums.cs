@@ -79,5 +79,6 @@
         AddCombatant = 6,
         RemoveCombatant = 7,
         AbilityUse = 8,
+        DoTHoT = 9,
     }
 }

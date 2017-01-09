@@ -15,6 +15,7 @@ namespace ACTWebSocket_Plugin
         {
             FFXIV_OverlayAPI overlayAPI;
             public String id = null;
+            private bool isfirst = true;
             public WebSocketCommunicateBehavior()
             {
                 overlayAPI = ACTWebSocketCore.overlayAPI;
@@ -71,8 +72,16 @@ namespace ACTWebSocket_Plugin
                 {
                     case Opcode.Text:
                         {
-                            if (e.Data == ".")
+                            if (e.Data.StartsWith("."))
+                            {
+                                if(isfirst)
+                                {
+                                    overlayAPI.SendFirstConnData(ID, Sessions);
+                                    isfirst = false;
+                                }
                                 return;
+                            }
+
                             try
                             {
                                 JObject o = JObject.Parse(e.Data);

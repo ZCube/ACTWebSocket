@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using ACTWebSocket_Plugin.Parse;
 
 namespace ACTWebSocket_Plugin
 {
@@ -31,6 +32,63 @@ namespace ACTWebSocket_Plugin
         public void SendJSON(SendMessageType type, JToken json)
         {
             core.Broadcast("/MiniParse", type.ToString(), json);
+        }
+
+        public void SendFirstConnData(string id, WebSocketSharp.Server.WebSocketSessionManager session)
+        {
+            // 플레이어 아이디 전송
+            if (CurrentPlayerID != 0)
+            {
+                JObject mychar = JObject.FromObject(new
+                {
+                    type = "broadcast",
+                    msgtype = SendMessageType.SendCharName.ToString(),
+                    msg = JObject.FromObject(new
+                    {
+                        charID = CurrentPlayerID,
+                        charName = CurrentPlayerName
+                    })
+                });
+                session.SendTo(mychar.ToString(), id);
+            }
+
+            // 지역 전송
+            if (CurrentZoneID != 0)
+            {
+                session.SendTo(JObject.FromObject(new
+                {
+                    type = "broadcast",
+                    msgtype = SendMessageType.ChangeZone.ToString(),
+                    msg = JObject.FromObject(new
+                    {
+                        zoneID = CurrentZoneID
+                    })
+                }).ToString(), id);
+            }
+
+            // 오브젝트 목록 전송
+            if (Combatants.Count > 0)
+            {
+                foreach(KeyValuePair<uint, Combatant> c in Combatants)
+                {
+                    Combatant combatant = c.Value;
+                    session.SendTo(JObject.FromObject(new
+                    {
+                        type = "broadcast",
+                        msgtype = SendMessageType.AddCombatant.ToString(),
+                        msg = JObject.FromObject(new
+                        {
+                            id = combatant.id,
+                            name = combatant.name,
+                            job = combatant.jobid,
+                            level = combatant.level,
+                            max_hp = combatant.max_hp,
+                            max_mp = combatant.max_mp,
+                            owner_id = combatant.owner_id,
+                        })
+                    }).ToString(), id);
+                }
+            }
         }
 
         /// <summary>

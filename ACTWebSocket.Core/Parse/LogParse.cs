@@ -57,7 +57,7 @@ namespace ACTWebSocket_Plugin
                         SendJSON(SendMessageType.ChangeZone,
                             JObject.FromObject(new
                             {
-                                zoneID = currentZone
+                                zoneID = CurrentZoneID
                             }));
                         break;
                     case MessageType.ChangePrimaryPlayer:
@@ -83,6 +83,7 @@ namespace ACTWebSocket_Plugin
                         }
                         Combatant combatant = new Combatant();
                         combatant.id = Convert.ToUInt32(data[2], 16);
+                        combatant.name = data[3];
                         combatant.jobid = Convert.ToByte(data[4], 16);
                         combatant.level = Convert.ToByte(data[5], 16);
                         combatant.max_hp = Convert.ToInt32(data[6], 16);
@@ -95,6 +96,7 @@ namespace ACTWebSocket_Plugin
                             JObject.FromObject(new
                             {
                                 id = combatant.id,
+                                name = data[3],
                                 job = combatant.jobid,
                                 level = combatant.level,
                                 max_hp = combatant.max_hp,
@@ -121,6 +123,27 @@ namespace ACTWebSocket_Plugin
                         break;
                     case MessageType.IncomingAbility:
                         // 메모리?
+                        break;
+                    case MessageType.NetworkDoT:
+                        if (data.Length < 13)
+                        {
+                            InvaildLogLine(data);
+                            break;
+                        }
+
+                        SendJSON(SendMessageType.DoTHoT,
+                            JObject.FromObject(new
+                            {
+                                // Only Target Data...
+                                id = Convert.ToUInt32(data[2], 16),
+                                name = data[3],
+                                cur_hp = Convert.ToInt32(data[7]),
+                                max_hp = Convert.ToInt32(data[8]),
+                                cur_mp = Convert.ToInt32(data[9]),
+                                max_mp = Convert.ToInt32(data[10]),
+                                cur_tp = Convert.ToInt32(data[11]),
+                                max_tp = Convert.ToInt32(data[12]),
+                            }));
                         break;
                     case MessageType.NetworkAbility:
                     case MessageType.NetworkAOEAbility:
@@ -248,8 +271,9 @@ namespace ACTWebSocket_Plugin
                                 PartyList.Add(var_2);
                         }
                         break;
-                    // unused
                     case MessageType.FlyingText:
+                        break;
+                    // unused
                     case MessageType.CombatantHP:
                     case MessageType.Error:
                     case MessageType.Timer:
