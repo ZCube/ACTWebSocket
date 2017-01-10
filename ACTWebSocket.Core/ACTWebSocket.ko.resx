@@ -117,48 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>스킨 리스트</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>오버레이 윈도우 리스트</value>
-  </data>
-  <data name="button2.Text" xml:space="preserve">
-    <value>새 오버레이 윈도우 열기</value>
-  </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>리스트 갱신</value>
-  </data>
-  <data name="copyURL.Text" xml:space="preserve">
-    <value>URL 복사</value>
-  </data>
-  <data name="button4.Text" xml:space="preserve">
-    <value>URL로 새 오버레이 윈도우 열기</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="autostart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 16</value>
-  </data>
   <data name="autostart.Text" xml:space="preserve">
-    <value>ACT 실행시 자동 서버 시작</value>
-  </data>
-  <data name="MiniParseUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>48, 16</value>
+    <value>서버 자동 시작</value>
   </data>
   <data name="MiniParseUse.Text" xml:space="preserve">
-    <value>사용</value>
-  </data>
-  <data name="BeforeLogLineReadUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 16</value>
+    <value>전투 데이터</value>
   </data>
   <data name="BeforeLogLineReadUse.Text" xml:space="preserve">
-    <value>BeforeLogLineRead 사용</value>
-  </data>
-  <data name="OnLogLineReadUse.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 16</value>
+    <value>BeforeLogLineRead</value>
   </data>
   <data name="OnLogLineReadUse.Text" xml:space="preserve">
-    <value>OnLogLineRead 사용</value>
+    <value>OnLogLineRead</value>
   </data>
   <data name="buttonOff.Text" xml:space="preserve">
     <value>끄기</value>
@@ -166,38 +135,21 @@
   <data name="buttonOn.Text" xml:space="preserve">
     <value>켜기</value>
   </data>
-  <data name="localhostOnly.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 16</value>
-  </data>
-  <data name="localhostOnly.Text" xml:space="preserve">
-    <value>로컬만 사용 (외부에서 접속 불가)</value>
-  </data>
-  <data name="randomURL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>115, 16</value>
+  <data name="UPNPUse.Text" xml:space="preserve">
+    <value>UPNP 사용 (공유기 포트 매핑)</value>
   </data>
   <data name="randomURL.Text" xml:space="preserve">
     <value>임의의 URL 사용</value>
   </data>
-  <data name="checkBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 16</value>
-  </data>
-  <data name="checkBox1.Text" xml:space="preserve">
-    <value>마우스 클릭 비활성화</value>
-  </data>
-  <data name="checkBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 16</value>
-  </data>
-  <data name="checkBox2.Text" xml:space="preserve">
-    <value>포커스 비활성화</value>
-  </data>
-  <data name="close.Text" xml:space="preserve">
-    <value>닫기</value>
-  </data>
   <data name="startoption.Text" xml:space="preserve">
     <value>시작 옵션</value>
   </data>
-  <data name="hostdata.Text" xml:space="preserve">
-    <value>서버 설정</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 12</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>UPNP 포트</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 12</value>
@@ -211,88 +163,28 @@
   <data name="label14.Text" xml:space="preserve">
     <value>포트</value>
   </data>
-  <data name="label17.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 12</value>
+  <data name="hostdata.Text" xml:space="preserve">
+    <value>서버</value>
   </data>
-  <data name="label17.Text" xml:space="preserve">
-    <value>정렬 타입</value>
+  <data name="chatFilter.Text" xml:space="preserve">
+    <value>채팅</value>
   </data>
-  <data name="label16.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 12</value>
-  </data>
-  <data name="label16.Text" xml:space="preserve">
-    <value>정렬 키</value>
+  <data name="othersets.Text" xml:space="preserve">
+    <value>메세지 필터</value>
   </data>
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
   </data>
-  <data name="groupBox2.Text" xml:space="preserve">
-    <value>오버레이 속성</value>
+  <data name="copyURL.Text" xml:space="preserve">
+    <value>클립보드 복사</value>
   </data>
-  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 12</value>
+  <data name="buttonRefresh.Text" xml:space="preserve">
+    <value>새로고침</value>
   </data>
-  <data name="label11.Text" xml:space="preserve">
-    <value>높이</value>
+  <data name="buttonAddURL.Text" xml:space="preserve">
+    <value>URL 추가</value>
   </data>
-  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 12</value>
-  </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>너비</value>
-  </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 12</value>
-  </data>
-  <data name="label7.Text" xml:space="preserve">
-    <value>FPS</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>줌</value>
-  </data>
-  <data name="button5.Text" xml:space="preserve">
-    <value>열기</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>28, 12</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>URL</value>
-  </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 12</value>
-  </data>
-  <data name="label4.Text" xml:space="preserve">
-    <value>투명도</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>제목</value>
-  </data>
-  <data name="checkBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 16</value>
-  </data>
-  <data name="checkBox6.Text" xml:space="preserve">
-    <value>크기 조절 활성화</value>
-  </data>
-  <data name="checkBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 16</value>
-  </data>
-  <data name="checkBox5.Text" xml:space="preserve">
-    <value>드래그 이동 활성화</value>
-  </data>
-  <data name="checkBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 16</value>
-  </data>
-  <data name="checkBox4.Text" xml:space="preserve">
-    <value>드래그 활성화</value>
-  </data>
-  <data name="checkBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 16</value>
-  </data>
-  <data name="checkBox3.Text" xml:space="preserve">
-    <value>숨기기</value>
+  <data name="buttonURL.Text" xml:space="preserve">
+    <value>URL 삭제</value>
   </data>
 </root>

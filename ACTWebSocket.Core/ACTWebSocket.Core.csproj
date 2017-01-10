@@ -126,6 +126,9 @@
     <Compile Include="WebSocketCommunicateBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ACTWebSocket.ko.resx">
+      <DependentUpon>ACTWebSocket.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ACTWebSocket.resx">
       <DependentUpon>ACTWebSocket.cs</DependentUpon>
     </EmbeddedResource>

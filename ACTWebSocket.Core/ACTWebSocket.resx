@@ -415,7 +415,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;startoption.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>12</value>
   </data>
   <data name="&gt;&gt;hostnames.Name" xml:space="preserve">
     <value>hostnames</value>
@@ -499,7 +499,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;hostdata.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>11</value>
   </data>
   <data name="hostnames.Location" type="System.Drawing.Point, System.Drawing">
     <value>79, 23</value>
@@ -529,7 +529,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 79</value>
+    <value>10, 79</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>64, 12</value>
@@ -583,7 +583,7 @@
     <value>True</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 26</value>
+    <value>10, 26</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>30, 12</value>
@@ -610,7 +610,7 @@
     <value>True</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 52</value>
+    <value>10, 52</value>
   </data>
   <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
     <value>27, 12</value>
@@ -667,7 +667,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;othersets.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>10</value>
   </data>
   <data name="chatFilter.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -724,16 +724,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;serverStatus.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>9</value>
   </data>
   <data name="copyURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="copyURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>454, 4</value>
+    <value>454, 45</value>
   </data>
   <data name="copyURL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 39</value>
+    <value>92, 26</value>
   </data>
   <data name="copyURL.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -751,16 +751,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;copyURL.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="buttonRefresh.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonRefresh.Location" type="System.Drawing.Point, System.Drawing">
-    <value>552, 4</value>
+    <value>552, 45</value>
   </data>
   <data name="buttonRefresh.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 39</value>
+    <value>92, 26</value>
   </data>
   <data name="buttonRefresh.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -778,16 +778,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonRefresh.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="buttonAddURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonAddURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 3</value>
+    <value>258, 45</value>
   </data>
   <data name="buttonAddURL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 40</value>
+    <value>92, 26</value>
   </data>
   <data name="buttonAddURL.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -805,16 +805,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonAddURL.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>6</value>
   </data>
   <data name="buttonURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>356, 4</value>
+    <value>356, 44</value>
   </data>
   <data name="buttonURL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 39</value>
+    <value>92, 26</value>
   </data>
   <data name="buttonURL.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -832,13 +832,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;buttonURL.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>5</value>
   </data>
   <data name="skinList.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 49</value>
+    <value>258, 77</value>
   </data>
   <data name="skinList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>386, 383</value>
+    <value>386, 355</value>
   </data>
   <data name="skinList.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -853,13 +853,121 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;skinList.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="buttonOpen.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonOpen.Location" type="System.Drawing.Point, System.Drawing">
+    <value>258, 13</value>
+  </data>
+  <data name="buttonOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 26</value>
+  </data>
+  <data name="buttonOpen.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="buttonOpen.Text" xml:space="preserve">
+    <value>Open Overlay</value>
+  </data>
+  <data name="&gt;&gt;buttonOpen.Name" xml:space="preserve">
+    <value>buttonOpen</value>
+  </data>
+  <data name="&gt;&gt;buttonOpen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonOpen.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonOpen.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="buttonManage.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonManage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>356, 12</value>
+  </data>
+  <data name="buttonManage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 26</value>
+  </data>
+  <data name="buttonManage.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="buttonManage.Text" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="&gt;&gt;buttonManage.Name" xml:space="preserve">
+    <value>buttonManage</value>
+  </data>
+  <data name="&gt;&gt;buttonManage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonManage.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonManage.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="buttonDownload.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonDownload.Location" type="System.Drawing.Point, System.Drawing">
+    <value>454, 12</value>
+  </data>
+  <data name="buttonDownload.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 26</value>
+  </data>
+  <data name="buttonDownload.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="buttonDownload.Text" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="&gt;&gt;buttonDownload.Name" xml:space="preserve">
+    <value>buttonDownload</value>
+  </data>
+  <data name="&gt;&gt;buttonDownload.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonDownload.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonDownload.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="buttonExit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonExit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>552, 12</value>
+  </data>
+  <data name="buttonExit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 26</value>
+  </data>
+  <data name="buttonExit.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="buttonExit.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Name" xml:space="preserve">
+    <value>buttonExit</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonExit.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>굴림, 9pt</value>
+    <value>Gulim, 9pt</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>700, 500</value>
