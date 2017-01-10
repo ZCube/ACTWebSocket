@@ -18,6 +18,8 @@ namespace ACTWebSocket_Plugin
     using System.Threading;
     using System.Net;
     using System.Diagnostics;
+    using System.ComponentModel;
+    using Ionic.Zip;
 
     public interface PluginDirectory
     {
@@ -40,6 +42,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonManage;
         private Button buttonDownload;
         private Button buttonExit;
+        private ProgressBar progressBar;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -136,6 +139,7 @@ namespace ACTWebSocket_Plugin
             this.buttonManage = new System.Windows.Forms.Button();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -356,9 +360,15 @@ namespace ACTWebSocket_Plugin
             this.buttonExit.UseVisualStyleBackColor = true;
             this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
             // 
+            // progressBar
+            // 
+            resources.ApplyResources(this.progressBar, "progressBar");
+            this.progressBar.Name = "progressBar";
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.buttonDownload);
             this.Controls.Add(this.buttonManage);
@@ -431,6 +441,7 @@ namespace ACTWebSocket_Plugin
                 core.overlaySkinDirectory = overlaySkinDirectory;
                 core.hwnd = Handle;
             }
+            progressBar.Hide();
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
@@ -1142,7 +1153,40 @@ namespace ACTWebSocket_Plugin
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
+            string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+            WebClient webClient = new WebClient();
+            progressBar.Minimum = 0;
+            progressBar.Maximum = 100;
+            progressBar.Show();
+            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+            webClient.DownloadFileAsync(new Uri(url), pluginDirectory+"/overlay_proc.zip");
+        }
 
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.TotalBytesToReceive == -1)
+            {
+                if (progressBar.Style != ProgressBarStyle.Marquee)
+                {
+                    progressBar.Value = 100;
+                    progressBar.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            else
+            {
+                progressBar.Value = e.ProgressPercentage;
+                progressBar.Style = ProgressBarStyle.Blocks;
+            }
+        }
+
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            progressBar.Hide();
+            ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+            z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+            z.ExtractAll(pluginDirectory + "/overlay_proc");
+            MessageBox.Show("Download and unzip completed!");
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
