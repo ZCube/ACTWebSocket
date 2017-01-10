@@ -54,8 +54,8 @@ namespace ACTWebSocket_Plugin
 
         public void SetPluginDirectory(string path)
         {
-            overlayProcDir = path + "\"overlay_proc\"";
-            overlayProcExe = overlayProcDir + "overlay_proc.exe";
+            overlayProcDir = path + "\\overlay_proc";
+            overlayProcExe = overlayProcDir + "\\overlay_proc.exe";
             pluginDirectory = path;
         }
 
@@ -1049,7 +1049,7 @@ namespace ACTWebSocket_Plugin
         private void buttonURL_Click(object sender, EventArgs e)
         {
             if (skinList.SelectedItems == null) return;
-            if(skinList.SelectedItems.Count >=0)
+            if(skinList.SelectedItems.Count > 0)
             {
                 string url = skinList.SelectedItems[0].Text;
                 SkinURLList.Remove(url);
@@ -1060,7 +1060,7 @@ namespace ACTWebSocket_Plugin
         private void copyURL_Click(object sender, EventArgs e)
         {
             if (skinList.SelectedItems == null) return;
-            if (skinList.SelectedItems.Count >= 0)
+            if (skinList.SelectedItems.Count > 0)
             {
                 string url = skinList.SelectedItems[0].Text;
                 copyURLPath(url);
@@ -1118,7 +1118,7 @@ namespace ACTWebSocket_Plugin
 
         private void buttonOpen_Click(object sender, EventArgs e)
         {
-            if (skinList.SelectedItems.Count >= 0)
+            if (skinList.SelectedItems.Count > 0)
             {
                 string url = skinList.SelectedItems[0].Text;
                 url = getURLPath(url);
