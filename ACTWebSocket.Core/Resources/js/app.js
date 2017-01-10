@@ -67,6 +67,16 @@ function closeMenu()
 	$(".wideswap").css({"left":"8px"});
 }
 
+function api_overlaywindow_get(json, callback)
+{
+	websocket.send(
+		JSON.stringify({
+			cmd: "get",
+			value: json
+		})
+	);
+}
+
 function api_overlaywindow_set(json, callback)
 {
 	websocket.send(
@@ -435,6 +445,10 @@ function update_pos(obj)
 				break;
 			}
 		}
+    if(find == false)
+    {
+      api_overlaywindow_get(obj);
+    }
 	}
 	catch(e)
 	{
