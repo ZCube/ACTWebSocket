@@ -76,7 +76,9 @@
 
     </style>
     <script src="jquery-2.1.1.min.js"></script>
-    <script src="actwebsocket.js"></script>
+    <script src="../actwebsocket.js"></script>
+    <script src="../actwebsocket_compat.js"></script>
+    <script>var wsUri = "ws://@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/</script>
     <script>
 
         //
@@ -350,47 +352,6 @@
             
             return result;
         }
-/* ACTWebSocket  Begin */
-
-class WebSocketImpl extends ActWebsocketInterface
-{
-    constructor(uri, path = "MiniParse") {
-        super(uri, path);
-    }
-    //send(to, type, msg)
-    //broadcast(type, msg)
-    onRecvMessage(e)
-    {
-        console.log(e);
-    }
-
-    onBroadcastMessage(e)
-    {
-        console.log(e);
-        if (e.detail.msgtype == "CombatData")
-        {
-            document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
-        }
-    }
-};
-
-var webs = null;
-
-var wsUri = "ws://@HOST_PORT@/MiniParse";
-$(document).ready(function() {
-    webs = new WebSocketImpl(wsUri);
-    webs.connect();
-});
-if (document.addEventListener) {
-    window.onbeforeunload = function() {
-        webs.close();
-    };
-    window.addEventListener("unload", function() {
-        webs.close();
-    }, false);
-}
-
-/* ACTWebSocket  End */
     </script>
 </head>
 <body>
