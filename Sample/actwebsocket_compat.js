@@ -21,7 +21,6 @@ class WebSocketImpl extends ActWebsocketInterface
 };
 
 var webs = null;
-var wsUri = "ws://@HOST_PORT@/MiniParse";
 $(document).ready(function() {
   webs = new WebSocketImpl(wsUri);
   webs.connect();
