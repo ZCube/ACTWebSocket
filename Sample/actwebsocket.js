@@ -3,7 +3,7 @@ class ActWebsocketInterface
 {
 	constructor(uri, path = "MiniParse") {
 		// url check
-		querySet = getQuerySet();
+		var querySet = this.getQuerySet();
 		if(querySet["HOST_PORT"] != undefined)
 		{
 		    uri = querySet["HOST_PORT"] + path;
@@ -33,7 +33,7 @@ class ActWebsocketInterface
 	}
 	connect() {
 		if(this.websocket != undefined && this.websocket != null)
-			close();
+			this.close();
 		this.activate = true;
 		var This = this;
 		this.websocket = new WebSocket(this.uri);
@@ -53,7 +53,7 @@ class ActWebsocketInterface
 		// get id from useragent
 		if(this.id != null && this.id != undefined)
 		{
-			set_id(this.id);
+			this.set_id(this.id);
 		}
 		else
 		{
@@ -61,7 +61,7 @@ class ActWebsocketInterface
 			var id = r.exec(navigator.userAgent);
 			if(id != null && id.length == 1)
 			{
-				set_id(id[0]);
+				this.set_id(id[0]);
 				self.id = id;
 			}
 		}
@@ -113,7 +113,7 @@ class ActWebsocketInterface
 		this.websocket.close();
 		console.log(evt);
 	}
-	static getQuerySet() {
+	getQuerySet() {
 		var querySet = {};
 		// get query 
 		var query = window.location.search.substring(1);
