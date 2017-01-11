@@ -59,6 +59,7 @@ namespace ACTWebSocket_Plugin
         {
             overlayProcDir = path + "\\overlay_proc";
             overlayProcExe = overlayProcDir + "\\overlay_proc.exe";
+            UpdateOverlayProc();
             pluginDirectory = path;
         }
 
@@ -400,14 +401,9 @@ namespace ACTWebSocket_Plugin
         #endregion
         public ACTWebSocketMain()
         {
-            InitializeComponent();
-            InitBrowser();
-        }
-
-
-        public void InitBrowser()
-        {
             ChatFilter = false;
+            InitializeComponent();
+            UpdateOverlayProc();
         }
 
         ~ACTWebSocketMain()
@@ -1127,6 +1123,13 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = UPNPUse.Checked;
         }
 
+        void UpdateOverlayProc()
+        {
+            bool b = File.Exists(overlayProcExe);
+            buttonOpen.Enabled = b;
+            buttonExit.Enabled = b;
+            buttonManage.Enabled = b;
+        }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             if (skinList.SelectedItems.Count > 0)
@@ -1153,6 +1156,7 @@ namespace ACTWebSocket_Plugin
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
+            buttonDownload.Enabled = false;
             string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
             WebClient webClient = new WebClient();
             progressBar.Minimum = 0;
@@ -1183,10 +1187,18 @@ namespace ACTWebSocket_Plugin
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
             progressBar.Hide();
-            ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
-            z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
-            z.ExtractAll(pluginDirectory + "/overlay_proc");
-            MessageBox.Show("Download and unzip completed!");
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+                z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                z.ExtractAll(pluginDirectory + "/overlay_proc");
+            });
+            Task UITask = task.ContinueWith((t) =>
+            {
+                buttonDownload.Enabled = true;
+                UpdateOverlayProc();
+                MessageBox.Show("Download and unzip completed!");
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
