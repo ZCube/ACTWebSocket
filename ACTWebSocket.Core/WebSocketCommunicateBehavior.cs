@@ -16,28 +16,79 @@ namespace ACTWebSocket_Plugin
             FFXIV_OverlayAPI overlayAPI;
             public String id = null;
             private bool isfirst = true;
+            public Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>> handle = new Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>>();
             public WebSocketCommunicateBehavior()
             {
                 overlayAPI = ACTWebSocketCore.overlayAPI;
                 id = Guid.NewGuid().ToString();
+                handle["broadcast"] = (session, o) => {
+                    String from = id;
+                    JToken msg = o["msg"].ToString();
+                    String msgtype = o["msgtype"].ToString();
+                    Broadcast(from, msgtype, msg);
+                };
+                handle["send"] = (session, o) => {
+                    String from = id;
+                    JToken msg = o["msg"].ToString();
+                    String msgtype = o["msgtype"].ToString();
+                    Broadcast(from, msgtype, msg);
+                };
+                handle["set_id"] = (session, o) => {
+                    String before = id;
+                    id = o["id"].ToString();
+                    String to = id;
+                    JObject t = new JObject();
+                    t["before"] = before;
+                    t["after"] = to;
+                    Broadcast(id, "set_id", t);
+                };
+                overlayAPI.InstallMessageHandle(ref handle);
             }
             protected override async void OnOpen()
             {
                 base.OnOpen();
+                overlayAPI.OnOpen(id, this);
             }
+
             protected override void OnClose(CloseEventArgs e)
             {
                 base.OnClose(e);
             }
 
-            public void Broadcast(String from, String type, JToken message)
+            public static JObject GenMessage(String type, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                obj["type"] = "broadcast";
-                obj["from"] = from;
-                obj["msgtype"] = type;
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
                 obj["msg"] = message;
-                String str = obj.ToString();
+                return obj;
+            }
+
+            public static JObject GenMessage(String type, String from, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
+                obj["from"] = from;
+                obj["msg"] = message;
+                return obj;
+            }
+
+            public static JObject GenMessage(String type, String from, String to, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                obj["type"] = type;
+                obj["msgtype"] = msgtype;
+                obj["from"] = from;
+                obj["to"] = to;
+                obj["msg"] = message;
+                return obj;
+            }
+
+            public void Broadcast(String from, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                String str = GenMessage("broadcast", from, msgtype, message).ToString();
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id != from)
@@ -47,15 +98,51 @@ namespace ACTWebSocket_Plugin
                 }
             }
 
-            public void Send(String from, String to, String type, JToken message)
+            public void Broadcast(String msgtype, JToken message)
+            {
+                String from = id;
+                String str = GenMessage("broadcast", from, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id != from)
+                    {
+                        s.Send(str);
+                    }
+                }
+            }
+
+            public void Send(String to, String msgtype, JToken message)
+            {
+                String from = id;
+                String str = GenMessage("send", from, to, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id == to)
+                    {
+                        s.Send(str);
+                        break;
+                    }
+                }
+            }
+
+            public void Send(String from, String to, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                obj["type"] = "send";
-                obj["msgtype"] = type;
-                obj["from"] = from;
-                obj["to"] = to;
-                obj["msg"] = message;
-                String str = obj.ToString();
+                String str = GenMessage("send", from, to, msgtype, message).ToString();
+                foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
+                {
+                    if (s.id == to)
+                    {
+                        s.Send(str);
+                        break;
+                    }
+                }
+            }
+
+            public void Send(String type, String from, String to, String msgtype, JToken message)
+            {
+                JObject obj = new JObject();
+                String str = GenMessage(type, from, to, msgtype, message).ToString();
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id == to)
@@ -74,11 +161,6 @@ namespace ACTWebSocket_Plugin
                         {
                             if (e.Data.StartsWith("."))
                             {
-                                if(isfirst)
-                                {
-                                    overlayAPI.SendFirstConnData(ID, Sessions);
-                                    isfirst = false;
-                                }
                                 return;
                             }
 
@@ -86,31 +168,14 @@ namespace ACTWebSocket_Plugin
                             {
                                 JObject o = JObject.Parse(e.Data);
                                 String type = o["type"].ToString();
-                                String from = id;
-                                if (type == "broadcast")
+                                try
                                 {
-                                    JToken msg = o["msg"].ToString();
-                                    String msgtype = o["msgtype"].ToString();
-                                    Broadcast(from, msgtype, msg);
+                                    handle[type](this, o);
                                 }
-                                if (type == "send")
+                                catch (Exception ex)
                                 {
-                                    JToken msg = o["msg"];
-                                    String to = o["to"].ToString();
-                                    String msgtype = o["msgtype"].ToString();
-                                    Send(from, to, msgtype, msg);
+                                    Send(this.id, this.id, "Error", ex.Message);
                                 }
-                                if (type == "set_id")
-                                {
-                                    String before = id;
-                                    id = o["id"].ToString();
-                                    String to = id;
-                                    JObject t = new JObject();
-                                    t["before"] = before;
-                                    t["after"] = to;
-                                    Broadcast(id, "set_id", t);
-                                }
-                                overlayAPI.OnMessage(this, type, from, o);
                             }
                             catch (Exception ex)
                             {

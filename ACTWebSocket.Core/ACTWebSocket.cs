@@ -17,6 +17,9 @@ namespace ACTWebSocket_Plugin
     using System.Threading.Tasks;
     using System.Threading;
     using System.Net;
+    using System.Diagnostics;
+    using System.ComponentModel;
+    using Ionic.Zip;
 
     public interface PluginDirectory
     {
@@ -35,6 +38,11 @@ namespace ACTWebSocket_Plugin
         private Button buttonAddURL;
         private Button buttonURL;
         private ListView skinList;
+        private Button buttonOpen;
+        private Button buttonManage;
+        private Button buttonDownload;
+        private Button buttonExit;
+        private ProgressBar progressBar;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -49,6 +57,9 @@ namespace ACTWebSocket_Plugin
 
         public void SetPluginDirectory(string path)
         {
+            overlayProcDir = path + "\\overlay_proc";
+            overlayProcExe = overlayProcDir + "\\overlay_proc.exe";
+            UpdateOverlayProc();
             pluginDirectory = path;
         }
 
@@ -125,6 +136,11 @@ namespace ACTWebSocket_Plugin
             this.buttonAddURL = new System.Windows.Forms.Button();
             this.buttonURL = new System.Windows.Forms.Button();
             this.skinList = new System.Windows.Forms.ListView();
+            this.buttonOpen = new System.Windows.Forms.Button();
+            this.buttonManage = new System.Windows.Forms.Button();
+            this.buttonDownload = new System.Windows.Forms.Button();
+            this.buttonExit = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -192,6 +208,7 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse.CheckState = System.Windows.Forms.CheckState.Checked;
             this.UPNPUse.Name = "UPNPUse";
             this.UPNPUse.UseVisualStyleBackColor = false;
+            this.UPNPUse.CheckedChanged += new System.EventHandler(this.UPNPUse_CheckedChanged);
             // 
             // randomURL
             // 
@@ -316,9 +333,47 @@ namespace ACTWebSocket_Plugin
             this.skinList.UseCompatibleStateImageBehavior = false;
             this.skinList.View = System.Windows.Forms.View.List;
             // 
+            // buttonOpen
+            // 
+            resources.ApplyResources(this.buttonOpen, "buttonOpen");
+            this.buttonOpen.Name = "buttonOpen";
+            this.buttonOpen.UseVisualStyleBackColor = true;
+            this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
+            // 
+            // buttonManage
+            // 
+            resources.ApplyResources(this.buttonManage, "buttonManage");
+            this.buttonManage.Name = "buttonManage";
+            this.buttonManage.UseVisualStyleBackColor = true;
+            this.buttonManage.Click += new System.EventHandler(this.buttonManage_Click);
+            // 
+            // buttonDownload
+            // 
+            resources.ApplyResources(this.buttonDownload, "buttonDownload");
+            this.buttonDownload.Name = "buttonDownload";
+            this.buttonDownload.UseVisualStyleBackColor = true;
+            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
+            // 
+            // buttonExit
+            // 
+            resources.ApplyResources(this.buttonExit, "buttonExit");
+            this.buttonExit.Name = "buttonExit";
+            this.buttonExit.UseVisualStyleBackColor = true;
+            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+            // 
+            // progressBar
+            // 
+            resources.ApplyResources(this.progressBar, "progressBar");
+            this.progressBar.Name = "progressBar";
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.buttonExit);
+            this.Controls.Add(this.buttonDownload);
+            this.Controls.Add(this.buttonManage);
+            this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.skinList);
             this.Controls.Add(this.buttonURL);
             this.Controls.Add(this.buttonAddURL);
@@ -346,14 +401,9 @@ namespace ACTWebSocket_Plugin
         #endregion
         public ACTWebSocketMain()
         {
-            InitializeComponent();
-            InitBrowser();
-        }
-
-
-        public void InitBrowser()
-        {
             ChatFilter = false;
+            InitializeComponent();
+            UpdateOverlayProc();
         }
 
         ~ACTWebSocketMain()
@@ -387,6 +437,7 @@ namespace ACTWebSocket_Plugin
                 core.overlaySkinDirectory = overlaySkinDirectory;
                 core.hwnd = Handle;
             }
+            progressBar.Hide();
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
@@ -849,6 +900,9 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        public string overlayProcDir { get; private set; }
+        public string overlayProcExe { get; private set; }
+
         public List<string> GetSkinList()
         {
             List<string> list = new List<string>();
@@ -858,8 +912,8 @@ namespace ACTWebSocket_Plugin
             }
             return list;
         }
-        
-        public void copyURLPath(string skinPath = "")
+
+        public string getURLPath(string skinPath = "")
         {
             string url = "";
             {
@@ -874,9 +928,9 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     Uri uri = new Uri(skinPath + "?HOST_PORT=" + "ws" + url);
-                    Clipboard.SetText(uri.ToString());
+                    return uri.ToString();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
                 }
@@ -889,7 +943,7 @@ namespace ACTWebSocket_Plugin
                     {
                         string fullURL = "http" + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
-                        Clipboard.SetText(fullURL);
+                        return fullURL;
                     }
                     catch (Exception e)
                     {
@@ -898,8 +952,18 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    Clipboard.SetText(url);
+                    return url;
                 }
+            }
+            return null;
+        }
+
+        public void copyURLPath(string skinPath = "")
+        {
+            string url = getURLPath(skinPath);
+            if(url != null)
+            {
+                Clipboard.SetText(url);
             }
         }
         #endregion Web JSObject Part End
@@ -992,7 +1056,7 @@ namespace ACTWebSocket_Plugin
         private void buttonURL_Click(object sender, EventArgs e)
         {
             if (skinList.SelectedItems == null) return;
-            if(skinList.SelectedItems.Count >=0)
+            if(skinList.SelectedItems.Count > 0)
             {
                 string url = skinList.SelectedItems[0].Text;
                 SkinURLList.Remove(url);
@@ -1003,7 +1067,7 @@ namespace ACTWebSocket_Plugin
         private void copyURL_Click(object sender, EventArgs e)
         {
             if (skinList.SelectedItems == null) return;
-            if (skinList.SelectedItems.Count >= 0)
+            if (skinList.SelectedItems.Count > 0)
             {
                 string url = skinList.SelectedItems[0].Text;
                 copyURLPath(url);
@@ -1052,6 +1116,97 @@ namespace ACTWebSocket_Plugin
         private void chatFilter_CheckedChanged(object sender, EventArgs e)
         {
             ChatFilter = chatFilter.Checked;
+        }
+
+        private void UPNPUse_CheckedChanged(object sender, EventArgs e)
+        {
+            uPnPPort.Enabled = UPNPUse.Checked;
+        }
+
+        void UpdateOverlayProc()
+        {
+            bool b = File.Exists(overlayProcExe);
+            buttonOpen.Enabled = b;
+            buttonExit.Enabled = b;
+            buttonManage.Enabled = b;
+        }
+        private void buttonOpen_Click(object sender, EventArgs e)
+        {
+            if (skinList.SelectedItems.Count > 0)
+            {
+                string url = skinList.SelectedItems[0].Text;
+                url = getURLPath(url);
+                if(url != null)
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                    startInfo.WorkingDirectory = overlayProcDir;
+                    startInfo.Arguments = "-o " + Utility.Base64Encoding(url);
+                    Process.Start(startInfo);
+                }
+            }
+        }
+
+        private void buttonManage_Click(object sender, EventArgs e)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+            startInfo.WorkingDirectory = overlayProcDir;
+            startInfo.Arguments = "-m";
+            Process.Start(startInfo);
+        }
+
+        private void buttonDownload_Click(object sender, EventArgs e)
+        {
+            buttonDownload.Enabled = false;
+            string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+            WebClient webClient = new WebClient();
+            progressBar.Minimum = 0;
+            progressBar.Maximum = 100;
+            progressBar.Show();
+            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+            webClient.DownloadFileAsync(new Uri(url), pluginDirectory+"/overlay_proc.zip");
+        }
+
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.TotalBytesToReceive == -1)
+            {
+                if (progressBar.Style != ProgressBarStyle.Marquee)
+                {
+                    progressBar.Value = 100;
+                    progressBar.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            else
+            {
+                progressBar.Value = e.ProgressPercentage;
+                progressBar.Style = ProgressBarStyle.Blocks;
+            }
+        }
+
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            progressBar.Hide();
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+                z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                z.ExtractAll(pluginDirectory + "/overlay_proc");
+            });
+            Task UITask = task.ContinueWith((t) =>
+            {
+                buttonDownload.Enabled = true;
+                UpdateOverlayProc();
+                MessageBox.Show("Download and unzip completed!");
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private void buttonExit_Click(object sender, EventArgs e)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+            startInfo.WorkingDirectory = overlayProcDir;
+            startInfo.Arguments = "-x";
+            Process.Start(startInfo);
         }
     }
 }

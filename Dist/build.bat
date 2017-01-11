@@ -6,8 +6,8 @@ xcopy /hrkysd ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\MimeType*.dll Dist\temp
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp
-xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp
-xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Open.Nat* Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Open.Nat*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\DotNetZip*.dll Dist\temp
 
 
 xcopy /hrkysd Sample Dist\temp\

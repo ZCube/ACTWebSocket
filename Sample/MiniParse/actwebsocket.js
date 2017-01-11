@@ -73,7 +73,8 @@ class ActWebsocketInterface
 		this.websocket = null;
 		if(this.activate)
 		{
-			setTimeout(this.connect, 5000);
+			var This = this;
+			setTimeout(function() {This.connect();}, 5000);
 		}
 	}
 	onmessage(evt) {
@@ -166,6 +167,7 @@ class ActWebsocketInterface
 	}
 };
 
+/*
 class ActWebSocketImpl extends ActWebsocketInterface
 {
 	constructor(uri, path = "MiniParse") {
@@ -185,3 +187,4 @@ class ActWebSocketImpl extends ActWebsocketInterface
 		}
 	}
 };
+*/

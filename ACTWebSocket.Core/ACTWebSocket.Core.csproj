@@ -74,6 +74,10 @@
       <HintPath>C:\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MimeTypeMap, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediaTypeMap.2.1.0.0\lib\net40\MimeTypeMap.dll</HintPath>
       <Private>True</Private>
@@ -126,6 +130,9 @@
     <Compile Include="WebSocketCommunicateBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ACTWebSocket.ko.resx">
+      <DependentUpon>ACTWebSocket.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ACTWebSocket.resx">
       <DependentUpon>ACTWebSocket.cs</DependentUpon>
     </EmbeddedResource>

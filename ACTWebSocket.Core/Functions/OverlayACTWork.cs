@@ -1,6 +1,8 @@
 ﻿using Advanced_Combat_Tracker;
 using System;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace ACTWebSocket_Plugin
 {
