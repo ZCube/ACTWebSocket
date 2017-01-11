@@ -148,7 +148,7 @@
     <value>5</value>
   </data>
   <data name="autostart.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
+    <value>Top, Left, Right</value>
   </data>
   <data name="autostart.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -175,7 +175,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;autostart.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="MiniParseUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -334,13 +334,13 @@
     <value>0</value>
   </data>
   <data name="UPNPUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
+    <value>Top, Left, Right</value>
   </data>
   <data name="UPNPUse.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="UPNPUse.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 46</value>
+    <value>11, 47</value>
   </data>
   <data name="UPNPUse.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 21</value>
@@ -361,16 +361,16 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;UPNPUse.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="randomURL.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
+    <value>Top, Left, Right</value>
   </data>
   <data name="randomURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="randomURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 68</value>
+    <value>11, 70</value>
   </data>
   <data name="randomURL.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 21</value>
@@ -391,13 +391,43 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;randomURL.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
+  </data>
+  <data name="skinOnAct.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="skinOnAct.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 93</value>
+  </data>
+  <data name="skinOnAct.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 21</value>
+  </data>
+  <data name="skinOnAct.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="skinOnAct.Text" xml:space="preserve">
+    <value>Skin Dir On Act/OverlaySkin</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Name" xml:space="preserve">
+    <value>skinOnAct</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Parent" xml:space="preserve">
+    <value>startoption</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="startoption.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
   <data name="startoption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>249, 98</value>
+    <value>249, 124</value>
   </data>
   <data name="startoption.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -478,7 +508,7 @@
     <value>4</value>
   </data>
   <data name="hostdata.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 107</value>
+    <value>3, 133</value>
   </data>
   <data name="hostdata.Size" type="System.Drawing.Size, System.Drawing">
     <value>249, 109</value>
@@ -646,7 +676,7 @@
     <value>0</value>
   </data>
   <data name="othersets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 222</value>
+    <value>3, 248</value>
   </data>
   <data name="othersets.Size" type="System.Drawing.Size, System.Drawing">
     <value>248, 125</value>
@@ -703,7 +733,7 @@
     <value>0</value>
   </data>
   <data name="serverStatus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 353</value>
+    <value>3, 379</value>
   </data>
   <data name="serverStatus.Size" type="System.Drawing.Size, System.Drawing">
     <value>248, 79</value>
@@ -838,7 +868,7 @@
     <value>258, 77</value>
   </data>
   <data name="skinList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>386, 355</value>
+    <value>386, 381</value>
   </data>
   <data name="skinList.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -964,7 +994,7 @@
     <value>1</value>
   </data>
   <data name="progressBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 439</value>
+    <value>3, 464</value>
   </data>
   <data name="progressBar.Size" type="System.Drawing.Size, System.Drawing">
     <value>641, 23</value>
@@ -994,7 +1024,7 @@
     <value>700, 500</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1152, 794</value>
+    <value>700, 500</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ACTWebSocketMain</value>
