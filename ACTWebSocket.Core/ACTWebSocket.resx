@@ -393,24 +393,6 @@
   <data name="&gt;&gt;randomURL.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="skinOnAct.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Left, Right</value>
-  </data>
-  <data name="skinOnAct.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 93</value>
-  </data>
-  <data name="skinOnAct.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 21</value>
-  </data>
-  <data name="skinOnAct.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="skinOnAct.Text" xml:space="preserve">
-    <value>Skin Dir On Act/OverlaySkin</value>
-  </data>
   <data name="&gt;&gt;skinOnAct.Name" xml:space="preserve">
     <value>skinOnAct</value>
   </data>
@@ -889,7 +871,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonOpen.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 13</value>
+    <value>356, 12</value>
   </data>
   <data name="buttonOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 26</value>
@@ -916,7 +898,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonManage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>356, 12</value>
+    <value>454, 12</value>
   </data>
   <data name="buttonManage.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 26</value>
@@ -943,7 +925,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonDownload.Location" type="System.Drawing.Point, System.Drawing">
-    <value>454, 12</value>
+    <value>258, 13</value>
   </data>
   <data name="buttonDownload.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 26</value>
@@ -994,10 +976,10 @@
     <value>1</value>
   </data>
   <data name="progressBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 464</value>
+    <value>356, 15</value>
   </data>
   <data name="progressBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>641, 23</value>
+    <value>288, 23</value>
   </data>
   <data name="progressBar.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -1012,6 +994,36 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;progressBar.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="skinOnAct.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="skinOnAct.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 93</value>
+  </data>
+  <data name="skinOnAct.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 21</value>
+  </data>
+  <data name="skinOnAct.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="skinOnAct.Text" xml:space="preserve">
+    <value>Skin Dir On Act/OverlaySkin</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Name" xml:space="preserve">
+    <value>skinOnAct</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.Parent" xml:space="preserve">
+    <value>startoption</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
