@@ -3,13 +3,10 @@ class ActWebsocketInterface
 {
 	constructor(uri, path = "MiniParse") {
 		// url check
-		if(uri == undefined || uri == null )
+		querySet = getQuerySet();
+		if(querySet["HOST_PORT"] != undefined)
 		{
-			querySet = getQuerySet();
-			if(querySet["HOST_PORT"] != undefined)
-			{
-				uri = querySet["HOST_PORT"] + path;
-			}
+		    uri = querySet["HOST_PORT"] + path;
 		}
 		this.uri = uri;
 		this.id = null;
