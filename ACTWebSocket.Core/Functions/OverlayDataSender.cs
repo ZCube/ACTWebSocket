@@ -37,59 +37,66 @@ namespace ACTWebSocket_Plugin
 
         public void OnOpen(string id, WebSocketCommunicateBehavior session)
         {
-            // 마지막 전투 전송
-            if (updateStringCache != null)
+            try
             {
-                // isActive Update
-                updateStringCache["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
-
-                session.Send("broadcast", null, session.id, SendMessageType.CombatData.ToString(),
-                //session.Broadcast(SendMessageType.CombatData.ToString(),
-                    updateStringCache
-                    );
-            }
-
-            // 플레이어 아이디 전송
-            if (CurrentPlayerID != 0)
-            {
-                session.Send("broadcast", null, session.id, SendMessageType.SendCharName.ToString(),
-                //session.Broadcast(SendMessageType.SendCharName.ToString(),
-                    JObject.FromObject(new
-                    {
-                        charID = CurrentPlayerID,
-                        charName = CurrentPlayerName
-                    }));
-            }
-
-            // 지역 전송
-            if (CurrentZoneID != 0)
-            {
-                session.Send("broadcast", null, session.id, SendMessageType.ChangeZone.ToString(),
-                //session.Broadcast(SendMessageType.ChangeZone.ToString(),
-                    JObject.FromObject(new
-                    {
-                        zoneID = CurrentZoneID
-                    }));
-            }
-
-            // 오브젝트 목록 전송
-            if (Combatants.Count > 0)
-            {
-                foreach(KeyValuePair<uint, Combatant> c in Combatants)
+                // 마지막 전투 전송
+                if (updateStringCache != null)
                 {
-                    Combatant combatant = c.Value;
-                    session.Send("broadcast", null, session.id, SendMessageType.AddCombatant.ToString(),
+                    // isActive Update
+                    updateStringCache["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;
+
+                    session.Send("broadcast", null, session.id, SendMessageType.CombatData.ToString(),
+                        //session.Broadcast(SendMessageType.CombatData.ToString(),
+                        updateStringCache
+                        );
+                }
+
+                // 플레이어 아이디 전송
+                if (CurrentPlayerID != 0)
+                {
+                    session.Send("broadcast", null, session.id, SendMessageType.SendCharName.ToString(),
+                        //session.Broadcast(SendMessageType.SendCharName.ToString(),
                         JObject.FromObject(new
                         {
-                            id = combatant.id,
-                            name = combatant.name,
-                            job = combatant.jobid,
-                            level = combatant.level,
-                            max_hp = combatant.max_hp,
-                            max_mp = combatant.max_mp,
-                            owner_id = combatant.owner_id,
+                            charID = CurrentPlayerID,
+                            charName = CurrentPlayerName
                         }));
                 }
+
+                // 지역 전송
+                if (CurrentZoneID != 0)
+                {
+                    session.Send("broadcast", null, session.id, SendMessageType.ChangeZone.ToString(),
+                        //session.Broadcast(SendMessageType.ChangeZone.ToString(),
+                        JObject.FromObject(new
+                        {
+                            zoneID = CurrentZoneID
+                        }));
+                }
+
+                // 오브젝트 목록 전송
+                if (Combatants.Count > 0)
+                {
+                    foreach (KeyValuePair<uint, Combatant> c in Combatants)
+                    {
+                        Combatant combatant = c.Value;
+                        session.Send("broadcast", null, session.id, SendMessageType.AddCombatant.ToString(),
+                            JObject.FromObject(new
+                            {
+                                id = combatant.id,
+                                name = combatant.name,
+                                job = combatant.jobid,
+                                level = combatant.level,
+                                max_hp = combatant.max_hp,
+                                max_mp = combatant.max_mp,
+                                owner_id = combatant.owner_id,
+                            }));
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                // TODO : how?
             }
         }
 
@@ -118,7 +125,7 @@ namespace ACTWebSocket_Plugin
             catch(Exception err)
             {
                 // 예외처리 필요.
-                SendErrorJSON(err.Message);
+                SendErrorJSON(err.ToString());
             }
         }
 
