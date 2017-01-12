@@ -762,14 +762,21 @@ namespace ACTWebSocket_Plugin
             {
                 Task upnpTask = new Task(async () =>
                 {
-                    var discoverer = new NatDiscoverer();
-                    var cts = new CancellationTokenSource(10000); // 10secs
-                    var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
+                    try
+                    {
+                        var discoverer = new NatDiscoverer();
+                        var cts = new CancellationTokenSource(10000); // 10secs
+                        var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
-                    // not registered when first invoke...
-                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        // not registered when first invoke...
+                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                    }
+                    catch(Exception e)
+                    {
+
+                    }
                 });
                 upnpTask.Start();
             }
