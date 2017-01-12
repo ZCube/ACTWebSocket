@@ -100,7 +100,7 @@ namespace ACTWebSocket_Plugin
             Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), overlayAPI.CreateEncounterJsonData());
         }
 
-        internal void StartServer(string address, int port, int extPort, string domain = null)
+        internal void StartServer(string address, int port, int extPort, string domain = null, bool skinOnAct = false)
         {
             StopServer();
 
@@ -123,7 +123,15 @@ namespace ACTWebSocket_Plugin
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/OnLogLineRead");
             
-            httpServer.RootPath = overlaySkinDirectory;
+            if(skinOnAct)
+            {
+                httpServer.RootPath = overlaySkinDirectory;
+            }
+            else
+            {
+                httpServer.RootPath = pluginDirectory;
+            }
+
             httpServer.OnConnect += (sender, e) =>
             {
                 var req = e.Request;

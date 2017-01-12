@@ -43,6 +43,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonDownload;
         private Button buttonExit;
         private ProgressBar progressBar;
+        private CheckBox skinOnAct;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -141,6 +142,7 @@ namespace ACTWebSocket_Plugin
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -220,6 +222,7 @@ namespace ACTWebSocket_Plugin
             // startoption
             // 
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
@@ -366,6 +369,14 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.progressBar, "progressBar");
             this.progressBar.Name = "progressBar";
             // 
+            // skinOnAct
+            // 
+            resources.ApplyResources(this.skinOnAct, "skinOnAct");
+            this.skinOnAct.BackColor = System.Drawing.Color.Transparent;
+            this.skinOnAct.Name = "skinOnAct";
+            this.skinOnAct.UseVisualStyleBackColor = false;
+            this.skinOnAct.CheckedChanged += new System.EventHandler(this.skinOnAct_CheckedChanged);
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -447,6 +458,7 @@ namespace ACTWebSocket_Plugin
             MiniParseUse.Checked = MiniParse;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
+            skinOnAct.Checked = SkinOnAct;
             chatFilter.Checked = ChatFilter;
             autostart.Checked = AutoRun;
             StopServer();
@@ -555,6 +567,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseUPnP = false;
                     }
+                    if (obj.TryGetValue("SkinOnAct", out token))
+                    {
+                        SkinOnAct = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        SkinOnAct = true;
+                    }
                     if (obj.TryGetValue("AutoRun", out token))
                     {
                         AutoRun = token.ToObject<bool>();
@@ -627,6 +647,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("OnLogLineRead", OnLogLineRead);
             obj.Add("MiniParse", MiniParse);
             obj.Add("ChatFilter", ChatFilter);
+            obj.Add("SkinOnAct", SkinOnAct);
             JArray skins = new JArray();
             foreach (string a in SkinURLList)
             {
@@ -706,7 +727,7 @@ namespace ACTWebSocket_Plugin
         public int Port { get; set; }
         public int UPnPPort { get; set; }
         public string Hostname { get; set; }
-
+        public bool SkinOnAct { get; set; }
         public bool RandomURL
         {
             get
@@ -780,11 +801,11 @@ namespace ACTWebSocket_Plugin
             {
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct);
                 }
             }
             catch (Exception e)
@@ -796,6 +817,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = false;
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
+            skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             randomURL.Enabled = false;
             buttonOn.Enabled = false;
@@ -812,6 +834,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = true;
             //MiniParseUse.Enabled = true;
             //chatFilter.Enabled = true;
+            skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
             randomURL.Enabled = true;
             buttonOn.Enabled = true;
@@ -905,10 +928,11 @@ namespace ACTWebSocket_Plugin
 
         public List<string> GetSkinList()
         {
+            string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
             List<string> list = new List<string>();
-            foreach (string file in Directory.EnumerateFiles(overlaySkinDirectory, "*.html", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(dir, "*.html", SearchOption.AllDirectories))
             {
-                list.Add(Utility.GetRelativePath(file, overlaySkinDirectory));
+                list.Add(Utility.GetRelativePath(file, dir));
             }
             return list;
         }
@@ -975,6 +999,7 @@ namespace ACTWebSocket_Plugin
             MiniParse = MiniParseUse.Checked;
             UseUPnP = UPNPUse.Checked;
             RandomURL = randomURL.Checked;
+            SkinOnAct = skinOnAct.Checked;
             ChatFilter = chatFilter.Checked;
             AutoRun = autostart.Checked;
             Hostname = hostnames.Text;
@@ -1080,6 +1105,12 @@ namespace ACTWebSocket_Plugin
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
+            skinList.Items.Clear();
+            foreach (var a in SkinURLList)
+            {
+                skinList.Items.Add(a);
+            }
+
             List<string> list =  GetSkinList();
             foreach(var u in list)
             {
@@ -1121,6 +1152,12 @@ namespace ACTWebSocket_Plugin
         private void UPNPUse_CheckedChanged(object sender, EventArgs e)
         {
             uPnPPort.Enabled = UPNPUse.Checked;
+        }
+
+        private void skinOnAct_CheckedChanged(object sender, EventArgs e)
+        {
+            SkinOnAct = skinOnAct.Checked;
+            buttonRefresh_Click(sender, e);
         }
 
         void UpdateOverlayProc()

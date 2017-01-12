@@ -10,8 +10,8 @@ xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Open.Nat*.dll Dist\temp
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\DotNetZip*.dll Dist\temp
 
 
-xcopy /hrkysd Sample Dist\temp\
 popd
+xcopy /hrkysd ..\Sample /exclude:exclude_files.txt temp\
 del ACTWebSocket_latest.7z
 pushd temp
 "c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest.7z *
