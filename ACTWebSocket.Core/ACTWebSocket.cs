@@ -125,6 +125,7 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
             this.startoption = new System.Windows.Forms.GroupBox();
+            this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
             this.hostnames = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -144,7 +145,6 @@ namespace ACTWebSocket_Plugin
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -223,17 +223,26 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
+            // skinOnAct
+            // 
+            resources.ApplyResources(this.skinOnAct, "skinOnAct");
+            this.skinOnAct.BackColor = System.Drawing.Color.Transparent;
+            this.skinOnAct.Name = "skinOnAct";
+            this.skinOnAct.UseVisualStyleBackColor = false;
+            this.skinOnAct.CheckedChanged += new System.EventHandler(this.skinOnAct_CheckedChanged);
+            // 
             // hostdata
             // 
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -241,14 +250,13 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            this.hostnames.FormattingEnabled = true;
             resources.ApplyResources(this.hostnames, "hostnames");
+            this.hostnames.FormattingEnabled = true;
             this.hostnames.Name = "hostnames";
             // 
             // label2
@@ -277,12 +285,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -296,9 +304,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -371,18 +379,10 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.progressBar, "progressBar");
             this.progressBar.Name = "progressBar";
             // 
-            // skinOnAct
-            // 
-            resources.ApplyResources(this.skinOnAct, "skinOnAct");
-            this.skinOnAct.BackColor = System.Drawing.Color.Transparent;
-            this.skinOnAct.Name = "skinOnAct";
-            this.skinOnAct.UseVisualStyleBackColor = false;
-            this.skinOnAct.CheckedChanged += new System.EventHandler(this.skinOnAct_CheckedChanged);
-            // 
             // ACTWebSocketMain
             // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.buttonDownload);
             this.Controls.Add(this.buttonManage);
@@ -396,7 +396,7 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
-            resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.progressBar);
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -451,6 +451,7 @@ namespace ACTWebSocket_Plugin
                 core.hwnd = Handle;
             }
             progressBar.Hide();
+            progressBar.BringToFront();
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
