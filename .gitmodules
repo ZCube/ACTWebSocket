@@ -2,5 +2,5 @@
 	path = external/websocket-sharp
 	url = https://github.com/sta/websocket-sharp.git
 [submodule "Sample/overlayskins"]
-	path = Sample/overlayskins
+	path = Sample/OverlaySkin
 	url = https://github.com/ZCube/ff14_overlayskin.git
