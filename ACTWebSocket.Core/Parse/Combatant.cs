@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable 0414 // private field assigned but not used. 
+
 namespace ACTWebSocket_Plugin.Parse
 {
     public class Combatant

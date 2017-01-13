@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using Advanced_Combat_Tracker;
 using System.Xml;
 
+#pragma warning disable 0168 // variable declared but not used. 
+
 namespace ACTWebSocket_Plugin
 {
     using static ACTWebSocketCore;
@@ -475,8 +477,6 @@ namespace ACTWebSocket_Plugin
 
             try
             {
-                core.StartUIServer();
-
                 if (autostart.Checked)
                 {
                     StartServer();
@@ -489,7 +489,6 @@ namespace ACTWebSocket_Plugin
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                core.StopUIServer();
                 StopServer();
             }
 
@@ -518,7 +517,7 @@ namespace ACTWebSocket_Plugin
         {
         }
 
-        async void LoadSettings()
+        void LoadSettings()
         {
             if (File.Exists(settingsFile))
             {
@@ -780,9 +779,7 @@ namespace ACTWebSocket_Plugin
                 });
                 upnpTask.Start();
             }
-
-            IPHostEntry hostEntry;
-            IPAddress address;
+            
             var addresses = Dns.GetHostAddresses(Hostname);
 
             bool localhostOnly = false;

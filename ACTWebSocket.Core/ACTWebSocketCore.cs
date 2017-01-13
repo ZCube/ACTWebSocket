@@ -25,75 +25,11 @@ namespace ACTWebSocket_Plugin
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
         public static FFXIV_OverlayAPI overlayAPI;
         public HttpServer httpServer = null;
-        HttpServer uiServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
         public string randomDir = null;
         internal IntPtr hwnd;
 
-        internal void StartUIServer()
-        {
-            StopUIServer();
-            uiServer = new HttpServer(System.Net.IPAddress.Parse("127.0.0.1"), 9999);
-            uiServer.ReuseAddress = true;
-            uiServer.OnPost += (sender, e) =>
-            {
-                var req = e.Request;
-                var res = e.Response;
-                res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
-                res.AddHeader("Access-Control-Allow-Origin", "*");
-
-                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-
-                var path = req.RawUrl;
-                path = Uri.UnescapeDataString(path);
-
-                if (path.StartsWith("/api/"))
-                {
-                    JObject o = null;
-                    if (req.ContentLength64 != -1)
-                    {
-                        byte[] data = new byte[req.ContentLength64];
-                        req.InputStream.Read(data, 0, (int)req.ContentLength64);
-                        string str = Encoding.UTF8.GetString(data, 0, (int)req.ContentLength64);
-                        try
-                        {
-                            o = JObject.Parse(str);
-                        }
-                        catch (Exception e3)
-                        {
-
-                        }
-                    }
-                    //if (o != null)
-                    try
-                    {
-                    }
-                    catch(Exception error)
-                    {
-                        System.Windows.Forms.MessageBox.Show(error.Message);
-                    }
-                }
-            };
-            uiServer.OnOptions += (sender, e) =>
-            {
-                var req = e.Request;
-                var res = e.Response;
-                res.AddHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
-                res.AddHeader("Access-Control-Allow-Origin", "*");
-            };
-            uiServer.Start();
-        }
-
-        internal void StopUIServer()
-        {
-            if (uiServer != null)
-            {
-                uiServer.Stop();
-                uiServer = null;
-            }
-        }
-        
         void InitUpdate()
         {
             System.Threading.Thread.Sleep(1000);
@@ -230,7 +166,7 @@ namespace ACTWebSocket_Plugin
 
             pingTimer = new Timer();
             pingTimer.Interval = 2000;
-            pingTimer.Elapsed += async (o, e) =>
+            pingTimer.Elapsed += (o, e) =>
             {
                 try
                 {
@@ -248,7 +184,7 @@ namespace ACTWebSocket_Plugin
 
             updateTimer = new Timer();
             updateTimer.Interval = 1000;
-            updateTimer.Elapsed += async (o, e) =>
+            updateTimer.Elapsed += (o, e) =>
             {
                 try
                 {
