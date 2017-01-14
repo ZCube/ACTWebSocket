@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket", "ACTWebSocke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACTWebSocket.Core", "ACTWebSocket.Core\ACTWebSocket.Core.csproj", "{41EFD039-54EF-41B6-8737-1DA118AF2FE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitVersion", "external\NGitVersion\src\NGitVersion\NGitVersion.csproj", "{BADB59FB-1A14-42AF-B314-152C4787F437}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
