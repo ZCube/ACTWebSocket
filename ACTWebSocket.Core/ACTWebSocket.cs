@@ -22,6 +22,7 @@ namespace ACTWebSocket_Plugin
     using System.Diagnostics;
     using System.ComponentModel;
     using Ionic.Zip;
+    using System.Text.RegularExpressions;
 
     public interface PluginDirectory
     {
@@ -622,7 +623,7 @@ namespace ACTWebSocket_Plugin
                         foreach (var a in token.Values<string>())
                         {
                             SkinURLList.Add(a);
-                            skinList.Items.Add(a);
+                            AddURL(a);
                         }
                     }
                 }
@@ -632,6 +633,7 @@ namespace ACTWebSocket_Plugin
                 hostnames.Text = Hostname;
             }
         }
+
 
         void SaveSettings()
         {
@@ -1080,7 +1082,7 @@ namespace ACTWebSocket_Plugin
         {
             string url = ShowDialog("Add URL", "Add URL").Trim() ;
             SkinURLList.Add(url);
-            skinList.Items.Add(url);
+            AddURL(url);
         }
 
         private void buttonURL_Click(object sender, EventArgs e)
@@ -1099,7 +1101,7 @@ namespace ACTWebSocket_Plugin
             if (skinList.SelectedItems == null) return;
             if (skinList.SelectedItems.Count > 0)
             {
-                string url = skinList.SelectedItems[0].Text;
+                string url = (string)skinList.SelectedItems[0].Tag;
                 copyURLPath(url);
             }
             else
@@ -1108,28 +1110,68 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        string GetTitle(string path)
+        {
+            string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
+            string title = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string source = File.ReadAllText(path);
+                    title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
+                }
+                if (File.Exists(dir + "/" + path))
+                {
+                    string source = File.ReadAllText(dir + "/" + path);
+                    title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
+                }
+                else
+                {
+                    WebClient wc = new WebClient();
+                    string source = wc.DownloadString(path);
+                    title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return title;
+        }
+
+        private void AddURL(string a)
+        {
+            string title = GetTitle(a);
+            title = title == null ? a : title;
+            ListViewItem lvi = new ListViewItem();
+            lvi.Text = title;
+            lvi.Tag = a;
+            skinList.Items.Add(lvi);
+        }
+
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             skinList.Items.Clear();
             foreach (var a in SkinURLList)
             {
-                skinList.Items.Add(a);
+                AddURL(a);
             }
 
             List<string> list =  GetSkinList();
-            foreach(var u in list)
+            foreach(var a in list)
             {
                 bool find = false;
                 for(int i=0;i<skinList.Items.Count;++i)
                 {
-                    if(skinList.Items[i].Text == u)
+                    if(skinList.Items[i].Tag == a)
                     {
                         find = true;
                     }
                 }
                 if(!find)
                 {
-                    skinList.Items.Add(u);
+                    AddURL(a);
                 }
             }
         }
@@ -1176,7 +1218,7 @@ namespace ACTWebSocket_Plugin
         {
             if (skinList.SelectedItems.Count > 0)
             {
-                string url = skinList.SelectedItems[0].Text;
+                string url = (string)skinList.SelectedItems[0].Tag;
                 url = getURLPath(url);
                 if(url != null)
                 {
