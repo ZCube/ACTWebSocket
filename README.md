@@ -72,7 +72,8 @@ LogLine을 수정함으로 이 플러그인 먼저 로드 되는지 후에 로�
 
 ## Binary ##
 
-nonstable trunk head : [download](https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1)
+latest : [download](https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1)
+1.1.0 : [download](https://github.com/ZCube/ACTWebSocket/releases/download/1.1.0/ACTWebSocket_1.1.0.7z)
 
 ## License ##
 
