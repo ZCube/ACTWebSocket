@@ -1,0 +1,11 @@
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("@VERSION_SHORT@")]
+[assembly: AssemblyFileVersion("@VERSION_SHORT@")]
+[assembly: AssemblyInformationalVersion("@VERSION_LONG@")]
