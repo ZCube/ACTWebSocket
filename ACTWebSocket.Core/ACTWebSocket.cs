@@ -156,6 +156,7 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.port, "port");
             this.port.Name = "port";
+            this.port.TextChanged += new System.EventHandler(this.port_TextChanged);
             this.port.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.port_KeyPress);
             // 
             // autostart
@@ -846,7 +847,7 @@ namespace ACTWebSocket_Plugin
             randomURL.Enabled = true;
             buttonOn.Enabled = true;
             port.Enabled = true;
-            uPnPPort.Enabled = true;
+            uPnPPort.Enabled = false;
             hostnames.Enabled = true;
             buttonOff.Enabled = false;
         }
@@ -1291,6 +1292,11 @@ namespace ACTWebSocket_Plugin
             startInfo.WorkingDirectory = overlayProcDir;
             startInfo.Arguments = "-x";
             Process.Start(startInfo);
+        }
+
+        private void port_TextChanged(object sender, EventArgs e)
+        {
+            uPnPPort.Text = port.Text;
         }
     }
 }

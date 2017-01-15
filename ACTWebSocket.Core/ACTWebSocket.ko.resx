@@ -147,15 +147,16 @@
   <data name="startoption.Text" xml:space="preserve">
     <value>시작 옵션</value>
   </data>
-  <data name="hostdata.Text" xml:space="preserve">
-    <value>서버</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>UPNP 포트</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="uPnPPort.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 12</value>
@@ -169,11 +170,14 @@
   <data name="label14.Text" xml:space="preserve">
     <value>포트</value>
   </data>
-  <data name="othersets.Text" xml:space="preserve">
-    <value>메세지 필터</value>
+  <data name="hostdata.Text" xml:space="preserve">
+    <value>서버</value>
   </data>
   <data name="chatFilter.Text" xml:space="preserve">
     <value>채팅</value>
+  </data>
+  <data name="othersets.Text" xml:space="preserve">
+    <value>메세지 필터</value>
   </data>
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
