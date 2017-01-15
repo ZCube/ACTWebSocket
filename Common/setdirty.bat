@@ -1,0 +1,1 @@
+powershell  -ExecutionPolicy Bypass  "& "".\setdirty.ps1"""

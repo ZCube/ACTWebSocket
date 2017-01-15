@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
+#pragma warning disable 0168 // variable declared but not used. 
+
 namespace ACTWebSocket_Plugin
 {
     public partial class ACTWebSocketCore
@@ -15,7 +17,6 @@ namespace ACTWebSocket_Plugin
         {
             FFXIV_OverlayAPI overlayAPI;
             public String id = null;
-            private bool isfirst = true;
             public Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>> handle = new Dictionary<string, Action<WebSocketCommunicateBehavior, JObject>>();
             public WebSocketCommunicateBehavior()
             {
@@ -44,7 +45,7 @@ namespace ACTWebSocket_Plugin
                 };
                 overlayAPI.InstallMessageHandle(ref handle);
             }
-            protected override async void OnOpen()
+            protected override void OnOpen()
             {
                 base.OnOpen();
                 overlayAPI.OnOpen(id, this);
@@ -155,42 +156,30 @@ namespace ACTWebSocket_Plugin
 
             protected override void OnMessage(MessageEventArgs e)
             {
-                switch (e.Type)
+                if (e.IsText)
                 {
-                    case Opcode.Text:
+                    if (e.Data.StartsWith("."))
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        JObject o = JObject.Parse(e.Data);
+                        String type = o["type"].ToString();
+                        try
                         {
-                            if (e.Data.StartsWith("."))
-                            {
-                                return;
-                            }
-
-                            try
-                            {
-                                JObject o = JObject.Parse(e.Data);
-                                String type = o["type"].ToString();
-                                try
-                                {
-                                    handle[type](this, o);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Send(this.id, this.id, "Error", ex.Message);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
+                            handle[type](this, o);
                         }
-                        break;
-                    case Opcode.Binary:
-                    case Opcode.Cont:
-                    case Opcode.Close:
-                    case Opcode.Ping:
-                    case Opcode.Pong:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        catch (Exception ex)
+                        {
+                            Send(this.id, this.id, "Error", ex.Message);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
             }
         }

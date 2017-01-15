@@ -9,6 +9,8 @@ using Newtonsoft.Json.Linq;
 using ACTWebSocket_Plugin.Parse;
 using static ACTWebSocket_Plugin.ACTWebSocketCore;
 
+#pragma warning disable 0168 // variable declared but not used. 
+
 namespace ACTWebSocket_Plugin
 {
     partial class FFXIV_OverlayAPI
@@ -220,7 +222,7 @@ namespace ACTWebSocket_Plugin
             return encounterDict;
         }
 
-        public async Task Update()
+        public void Update()
         {
             if (ACTWebSocketCore.CheckIsActReady())
             {

@@ -1,6 +1,8 @@
 ﻿using System;
 using ACTWebSocket_Plugin.Objects;
 
+#pragma warning disable 0169 // variable declared but not used. 
+
 namespace ACTWebSocket_Plugin.Parse
 {
     public class LogEntry

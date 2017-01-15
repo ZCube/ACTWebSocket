@@ -102,6 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Common\AssemblyInfo.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ACTWebSocket.cs" />
     <Compile Include="AssemblyResolver.cs" />
