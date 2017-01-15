@@ -37,7 +37,6 @@ namespace ACTWebSocket_Plugin
         private ComboBox hostnames;
         private Label label2;
         private TextBox uPnPPort;
-        private Button buttonRefresh;
         private Button buttonAddURL;
         private Button buttonURL;
         private ListView skinList;
@@ -47,6 +46,10 @@ namespace ACTWebSocket_Plugin
         private Button buttonExit;
         private ProgressBar progressBar;
         private CheckBox skinOnAct;
+        private Button buttonStart;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private CheckBox autostartoverlay;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -137,7 +140,6 @@ namespace ACTWebSocket_Plugin
             this.chatFilter = new System.Windows.Forms.CheckBox();
             this.serverStatus = new System.Windows.Forms.GroupBox();
             this.copyURL = new System.Windows.Forms.Button();
-            this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonAddURL = new System.Windows.Forms.Button();
             this.buttonURL = new System.Windows.Forms.Button();
             this.skinList = new System.Windows.Forms.ListView();
@@ -146,10 +148,16 @@ namespace ACTWebSocket_Plugin
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.buttonStart = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.autostartoverlay = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
             this.serverStatus.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -319,13 +327,6 @@ namespace ACTWebSocket_Plugin
             this.copyURL.UseVisualStyleBackColor = true;
             this.copyURL.Click += new System.EventHandler(this.copyURL_Click);
             // 
-            // buttonRefresh
-            // 
-            resources.ApplyResources(this.buttonRefresh, "buttonRefresh");
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
-            // 
             // buttonAddURL
             // 
             resources.ApplyResources(this.buttonAddURL, "buttonAddURL");
@@ -343,8 +344,10 @@ namespace ACTWebSocket_Plugin
             // skinList
             // 
             resources.ApplyResources(this.skinList, "skinList");
+            this.skinList.HideSelection = false;
             this.skinList.MultiSelect = false;
             this.skinList.Name = "skinList";
+            this.skinList.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.skinList.UseCompatibleStateImageBehavior = false;
             this.skinList.View = System.Windows.Forms.View.List;
             // 
@@ -381,24 +384,53 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.progressBar, "progressBar");
             this.progressBar.Name = "progressBar";
             // 
+            // buttonStart
+            // 
+            resources.ApplyResources(this.buttonStart, "buttonStart");
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            // 
+            // groupBox1
+            // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.autostartoverlay);
+            this.groupBox1.Controls.Add(this.buttonDownload);
+            this.groupBox1.Controls.Add(this.buttonStart);
+            this.groupBox1.Controls.Add(this.buttonExit);
+            this.groupBox1.Controls.Add(this.buttonManage);
+            this.groupBox1.Controls.Add(this.progressBar);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // autostartoverlay
+            // 
+            resources.ApplyResources(this.autostartoverlay, "autostartoverlay");
+            this.autostartoverlay.BackColor = System.Drawing.Color.Transparent;
+            this.autostartoverlay.Name = "autostartoverlay";
+            this.autostartoverlay.UseVisualStyleBackColor = false;
+            // 
+            // groupBox2
+            // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.buttonOpen);
+            this.groupBox2.Controls.Add(this.buttonURL);
+            this.groupBox2.Controls.Add(this.skinList);
+            this.groupBox2.Controls.Add(this.copyURL);
+            this.groupBox2.Controls.Add(this.buttonAddURL);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
             // ACTWebSocketMain
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.buttonExit);
-            this.Controls.Add(this.buttonDownload);
-            this.Controls.Add(this.buttonManage);
-            this.Controls.Add(this.buttonOpen);
-            this.Controls.Add(this.skinList);
-            this.Controls.Add(this.buttonURL);
-            this.Controls.Add(this.buttonAddURL);
-            this.Controls.Add(this.buttonRefresh);
-            this.Controls.Add(this.copyURL);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.serverStatus);
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
-            this.Controls.Add(this.progressBar);
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -407,6 +439,8 @@ namespace ACTWebSocket_Plugin
             this.othersets.ResumeLayout(false);
             this.serverStatus.ResumeLayout(false);
             this.serverStatus.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -466,6 +500,7 @@ namespace ACTWebSocket_Plugin
             skinOnAct.Checked = SkinOnAct;
             chatFilter.Checked = ChatFilter;
             autostart.Checked = AutoRun;
+            autostartoverlay.Checked = AutoOverlay;
             StopServer();
 
             if (core != null)
@@ -495,6 +530,19 @@ namespace ACTWebSocket_Plugin
                 StopServer();
             }
 
+            try
+            {
+                if (autostartoverlay.Checked)
+                {
+                    buttonStart_Click(null, null);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                StopServer();
+            }
+
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
             ActGlobals.oFormActMain.BeforeLogLineRead += oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += oFormActMain_OnLogLineRead;
@@ -510,6 +558,7 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
 
             SaveSettings();
+            buttonExit_Click(null, null);
             //browser.ExecuteScriptAsync("api_overlaywindow_close_all();");
             lblStatus.Text = "Plugin Exited";
         }
@@ -585,6 +634,14 @@ namespace ACTWebSocket_Plugin
                     {
                         AutoRun = false;
                     }
+                    if (obj.TryGetValue("AutoOverlay", out token))
+                    {
+                        AutoOverlay = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        AutoOverlay = false;
+                    }
                     if (obj.TryGetValue("BeforeLogLineRead", out token))
                     {
                         BeforeLogLineRead = token.ToObject<bool>();
@@ -646,6 +703,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
             obj.Add("AutoRun", AutoRun);
+            obj.Add("AutoOverlay", AutoOverlay);
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
             obj.Add("OnLogLineRead", OnLogLineRead);
             obj.Add("MiniParse", MiniParse);
@@ -752,6 +810,7 @@ namespace ACTWebSocket_Plugin
 
         public bool UseUPnP { get; set; }
         public bool AutoRun { get; set; }
+        public bool AutoOverlay { get; set; }
         public bool ChatFilter { get; set; }
         public List<String> SkinURLList = new List<String>();
 
@@ -1010,6 +1069,7 @@ namespace ACTWebSocket_Plugin
             SkinOnAct = skinOnAct.Checked;
             ChatFilter = chatFilter.Checked;
             AutoRun = autostart.Checked;
+            AutoOverlay = autostartoverlay.Checked;
             Hostname = hostnames.Text;
             try
             {
@@ -1214,6 +1274,7 @@ namespace ACTWebSocket_Plugin
             buttonOpen.Enabled = b;
             buttonExit.Enabled = b;
             buttonManage.Enabled = b;
+            buttonStart.Enabled = b;
         }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
@@ -1233,23 +1294,50 @@ namespace ACTWebSocket_Plugin
 
         private void buttonManage_Click(object sender, EventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
-            startInfo.WorkingDirectory = overlayProcDir;
-            startInfo.Arguments = "-m";
-            Process.Start(startInfo);
+            UpdateOverlayProc();
+            if (!buttonManage.Enabled)
+                return;
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                startInfo.WorkingDirectory = overlayProcDir;
+                startInfo.Arguments = "-m";
+                Process.Start(startInfo);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            buttonDownload.Enabled = false;
-            string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
-            WebClient webClient = new WebClient();
-            progressBar.Minimum = 0;
-            progressBar.Maximum = 100;
-            progressBar.Show();
-            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-            webClient.DownloadFileAsync(new Uri(url), pluginDirectory+"/overlay_proc.zip");
+            UpdateOverlayProc();
+            if (!buttonDownload.Enabled)
+                return;
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                startInfo.WorkingDirectory = overlayProcDir;
+                startInfo.Arguments = "-x";
+                Process.Start(startInfo).WaitForExit();
+                buttonDownload.Enabled = false;
+                string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+                WebClient webClient = new WebClient();
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 100;
+                progressBar.Show();
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                webClient.DownloadFileAsync(new Uri(url), pluginDirectory + "/overlay_proc.zip");
+            }
+            catch (Exception ex)
+            {
+                progressBar.Hide();
+                buttonDownload.Enabled = true;
+                UpdateOverlayProc();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -1271,7 +1359,6 @@ namespace ACTWebSocket_Plugin
 
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
-            progressBar.Hide();
             Task task = Task.Factory.StartNew(() =>
             {
                 ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
@@ -1280,23 +1367,54 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
+                progressBar.Hide();
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
-                MessageBox.Show("Download and unzip completed!");
+                buttonStart_Click(null, null);
             }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            UpdateOverlayProc();
+            if (!buttonStart.Enabled)
+                return;
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                startInfo.WorkingDirectory = overlayProcDir;
+                startInfo.Arguments = "";
+                Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
-            startInfo.WorkingDirectory = overlayProcDir;
-            startInfo.Arguments = "-x";
-            Process.Start(startInfo);
+            UpdateOverlayProc();
+            if (!buttonExit.Enabled)
+                return;
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                startInfo.WorkingDirectory = overlayProcDir;
+                startInfo.Arguments = "-x";
+                Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void port_TextChanged(object sender, EventArgs e)
         {
             uPnPPort.Text = port.Text;
         }
+
     }
 }
