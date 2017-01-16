@@ -1313,14 +1313,15 @@ namespace ACTWebSocket_Plugin
         private void buttonDownload_Click(object sender, EventArgs e)
         {
             UpdateOverlayProc();
-            if (!buttonDownload.Enabled)
-                return;
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
-                startInfo.WorkingDirectory = overlayProcDir;
-                startInfo.Arguments = "-x";
-                Process.Start(startInfo).WaitForExit();
+                if(File.Exists(overlayProcExe))
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                    startInfo.WorkingDirectory = overlayProcDir;
+                    startInfo.Arguments = "-x";
+                    Process.Start(startInfo).WaitForExit();
+                }
                 buttonDownload.Enabled = false;
                 string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
                 WebClient webClient = new WebClient();
