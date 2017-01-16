@@ -29,8 +29,8 @@ WebSocket Plugin for Advanced Combat Tracker v3
 1. Overlay MiniParse에 보내는 것을 웹소켓으로 구현한 예
 ``` javascript
   ...
-	<script src="https://cdn.rawgit.com/ZCube/ACTWebSocket/master/Sample/actwebsocket.js"></script>
-	<script src="https://cdn.rawgit.com/ZCube/ACTWebSocket/master/Sample/actwebsocket_compat.js"></script>
+	<script src="https://ZCube.github.io/ACTWebSocket/Sample/actwebsocket.js"></script>
+	<script src="https://ZCube.github.io/ACTWebSocket/Sample/actwebsocket_compat.js"></script>
 	<script>var wsUri = "ws://@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/</script>
   ...
 ```
