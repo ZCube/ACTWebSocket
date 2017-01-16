@@ -120,6 +120,9 @@
   <data name="OnLogLineReadUse.Text" xml:space="preserve">
     <value>Using OnLogLineRead</value>
   </data>
+  <data name="&gt;&gt;buttonOn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;othersets.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
@@ -164,6 +167,9 @@
   <data name="autostartoverlay.Text" xml:space="preserve">
     <value>OverlayProc Auto Start (with ACT</value>
   </data>
+  <data name="buttonOff.Text" xml:space="preserve">
+    <value>Off</value>
+  </data>
   <data name="skinList.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 20</value>
   </data>
@@ -186,8 +192,8 @@
   <data name="label14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;buttonOn.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;label14.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;randomURL.Parent" xml:space="preserve">
     <value>startoption</value>
@@ -223,10 +229,10 @@
     <value>True</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>404, 79</value>
+    <value>404, 80</value>
   </data>
   <data name="buttonURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>104, 325</value>
+    <value>104, 331</value>
   </data>
   <data name="buttonOn.Size" type="System.Drawing.Size, System.Drawing">
     <value>236, 25</value>
@@ -244,7 +250,7 @@
     <value>15</value>
   </data>
   <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>404, 362</value>
+    <value>404, 368</value>
   </data>
   <data name="&gt;&gt;skinOnAct.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -366,14 +372,17 @@
   <data name="&gt;&gt;MiniParseUse.Name" xml:space="preserve">
     <value>MiniParseUse</value>
   </data>
-  <data name="buttonOff.Text" xml:space="preserve">
-    <value>Off</value>
+  <data name="startoption.Text" xml:space="preserve">
+    <value>Start Options</value>
   </data>
   <data name="&gt;&gt;othersets.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="&gt;&gt;MiniParseUse.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;port.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -400,7 +409,7 @@
     <value>NoControl</value>
   </data>
   <data name="autostartoverlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 21</value>
+    <value>386, 21</value>
   </data>
   <data name="&gt;&gt;buttonDownload.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -429,8 +438,8 @@
   <data name="&gt;&gt;label15.Parent" xml:space="preserve">
     <value>hostdata</value>
   </data>
-  <data name="&gt;&gt;autostartoverlay.Name" xml:space="preserve">
-    <value>autostartoverlay</value>
+  <data name="&gt;&gt;buttonManage.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="randomURL.Location" type="System.Drawing.Point, System.Drawing">
     <value>11, 70</value>
@@ -504,9 +513,6 @@
   <data name="buttonURL.Text" xml:space="preserve">
     <value>Delete URL</value>
   </data>
-  <data name="uPnPPort.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 21</value>
-  </data>
   <data name="BeforeLogLineReadUse.Location" type="System.Drawing.Point, System.Drawing">
     <value>11, 69</value>
   </data>
@@ -564,8 +570,8 @@
   <data name="&gt;&gt;buttonOff.Name" xml:space="preserve">
     <value>buttonOff</value>
   </data>
-  <data name="&gt;&gt;port.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="uPnPPort.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 21</value>
   </data>
   <data name="UPNPUse.Text" xml:space="preserve">
     <value>Use UPNP</value>
@@ -582,8 +588,8 @@
   <data name="&gt;&gt;progressBar.Name" xml:space="preserve">
     <value>progressBar</value>
   </data>
-  <data name="&gt;&gt;label14.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;startoption.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="&gt;&gt;UPNPUse.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -613,10 +619,7 @@
     <value>28</value>
   </data>
   <data name="skinList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>386, 299</value>
-  </data>
-  <data name="startoption.Text" xml:space="preserve">
-    <value>Start Options</value>
+    <value>386, 305</value>
   </data>
   <data name="&gt;&gt;buttonOpen.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -634,7 +637,7 @@
     <value>11, 47</value>
   </data>
   <data name="buttonAddURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 325</value>
+    <value>6, 331</value>
   </data>
   <data name="autostart.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -661,7 +664,7 @@
     <value>231, 21</value>
   </data>
   <data name="groupBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 96</value>
+    <value>258, 90</value>
   </data>
   <data name="&gt;&gt;autostartoverlay.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -780,9 +783,6 @@
   <data name="&gt;&gt;serverStatus.Name" xml:space="preserve">
     <value>serverStatus</value>
   </data>
-  <data name="&gt;&gt;buttonManage.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
   <data name="&gt;&gt;othersets.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -800,9 +800,6 @@
   </data>
   <data name="hostdata.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 133</value>
-  </data>
-  <data name="&gt;&gt;UPNPUse.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;randomURL.Name" xml:space="preserve">
     <value>randomURL</value>
@@ -856,7 +853,7 @@
     <value>buttonDownload</value>
   </data>
   <data name="copyURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>202, 325</value>
+    <value>202, 331</value>
   </data>
   <data name="port.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -975,6 +972,9 @@
   <data name="&gt;&gt;autostart.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="&gt;&gt;autostartoverlay.Name" xml:space="preserve">
+    <value>autostartoverlay</value>
+  </data>
   <data name="&gt;&gt;serverStatus.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
@@ -1029,11 +1029,11 @@
   <data name="&gt;&gt;skinOnAct.Parent" xml:space="preserve">
     <value>startoption</value>
   </data>
-  <data name="&gt;&gt;startoption.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;UPNPUse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="buttonOpen.Location" type="System.Drawing.Point, System.Drawing">
-    <value>300, 325</value>
+    <value>300, 331</value>
   </data>
   <data name="&gt;&gt;othersets.Name" xml:space="preserve">
     <value>othersets</value>
