@@ -147,9 +147,6 @@
   <data name="startoption.Text" xml:space="preserve">
     <value>시작 옵션</value>
   </data>
-  <data name="hostdata.Text" xml:space="preserve">
-    <value>서버</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
@@ -173,26 +170,44 @@
   <data name="label14.Text" xml:space="preserve">
     <value>포트</value>
   </data>
-  <data name="othersets.Text" xml:space="preserve">
-    <value>메세지 필터</value>
+  <data name="hostdata.Text" xml:space="preserve">
+    <value>서버</value>
   </data>
   <data name="chatFilter.Text" xml:space="preserve">
     <value>채팅</value>
   </data>
+  <data name="othersets.Text" xml:space="preserve">
+    <value>메세지 필터</value>
+  </data>
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
+  </data>
+  <data name="copyURL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>202, 325</value>
   </data>
   <data name="copyURL.Text" xml:space="preserve">
     <value>URL 복사</value>
   </data>
+  <data name="buttonAddURL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 325</value>
+  </data>
   <data name="buttonAddURL.Text" xml:space="preserve">
     <value>URL 추가</value>
+  </data>
+  <data name="buttonURL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>104, 325</value>
   </data>
   <data name="buttonURL.Text" xml:space="preserve">
     <value>URL 삭제</value>
   </data>
+  <data name="skinList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>386, 299</value>
+  </data>
+  <data name="buttonOpen.Location" type="System.Drawing.Point, System.Drawing">
+    <value>300, 325</value>
+  </data>
   <data name="buttonOpen.Text" xml:space="preserve">
-    <value>오버레이 열기</value>
+    <value>새 오버레이</value>
   </data>
   <data name="buttonManage.Text" xml:space="preserve">
     <value>오버레이 관리</value>
@@ -208,5 +223,8 @@
   </data>
   <data name="autostartoverlay.Text" xml:space="preserve">
     <value>오버레이 자동 시작</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>700, 500</value>
   </data>
 </root>

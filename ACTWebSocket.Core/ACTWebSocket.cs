@@ -683,6 +683,7 @@ namespace ACTWebSocket_Plugin
                             SkinURLList.Add(a);
                             AddURL(a);
                         }
+
                     }
                 }
                 catch (Exception e)
@@ -719,35 +720,41 @@ namespace ACTWebSocket_Plugin
             File.WriteAllText(settingsFile, s);
         }
 
+        private List<String> addrs = new List<String>();
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
-            String strHostName = string.Empty;
-            strHostName = Dns.GetHostName();
-            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
 
-            List<String> addrs = new List<String>();
-            addrs.Add("127.0.0.1");
+            Task task = Task.Factory.StartNew(() =>
             {
-                IPAddress[] addr = ipEntry.AddressList;
-                for (int i = 0; i < addr.Length; i++)
+                String strHostName = string.Empty;
+                strHostName = Dns.GetHostName();
+                IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+
+                addrs.Clear();
+                addrs.Add("127.0.0.1");
                 {
-                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        addrs.Add(addr[i].ToString());
+                    IPAddress[] addr = ipEntry.AddressList;
+                    for (int i = 0; i < addr.Length; i++)
+                    {
+                        if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            addrs.Add(addr[i].ToString());
+                    }
                 }
-            }
-            String ipaddress = Utility.GetExternalIp();
-            if (ipaddress.Length > 0)
-                addrs.Add(ipaddress);
+                String ipaddress = Utility.GetExternalIp();
+                if (ipaddress.Length > 0)
+                    addrs.Add(ipaddress);
 
-            addrs = Utility.Distinct<String>(addrs);
-            addrs.Sort();
+                addrs = Utility.Distinct<String>(addrs);
+                addrs.Sort();
 
-            StringBuilder sb = new StringBuilder();
-            foreach (var addr in addrs)
+            });
+            Task UITask = task.ContinueWith((t) =>
             {
-                hostnames.Items.Add(addr);
-            }
-            buttonRefresh_Click(sender, e);
+                foreach (var addr in addrs)
+                {
+                    hostnames.Items.Add(addr);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void oFormActMain_BeforeLogLineRead(
@@ -1203,12 +1210,19 @@ namespace ACTWebSocket_Plugin
 
         private void AddURL(string a)
         {
-            string title = GetTitle(a);
-            title = title == null ? a : title;
-            ListViewItem lvi = new ListViewItem();
-            lvi.Text = title;
-            lvi.Tag = a;
-            skinList.Items.Add(lvi);
+            string title = null;
+            Task task = Task.Factory.StartNew(() =>
+            {
+                title = GetTitle(a);
+            });
+            Task UITask = task.ContinueWith((t) =>
+            {
+                title = title == null ? a : title;
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = title;
+                lvi.Tag = a;
+                skinList.Items.Add(lvi);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
@@ -1313,14 +1327,15 @@ namespace ACTWebSocket_Plugin
         private void buttonDownload_Click(object sender, EventArgs e)
         {
             UpdateOverlayProc();
-            if (!buttonDownload.Enabled)
-                return;
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
-                startInfo.WorkingDirectory = overlayProcDir;
-                startInfo.Arguments = "-x";
-                Process.Start(startInfo).WaitForExit();
+                if(File.Exists(overlayProcExe))
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                    startInfo.WorkingDirectory = overlayProcDir;
+                    startInfo.Arguments = "-x";
+                    Process.Start(startInfo).WaitForExit();
+                }
                 buttonDownload.Enabled = false;
                 string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
                 WebClient webClient = new WebClient();
