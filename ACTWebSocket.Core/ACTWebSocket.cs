@@ -677,13 +677,11 @@ namespace ACTWebSocket_Plugin
                     if(obj.TryGetValue("SkinURLList", out token))
                     {
                         SkinURLList.Clear();
-                        buttonRefresh_Click(null, null);
                         foreach (var a in token.Values<string>())
                         {
                             SkinURLList.Add(a);
-                            AddURL(a);
                         }
-
+                        buttonRefresh_Click(null, null);
                     }
                 }
                 catch (Exception e)
@@ -1218,11 +1216,23 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
-                title = title == null ? a : title;
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = title;
-                lvi.Tag = a;
-                skinList.Items.Add(lvi);
+                bool find = false;
+                foreach (ListViewItem i in skinList.Items)
+                {
+                    if (((string)i.Tag).CompareTo(a) == 0)
+                    {
+                        find = true;
+                    }
+                }
+
+                if(!find)
+                {
+                    title = title == null ? a : title;
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = title;
+                    lvi.Tag = a;
+                    skinList.Items.Add(lvi);
+                }
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
