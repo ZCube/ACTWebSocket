@@ -1039,6 +1039,7 @@ namespace ACTWebSocket_Plugin
                     {
                         string fullURL = "http" + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
+                        fullURL = fullURL.Replace("%2F", "/");
                         return fullURL;
                     }
                     catch (Exception e)
