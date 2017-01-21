@@ -182,49 +182,28 @@
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
   </data>
-  <data name="copyURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>202, 325</value>
-  </data>
   <data name="copyURL.Text" xml:space="preserve">
     <value>URL 복사</value>
-  </data>
-  <data name="buttonAddURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 325</value>
   </data>
   <data name="buttonAddURL.Text" xml:space="preserve">
     <value>URL 추가</value>
   </data>
-  <data name="buttonURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>104, 325</value>
-  </data>
   <data name="buttonURL.Text" xml:space="preserve">
     <value>URL 삭제</value>
   </data>
-  <data name="skinList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>386, 299</value>
-  </data>
-  <data name="buttonOpen.Location" type="System.Drawing.Point, System.Drawing">
-    <value>300, 325</value>
-  </data>
   <data name="buttonOpen.Text" xml:space="preserve">
-    <value>새 오버레이</value>
+    <value>URL 열기</value>
   </data>
-  <data name="buttonManage.Text" xml:space="preserve">
-    <value>오버레이 관리</value>
-  </data>
-  <data name="buttonDownload.Text" xml:space="preserve">
-    <value>다운로드</value>
-  </data>
-  <data name="buttonExit.Text" xml:space="preserve">
-    <value>오버레이 종료</value>
-  </data>
-  <data name="buttonStart.Text" xml:space="preserve">
-    <value>실행</value>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>웹 스킨</value>
   </data>
   <data name="autostartoverlay.Text" xml:space="preserve">
-    <value>오버레이 자동 시작</value>
+    <value>오버레이 자동 시작/종료</value>
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 500</value>
+  <data name="buttonCopyList.Text" xml:space="preserve">
+    <value>스킨 주소 복사</value>
+  </data>
+  <data name="groupBox3.Text" xml:space="preserve">
+    <value>파일 스킨</value>
   </data>
 </root>

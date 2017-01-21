@@ -29,6 +29,7 @@ namespace ACTWebSocket_Plugin
         Timer pingTimer = null;
         public string randomDir = null;
         internal IntPtr hwnd;
+        public JObject skinObject = new JObject();
 
         void InitUpdate()
         {
@@ -106,7 +107,26 @@ namespace ACTWebSocket_Plugin
 
                 if (content == null)
                 {
-                    res.StatusCode = (int)HttpStatusCode.NotFound;
+                    if (path == "/skins.json")
+                    {
+                        if(skinObject != null)
+                        {
+                            lock (skinObject)
+                            {
+                                res.ContentType = "text/html";
+                                res.ContentEncoding = Encoding.UTF8;
+                                res.WriteContent(res.ContentEncoding.GetBytes(skinObject.ToString()));
+                            }
+                        }
+                        else
+                        {
+                            res.StatusCode = (int)HttpStatusCode.NotFound;
+                        }
+                    }
+                    else
+                    {
+                        res.StatusCode = (int)HttpStatusCode.NotFound;
+                    }
                     return;
                 }
 
@@ -147,7 +167,6 @@ namespace ACTWebSocket_Plugin
                 }
 
                 res.WriteContent(content);
-                //new System.Threading.Thread(InitUpdate).Start();
             };
 
             //// TODO : Basic Auth
