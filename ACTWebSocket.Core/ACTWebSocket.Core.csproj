@@ -115,6 +115,12 @@
     <Compile Include="Classes\MP3.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\StaticAPI.cs" />
+    <Compile Include="Form_COPYDATA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_COPYDATA.Designer.cs">
+      <DependentUpon>Form_COPYDATA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions\OverlayACTWork.cs" />
     <Compile Include="Functions\OverlayAPI.cs" />
     <Compile Include="Functions\OverlayDataSender.cs" />
@@ -142,6 +148,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Form_COPYDATA.resx">
+      <DependentUpon>Form_COPYDATA.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\css\default.css" />
     <EmbeddedResource Include="Resources\img\copy.svg" />
     <EmbeddedResource Include="Resources\img\detail.svg" />

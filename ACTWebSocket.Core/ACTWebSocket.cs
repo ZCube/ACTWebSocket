@@ -32,6 +32,7 @@ namespace ACTWebSocket_Plugin
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
 
+        string overlayCaption = "OverlayProcWMCOPYDATA";
         string overlaySkinDirectory { get; set; }
         string pluginDirectory = "";
         private ComboBox hostnames;
@@ -47,10 +48,13 @@ namespace ACTWebSocket_Plugin
         private GroupBox groupBox1;
         private GroupBox groupBox3;
         private ListView FileSkinListView;
-        private TextBox skinURL;
-        private Button buttonCopyList;
+        private Button buttonOpenOverlayProcManager;
         private ColumnHeader Title2;
         private ColumnHeader Title;
+        private Button buttonStartStopOverlayProc;
+        private Button buttonOverlay;
+        private ProgressBar progressBar;
+        private Button buttonDownload;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -66,6 +70,7 @@ namespace ACTWebSocket_Plugin
         public void SetPluginDirectory(string path)
         {
             overlayProcDir = path + "\\overlay_proc";
+            overlayProcDir = "C:/Workspace/OverlayManager/bin/Windows/x86/Debug";
             overlayProcExe = overlayProcDir + "\\overlay_proc.exe";
             UpdateOverlayProc();
             pluginDirectory = path;
@@ -147,10 +152,13 @@ namespace ACTWebSocket_Plugin
             this.Title2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOpen = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonOverlay = new System.Windows.Forms.Button();
             this.autostartoverlay = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.skinURL = new System.Windows.Forms.TextBox();
-            this.buttonCopyList = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.buttonDownload = new System.Windows.Forms.Button();
+            this.buttonStartStopOverlayProc = new System.Windows.Forms.Button();
+            this.buttonOpenOverlayProcManager = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -373,6 +381,7 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
@@ -381,6 +390,13 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // buttonOverlay
+            // 
+            resources.ApplyResources(this.buttonOverlay, "buttonOverlay");
+            this.buttonOverlay.Name = "buttonOverlay";
+            this.buttonOverlay.UseVisualStyleBackColor = true;
+            this.buttonOverlay.Click += new System.EventHandler(this.buttonOverlay_Click);
             // 
             // autostartoverlay
             // 
@@ -391,25 +407,40 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.skinURL);
-            this.groupBox1.Controls.Add(this.buttonCopyList);
+            this.groupBox1.Controls.Add(this.buttonDownload);
+            this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
+            this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
+            this.groupBox1.Controls.Add(this.progressBar);
             resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // skinURL
+            // progressBar
             // 
-            resources.ApplyResources(this.skinURL, "skinURL");
-            this.skinURL.Name = "skinURL";
-            this.skinURL.ReadOnly = true;
+            resources.ApplyResources(this.progressBar, "progressBar");
+            this.progressBar.Name = "progressBar";
             // 
-            // buttonCopyList
+            // buttonDownload
             // 
-            resources.ApplyResources(this.buttonCopyList, "buttonCopyList");
-            this.buttonCopyList.Name = "buttonCopyList";
-            this.buttonCopyList.UseVisualStyleBackColor = true;
-            this.buttonCopyList.Click += new System.EventHandler(this.buttonCopyList_Click);
+            resources.ApplyResources(this.buttonDownload, "buttonDownload");
+            this.buttonDownload.Name = "buttonDownload";
+            this.buttonDownload.UseVisualStyleBackColor = true;
+            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
+            // 
+            // buttonStartStopOverlayProc
+            // 
+            resources.ApplyResources(this.buttonStartStopOverlayProc, "buttonStartStopOverlayProc");
+            this.buttonStartStopOverlayProc.Name = "buttonStartStopOverlayProc";
+            this.buttonStartStopOverlayProc.UseVisualStyleBackColor = true;
+            this.buttonStartStopOverlayProc.Click += new System.EventHandler(this.buttonStartStopOverlayProc_Click);
+            // 
+            // buttonOpenOverlayProcManager
+            // 
+            resources.ApplyResources(this.buttonOpenOverlayProcManager, "buttonOpenOverlayProcManager");
+            this.buttonOpenOverlayProcManager.Name = "buttonOpenOverlayProcManager";
+            this.buttonOpenOverlayProcManager.UseVisualStyleBackColor = true;
+            this.buttonOpenOverlayProcManager.Click += new System.EventHandler(this.buttonOpenOverlayProcManager_Click);
             // 
             // groupBox3
             // 
@@ -458,7 +489,6 @@ namespace ACTWebSocket_Plugin
             this.serverStatus.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -496,8 +526,25 @@ namespace ACTWebSocket_Plugin
 
         JObject overlayWindows = new JObject(); // 설정 전부
 
+        public bool SendMessage(string caption, JObject obj)
+        {
+            return ipc.SendMessage(caption, 0, obj.ToString());
+        }
+
+
+        IPC_COPYDATA ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+            if(ipc == null)
+            {
+                ipc = new IPC_COPYDATA();
+                ipc.Show();
+                ipc.Text = "Client"+overlayCaption;
+                ipc.onMessage = (code, message) =>
+                {
+
+                };
+            }
             if (core == null)
             {
                 core = new ACTWebSocketCore();
@@ -518,6 +565,8 @@ namespace ACTWebSocket_Plugin
             chatFilter.Checked = ChatFilter;
             autostart.Checked = AutoRun;
             autostartoverlay.Checked = AutoOverlay;
+            progressBar.Hide();
+            progressBar.SendToBack();
             StopServer();
 
             if (core != null)
@@ -551,7 +600,7 @@ namespace ACTWebSocket_Plugin
             {
                 if (autostartoverlay.Checked)
                 {
-                    //buttonStart_Click(null, null);
+                    StartOverlayProc();
                 }
             }
             catch (Exception e)
@@ -575,8 +624,11 @@ namespace ACTWebSocket_Plugin
             ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
 
             SaveSettings();
-            //buttonExit_Click(null, null);
-            //browser.ExecuteScriptAsync("api_overlaywindow_close_all();");
+
+            SendMessage(overlayCaption, JObject.FromObject(new
+            {
+                cmd = "stop"
+            }));
             lblStatus.Text = "Plugin Exited";
         }
 
@@ -1197,17 +1249,7 @@ namespace ACTWebSocket_Plugin
                 copyURLPath();
             }
         }
-
-        private void hostnames_TextChanged(object sender, EventArgs e)
-        {
-            skinURL.Text = getURLPath("skins.json");
-        }
-
-        private void buttonCopyList_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText(skinURL.Text);
-        }
-
+        
         string GetTitle(string path)
         {
             string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
@@ -1272,6 +1314,7 @@ namespace ACTWebSocket_Plugin
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
+                            hostnames_TextChanged(null, null);
                         }
                     }
                 }
@@ -1312,6 +1355,7 @@ namespace ACTWebSocket_Plugin
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
+                            hostnames_TextChanged(null, null);
                         }
                     }
                 }
@@ -1326,7 +1370,13 @@ namespace ACTWebSocket_Plugin
                 {
                     core.skinObject.RemoveAll();
                     core.skinObject["Type"] = "URLList";
+                    core.skinObject["HostName"] = hostnames.Text;
                     core.skinObject["URLList"] = new JArray();
+                    SendMessage(overlayCaption, JObject.FromObject(new
+                    {
+                        cmd = "urllist",
+                        value = core.skinObject
+                    }));
                 }
             }
             FileSkinListView.Items.Clear();
@@ -1433,6 +1483,184 @@ namespace ACTWebSocket_Plugin
             if (FileSkinListView.SelectedItems.Count > 0)
             {
                 WebSkinListView.SelectedItems.Clear();
+            }
+        }
+
+        public bool StartOverlayProc()
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                startInfo.WorkingDirectory = overlayProcDir;
+                startInfo.Arguments = "";
+                Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+            return true;
+        }
+
+        private void buttonDownload_Click(object sender, EventArgs e)
+        {
+            UpdateOverlayProc();
+            try
+            {
+                if (File.Exists(overlayProcExe))
+                {
+                    SendMessage(overlayCaption, JObject.FromObject(new
+                    {
+                        cmd = "stop"
+                    }));
+                }
+                buttonDownload.Enabled = false;
+                string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+                WebClient webClient = new WebClient();
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 100;
+                progressBar.Show();
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                webClient.DownloadFileAsync(new Uri(url), pluginDirectory + "/overlay_proc.zip");
+            }
+            catch (Exception ex)
+            {
+                progressBar.Hide();
+                buttonDownload.Enabled = true;
+                UpdateOverlayProc();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.TotalBytesToReceive == -1)
+            {
+                if (progressBar.Style != ProgressBarStyle.Marquee)
+                {
+                    progressBar.Value = 100;
+                    progressBar.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            else
+            {
+                progressBar.Value = e.ProgressPercentage;
+                progressBar.Style = ProgressBarStyle.Blocks;
+            }
+        }
+
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+                z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                z.ExtractAll(pluginDirectory + "/overlay_proc");
+            });
+            Task UITask = task.ContinueWith((t) =>
+            {
+                progressBar.Hide();
+                buttonDownload.Enabled = true;
+                UpdateOverlayProc();
+                StartOverlayProc();
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private void buttonStartStopOverlayProc_Click(object sender, EventArgs e)
+        {
+            bool b = File.Exists(overlayProcExe);
+            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            {
+                cmd = "stop"
+            })))
+            {
+                // run instance
+                StartOverlayProc();
+            }
+        }
+
+        private void buttonOpenOverlayProcManager_Click(object sender, EventArgs e)
+        {
+            bool b = File.Exists(overlayProcExe);
+            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            {
+                cmd = "manager"
+            })))
+            {
+                // run instance ?
+            }
+        }
+
+        private void buttonOverlay_Click(object sender, EventArgs e)
+        {
+            if (FileSkinListView.SelectedItems.Count > 0)
+            {
+                string url = (string)FileSkinListView.SelectedItems[0].Tag;
+                SendMessage(overlayCaption, JObject.FromObject(new
+                {
+                    cmd = "set",
+                    value = new
+                    {
+                        opacity = 1.0,
+                        zoom = 1.0,
+                        fps = 30.0,
+                        hide = false,
+                        useDragFilter = true,
+                        useDragMove = true,
+                        useResizeGrip = true,
+                        NoActivate = false,
+                        Transparent = false,
+                        url = getURLPath(url),
+                        title = FileSkinListView.SelectedItems[0].Text
+                    }
+                }));
+            }
+            else if (WebSkinListView.SelectedItems.Count > 0)
+            {
+                string url = (string)WebSkinListView.SelectedItems[0].Tag;
+                SendMessage(overlayCaption, JObject.FromObject(new
+                {
+                    cmd = "set",
+                    value = new
+                    {
+                        opacity = 1.0,
+                        zoom = 1.0,
+                        fps = 30.0,
+                        hide = false,
+                        useDragFilter = true,
+                        useDragMove = true,
+                        useResizeGrip = true,
+                        NoActivate = false,
+                        Transparent = false,
+                        url = getURLPath(url),
+                        title = WebSkinListView.SelectedItems[0].Text
+                    }
+                }));
+            }
+        }
+
+        private void hostnames_TextChanged(object sender, EventArgs e)
+        {
+            Hostname = hostnames.Text;
+            if (core != null)
+            {
+                lock (core.skinObject)
+                {
+                    JToken skinObject = core.skinObject.DeepClone();
+                    JArray urlConverted = new JArray();
+                    JArray array = (JArray)skinObject["URLList"];
+                    foreach(JToken obj in array)
+                    {
+                        obj["URL"] = getURLPath(obj["URL"].ToObject<String>());
+                    }
+                    SendMessage(overlayCaption, JObject.FromObject(new
+                    {
+                        cmd = "urllist",
+                        value = skinObject
+                    }));
+                }
             }
         }
     }
