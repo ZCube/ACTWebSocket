@@ -1237,9 +1237,32 @@ namespace ACTWebSocket_Plugin
             if (WebSkinListView.SelectedItems == null) return;
             if(WebSkinListView.SelectedItems.Count > 0)
             {
-                string url = WebSkinListView.SelectedItems[0].Text;
+                string url = (string)WebSkinListView.SelectedItems[0].Tag;
                 SkinURLList.Remove(url);
                 WebSkinListView.Items.RemoveAt(WebSkinListView.SelectedItems[0].Index);
+                {
+                    if (core != null)
+                    {
+                        lock (core.skinObject)
+                        {
+                            JArray urlConverted = new JArray();
+                            JArray array = (JArray)core.skinObject["URLList"];
+                            foreach (JToken obj in array)
+                            {
+                                if(obj["URL"].ToObject<String>() == url)
+                                {
+                                    obj.Remove();
+                                    break;
+                                }
+                            }
+                            SendMessage(overlayCaption, JObject.FromObject(new
+                            {
+                                cmd = "urllist",
+                                value = core.skinObject
+                            }));
+                        }
+                    }
+                }
             }
         }
 
