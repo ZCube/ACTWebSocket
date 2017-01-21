@@ -194,14 +194,23 @@
   <data name="buttonOpen.Text" xml:space="preserve">
     <value>URL 열기</value>
   </data>
+  <data name="buttonOverlay.Text" xml:space="preserve">
+    <value>오버레이</value>
+  </data>
   <data name="groupBox2.Text" xml:space="preserve">
     <value>웹 스킨</value>
   </data>
   <data name="autostartoverlay.Text" xml:space="preserve">
     <value>오버레이 자동 시작/종료</value>
   </data>
-  <data name="buttonCopyList.Text" xml:space="preserve">
-    <value>스킨 주소 복사</value>
+  <data name="buttonDownload.Text" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="buttonStartStopOverlayProc.Text" xml:space="preserve">
+    <value>OverlayProc 실행/종료</value>
+  </data>
+  <data name="buttonOpenOverlayProcManager.Text" xml:space="preserve">
+    <value>오버레이 관리자</value>
   </data>
   <data name="groupBox3.Text" xml:space="preserve">
     <value>파일 스킨</value>

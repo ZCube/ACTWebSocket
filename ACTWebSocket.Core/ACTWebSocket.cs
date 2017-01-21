@@ -154,10 +154,10 @@ namespace ACTWebSocket_Plugin
             this.buttonOverlay = new System.Windows.Forms.Button();
             this.autostartoverlay = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonStartStopOverlayProc = new System.Windows.Forms.Button();
             this.buttonOpenOverlayProcManager = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -243,12 +243,12 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
@@ -262,6 +262,7 @@ namespace ACTWebSocket_Plugin
             // 
             // hostdata
             // 
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -269,14 +270,13 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            this.hostnames.FormattingEnabled = true;
             resources.ApplyResources(this.hostnames, "hostnames");
+            this.hostnames.FormattingEnabled = true;
             this.hostnames.Name = "hostnames";
             this.hostnames.TextChanged += new System.EventHandler(this.hostnames_TextChanged);
             // 
@@ -306,12 +306,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -325,9 +325,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -380,13 +380,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
             this.groupBox2.Controls.Add(this.copyURL);
             this.groupBox2.Controls.Add(this.buttonAddURL);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -406,19 +406,14 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
             this.groupBox1.Controls.Add(this.progressBar);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
-            // 
-            // progressBar
-            // 
-            resources.ApplyResources(this.progressBar, "progressBar");
-            this.progressBar.Name = "progressBar";
             // 
             // buttonDownload
             // 
@@ -441,10 +436,15 @@ namespace ACTWebSocket_Plugin
             this.buttonOpenOverlayProcManager.UseVisualStyleBackColor = true;
             this.buttonOpenOverlayProcManager.Click += new System.EventHandler(this.buttonOpenOverlayProcManager_Click);
             // 
+            // progressBar
+            // 
+            resources.ApplyResources(this.progressBar, "progressBar");
+            this.progressBar.Name = "progressBar";
+            // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.FileSkinListView);
             resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Controls.Add(this.FileSkinListView);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -469,6 +469,7 @@ namespace ACTWebSocket_Plugin
             // 
             // ACTWebSocketMain
             // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -477,7 +478,6 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
-            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -1437,6 +1437,9 @@ namespace ACTWebSocket_Plugin
         void UpdateOverlayProc()
         {
             bool b = File.Exists(overlayProcExe);
+            buttonOverlay.Enabled = b;
+            buttonStartStopOverlayProc.Enabled = b;
+            buttonOpenOverlayProcManager.Enabled = b;
         }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
@@ -1487,6 +1490,11 @@ namespace ACTWebSocket_Plugin
 
         public bool StartOverlayProc()
         {
+            bool b = File.Exists(overlayProcExe);
+            if(!b)
+            {
+                return false;
+            }
             try
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
