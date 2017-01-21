@@ -541,7 +541,20 @@ namespace ACTWebSocket_Plugin
                 ipc.Text = "Client"+overlayCaption;
                 ipc.onMessage = (code, message) =>
                 {
-
+                    if (message == ".")
+                        return;
+                    JObject obj = JObject.Parse(message);
+                    JToken token;
+                    if (obj.TryGetValue("cmd", out token))
+                    {
+                        String cmd = token.ToObject<String>();
+                        switch(cmd)
+                        {
+                            case "get_urllist":
+                                hostnames_TextChanged(null, null);
+                                break;
+                        }
+                    }
                 };
             }
             if (core == null)
@@ -1268,6 +1281,7 @@ namespace ACTWebSocket_Plugin
                 else
                 {
                     WebClient wc = new WebClient();
+                    wc.Encoding = Encoding.UTF8;
                     string source = wc.DownloadString(path);
                     title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
                 }
