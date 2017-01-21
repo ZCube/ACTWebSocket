@@ -565,7 +565,7 @@ namespace ACTWebSocket_Plugin
             autostart.Checked = AutoRun;
             autostartoverlay.Checked = AutoOverlay;
             progressBar.Hide();
-            progressBar.SendToBack();
+            progressBar.BringToFront();
             StopServer();
 
             if (core != null)
