@@ -70,7 +70,6 @@ namespace ACTWebSocket_Plugin
         public void SetPluginDirectory(string path)
         {
             overlayProcDir = path + "\\overlay_proc";
-            overlayProcDir = "C:/Workspace/OverlayManager/bin/Windows/x86/Debug";
             overlayProcExe = overlayProcDir + "\\overlay_proc.exe";
             UpdateOverlayProc();
             pluginDirectory = path;
