@@ -1270,7 +1270,7 @@ namespace ACTWebSocket_Plugin
                             JObject skinInfo = new JObject();
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["WebSkinList"];
+                            JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
                         }
                     }
@@ -1310,7 +1310,7 @@ namespace ACTWebSocket_Plugin
                             JObject skinInfo = new JObject();
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["FileSkinList"];
+                            JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
                         }
                     }
@@ -1325,8 +1325,8 @@ namespace ACTWebSocket_Plugin
                 lock (core.skinObject)
                 {
                     core.skinObject.RemoveAll();
-                    core.skinObject["FileSkinList"] = new JArray();
-                    core.skinObject["WebSkinList"] = new JArray();
+                    core.skinObject["Type"] = "URLList";
+                    core.skinObject["URLList"] = new JArray();
                 }
             }
             FileSkinListView.Items.Clear();
@@ -1399,6 +1399,19 @@ namespace ACTWebSocket_Plugin
                 {
                     System.Diagnostics.Process.Start(url);
                 }
+            }
+            else if (FileSkinListView.SelectedItems.Count > 0)
+            {
+                string url = (string)FileSkinListView.SelectedItems[0].Tag;
+                url = getURLPath(url);
+                if (url != null)
+                {
+                    System.Diagnostics.Process.Start(url);
+                }
+            }
+            else
+            {
+                copyURLPath();
             }
         }
 
