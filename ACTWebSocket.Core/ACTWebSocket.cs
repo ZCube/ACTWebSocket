@@ -837,21 +837,7 @@ namespace ACTWebSocket_Plugin
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private void oFormActMain_BeforeLogLineRead(
-            bool isImport,
-            LogLineEventArgs logInfo)
-        {
-            FilterChatings("/BeforeLogLineRead", logInfo);
-        }
-
-        private void oFormActMain_OnLogLineRead(
-            bool isImport,
-            LogLineEventArgs logInfo)
-        {
-            FilterChatings("/OnLogLineRead", logInfo);
-        }
-
-        private void FilterChatings(string url, LogLineEventArgs e)
+        private bool IsChattings(LogLineEventArgs e)
         {
             string[] data = e.logLine.Split('|');
 
@@ -859,16 +845,44 @@ namespace ACTWebSocket_Plugin
             {
                 if (Convert.ToInt32(data[0]) == 0)
                 {
-                    if (Convert.ToInt32(data[2], 16) < 54 && ChatFilter)
+                    if (Convert.ToInt32(data[2], 16) < 54)
                     {
-                        return;
+                        return true;
                     }
                 }
-            }catch(Exception)
-            {
-                // TODO ?
             }
-            core.Broadcast(url, "Chat", e.logLine);
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        private void oFormActMain_BeforeLogLineRead(
+            bool isImport,
+            LogLineEventArgs logInfo)
+        {
+            if (BeforeLogLineRead)
+            {
+                bool isChatting = IsChattings(logInfo);
+                if(!isChatting || (isChatting && ChatFilter))
+                {
+                    core.Broadcast("/BeforeLogLineRead", "Chat", logInfo.logLine);
+                }
+            }
+        }
+
+        private void oFormActMain_OnLogLineRead(
+            bool isImport,
+            LogLineEventArgs logInfo)
+        {
+            if (OnLogLineRead)
+            {
+                bool isChatting = IsChattings(logInfo);
+                if (!isChatting || (isChatting && ChatFilter))
+                {
+                    core.Broadcast("/OnLogLineRead", "Chat", logInfo.logLine);
+                }
+            }
         }
 
         #region Web JSObject Part

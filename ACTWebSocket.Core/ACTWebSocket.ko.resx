@@ -174,7 +174,7 @@
     <value>서버</value>
   </data>
   <data name="chatFilter.Text" xml:space="preserve">
-    <value>채팅</value>
+    <value>채팅 내용 전달</value>
   </data>
   <data name="othersets.Text" xml:space="preserve">
     <value>메세지 필터</value>
