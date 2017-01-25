@@ -47,6 +47,19 @@ namespace ACTWebSocket_Plugin
             }
             protected override void OnOpen()
             {
+                string parent_path = "";
+                if (randomDir != null)
+                {
+                    parent_path = "/" + randomDir;
+                }
+
+                bool localConnection = false;
+                localConnection = ACTWebSocketCore.addrs.Contains(this.Context.UserEndPoint.Address.ToString());
+                if (!localConnection && this.Context.RequestUri.PathAndQuery.StartsWith(parent_path))
+                {
+                    this.Context.WebSocket.Close();
+                    return;
+                }
                 base.OnOpen();
                 overlayAPI.OnOpen(id, this);
             }
@@ -183,5 +196,6 @@ namespace ACTWebSocket_Plugin
                 }
             }
         }
+
     }
 }
