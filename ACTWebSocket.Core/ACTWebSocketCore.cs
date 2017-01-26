@@ -27,9 +27,15 @@ namespace ACTWebSocket_Plugin
         public HttpServer httpServer = null;
         Timer updateTimer = null;
         Timer pingTimer = null;
-        public string randomDir = null;
         internal IntPtr hwnd;
         public JObject skinObject = new JObject();
+        static public string randomDir = null;
+        static public List<String> addrs = new List<String>();
+
+        public void SetAddress(List<String> addrs)
+        {
+            ACTWebSocketCore.addrs = addrs;
+        }
 
         void InitUpdate()
         {
@@ -59,8 +65,16 @@ namespace ACTWebSocket_Plugin
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/MiniParse");
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/BeforeLogLineRead");
             httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/OnLogLineRead");
-            
-            if(skinOnAct)
+
+            if (randomDir != null)
+            {
+                httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/Communicate");
+                httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/MiniParse");
+                httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/BeforeLogLineRead");
+                httpServer.AddWebSocketService<WebSocketCommunicateBehavior>(parent_path + "/OnLogLineRead");
+            }
+
+            if (skinOnAct)
             {
                 httpServer.RootPath = overlaySkinDirectory;
             }
@@ -81,7 +95,10 @@ namespace ACTWebSocket_Plugin
                 HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
                 var path = req.RawUrl;
 
-                if(randomDir != null)
+                bool localConnection = false;
+                localConnection = addrs.Contains(req.RemoteEndPoint.Address.ToString());
+
+                if (randomDir != null && !localConnection)
                 {
                     if (!path.StartsWith(parent_path))
                     {
@@ -90,7 +107,7 @@ namespace ACTWebSocket_Plugin
                     }
                 }
 
-                if(path.StartsWith(parent_path))
+                if (path.StartsWith(parent_path))
                 {
                     path = path.Substring(parent_path.Length);
                 }

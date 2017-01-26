@@ -240,6 +240,7 @@ namespace ACTWebSocket_Plugin
             this.randomURL.BackColor = System.Drawing.Color.Transparent;
             this.randomURL.Name = "randomURL";
             this.randomURL.UseVisualStyleBackColor = false;
+            this.randomURL.CheckedChanged += new System.EventHandler(this.randomURL_CheckedChanged);
             // 
             // startoption
             // 
@@ -551,7 +552,7 @@ namespace ACTWebSocket_Plugin
                         switch(cmd)
                         {
                             case "get_urllist":
-                                hostnames_TextChanged(null, null);
+                                ServerUrlChanged();
                                 break;
                         }
                     }
@@ -824,6 +825,7 @@ namespace ACTWebSocket_Plugin
 
                 addrs = Utility.Distinct<String>(addrs);
                 addrs.Sort();
+                core.SetAddress(addrs);
 
             });
             Task UITask = task.ContinueWith((t) =>
@@ -878,17 +880,17 @@ namespace ACTWebSocket_Plugin
         {
             get
             {
-                return core == null || core.randomDir != null;
+                return core == null || ACTWebSocketCore.randomDir != null;
             }
             set
             {
                 if (value)
                 {
-                    core.randomDir = Guid.NewGuid().ToString();
+                    ACTWebSocketCore.randomDir = Guid.NewGuid().ToString();
                 }
                 else
                 {
-                    core.randomDir = null;
+                    ACTWebSocketCore.randomDir = null;
                 }
             }
         }
@@ -943,11 +945,11 @@ namespace ACTWebSocket_Plugin
             
             if (RandomURL)
             {
-                core.randomDir = Guid.NewGuid().ToString();
+                ACTWebSocketCore.randomDir = Guid.NewGuid().ToString();
             }
             else
             {
-                core.randomDir = null;
+                ACTWebSocketCore.randomDir = null;
             }
             try
             {
@@ -1089,15 +1091,18 @@ namespace ACTWebSocket_Plugin
             return list;
         }
 
-        public string getURLPath(string skinPath = "")
+        public string getURLPath(string skinPath = "", bool withRandomURL = true)
         {
             string url = "";
             {
                 url = "://" + Hostname + ":" + Port + "/";
             }
-            if (core.randomDir != null)
+            if (withRandomURL)
             {
-                url += core.randomDir + "/";
+                if (ACTWebSocketCore.randomDir != null)
+                {
+                    url += ACTWebSocketCore.randomDir + "/";
+                }
             }
             if (skinPath.ToLower().StartsWith("http"))
             {
@@ -1350,7 +1355,7 @@ namespace ACTWebSocket_Plugin
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
-                            hostnames_TextChanged(null, null);
+                            ServerUrlChanged();
                         }
                     }
                 }
@@ -1391,7 +1396,7 @@ namespace ACTWebSocket_Plugin
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
                             array.Add(skinInfo);
-                            hostnames_TextChanged(null, null);
+                            ServerUrlChanged();
                         }
                     }
                 }
@@ -1656,7 +1661,7 @@ namespace ACTWebSocket_Plugin
                         useResizeGrip = true,
                         NoActivate = false,
                         Transparent = false,
-                        url = getURLPath(url),
+                        url = getURLPath(url, false),
                         title = FileSkinListView.SelectedItems[0].Text
                     }
                 }));
@@ -1678,7 +1683,7 @@ namespace ACTWebSocket_Plugin
                         useResizeGrip = true,
                         NoActivate = false,
                         Transparent = false,
-                        url = getURLPath(url),
+                        url = getURLPath(url, false),
                         title = WebSkinListView.SelectedItems[0].Text
                     }
                 }));
@@ -1686,6 +1691,16 @@ namespace ACTWebSocket_Plugin
         }
 
         private void hostnames_TextChanged(object sender, EventArgs e)
+        {
+            ServerUrlChanged();
+        }
+
+        private void randomURL_CheckedChanged(object sender, EventArgs e)
+        {
+            ServerUrlChanged();
+        }
+
+        private void ServerUrlChanged()
         {
             Hostname = hostnames.Text;
             if (core != null)
@@ -1695,9 +1710,10 @@ namespace ACTWebSocket_Plugin
                     JToken skinObject = core.skinObject.DeepClone();
                     JArray urlConverted = new JArray();
                     JArray array = (JArray)skinObject["URLList"];
-                    foreach(JToken obj in array)
+                    core.skinObject["Token"] = ACTWebSocketCore.randomDir;
+                    foreach (JToken obj in array)
                     {
-                        obj["URL"] = getURLPath(obj["URL"].ToObject<String>());
+                        obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
                     }
                     SendMessage(overlayCaption, JObject.FromObject(new
                     {
@@ -1707,5 +1723,6 @@ namespace ACTWebSocket_Plugin
                 }
             }
         }
+
     }
 }

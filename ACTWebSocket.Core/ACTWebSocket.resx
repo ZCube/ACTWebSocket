@@ -129,15 +129,15 @@
   <data name="&gt;&gt;buttonOverlay.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
+    <value>30, 12</value>
+  </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="othersets.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 248</value>
-  </data>
-  <data name="randomURL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 70</value>
   </data>
   <data name="&gt;&gt;autostart.Parent" xml:space="preserve">
     <value>startoption</value>
@@ -177,6 +177,9 @@
   <data name="buttonDownload.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 23</value>
   </data>
+  <data name="buttonStartStopOverlayProc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 44</value>
+  </data>
   <data name="buttonOpenOverlayProcManager.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
   </data>
@@ -189,8 +192,8 @@
   <data name="&gt;&gt;randomURL.Parent" xml:space="preserve">
     <value>startoption</value>
   </data>
-  <data name="startoption.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+  <data name="randomURL.Text" xml:space="preserve">
+    <value>random URL</value>
   </data>
   <data name="othersets.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -216,11 +219,11 @@
   <data name="&gt;&gt;buttonOpenOverlayProcManager.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 93</value>
+  </data>
   <data name="&gt;&gt;label15.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="FileSkinListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>388, 120</value>
   </data>
   <data name="buttonOn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -231,11 +234,11 @@
   <data name="&gt;&gt;FileSkinListView.Name" xml:space="preserve">
     <value>FileSkinListView</value>
   </data>
-  <data name="FileSkinListView.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
   <data name="buttonOn.Size" type="System.Drawing.Size, System.Drawing">
     <value>236, 25</value>
+  </data>
+  <data name="MiniParseUse.Text" xml:space="preserve">
+    <value>Use Miniparse Data</value>
   </data>
   <data name="&gt;&gt;FileSkinListView.Parent" xml:space="preserve">
     <value>groupBox3</value>
@@ -246,11 +249,14 @@
   <data name="&gt;&gt;groupBox3.Name" xml:space="preserve">
     <value>groupBox3</value>
   </data>
+  <data name="buttonOpenOverlayProcManager.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="randomURL.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
-  <data name="&gt;&gt;serverStatus.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="copyURL.Text" xml:space="preserve">
+    <value>Copy URL</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -263,6 +269,9 @@
   </data>
   <data name="hostdata.Text" xml:space="preserve">
     <value>Host</value>
+  </data>
+  <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;buttonOpen.Parent" xml:space="preserve">
     <value>groupBox2</value>
@@ -291,14 +300,8 @@
   <data name="buttonOpenOverlayProcManager.Text" xml:space="preserve">
     <value>Open Manager</value>
   </data>
-  <data name="progressBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 45</value>
-  </data>
   <data name="randomURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="groupBox1.Text" xml:space="preserve">
-    <value>OverlayProc</value>
   </data>
   <data name="MiniParseUse.Location" type="System.Drawing.Point, System.Drawing">
     <value>11, 25</value>
@@ -312,8 +315,8 @@
   <data name="MiniParseUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
   </data>
-  <data name="&gt;&gt;autostartoverlay.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="&gt;&gt;groupBox3.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -342,6 +345,9 @@
   <data name="buttonOpen.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left</value>
   </data>
+  <data name="startoption.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
@@ -362,9 +368,6 @@
   </data>
   <data name="OnLogLineReadUse.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
-  </data>
-  <data name="&gt;&gt;label14.Name" xml:space="preserve">
-    <value>label14</value>
   </data>
   <data name="&gt;&gt;UPNPUse.Name" xml:space="preserve">
     <value>UPNPUse</value>
@@ -405,8 +408,8 @@
   <data name="&gt;&gt;port.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="progressBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>391, 20</value>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label14.Parent" xml:space="preserve">
     <value>hostdata</value>
@@ -414,20 +417,14 @@
   <data name="&gt;&gt;port.Name" xml:space="preserve">
     <value>port</value>
   </data>
-  <data name="buttonOverlay.Text" xml:space="preserve">
-    <value>Overlay</value>
+  <data name="buttonDownload.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
   </data>
   <data name="&gt;&gt;startoption.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="hostnames.Location" type="System.Drawing.Point, System.Drawing">
-    <value>79, 23</value>
-  </data>
   <data name="chatFilter.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="copyURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -465,8 +462,8 @@
   <data name="&gt;&gt;autostartoverlay.Name" xml:space="preserve">
     <value>autostartoverlay</value>
   </data>
-  <data name="buttonStartStopOverlayProc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>144, 44</value>
+  <data name="randomURL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 70</value>
   </data>
   <data name="&gt;&gt;copyURL.Parent" xml:space="preserve">
     <value>groupBox2</value>
@@ -498,6 +495,9 @@
   <data name="startoption.Size" type="System.Drawing.Size, System.Drawing">
     <value>249, 124</value>
   </data>
+  <data name="serverStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>248, 79</value>
+  </data>
   <data name="&gt;&gt;hostnames.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -505,6 +505,9 @@
     <value>Top, Bottom, Left, Right</value>
   </data>
   <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;autostartoverlay.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="buttonURL.TabIndex" type="System.Int32, mscorlib">
@@ -569,6 +572,9 @@
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>257, 5</value>
+  </data>
+  <data name="buttonOpen.Text" xml:space="preserve">
+    <value>Open URL</value>
   </data>
   <data name="buttonStartStopOverlayProc.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
@@ -636,8 +642,11 @@
   <data name="&gt;&gt;BeforeLogLineReadUse.Name" xml:space="preserve">
     <value>BeforeLogLineReadUse</value>
   </data>
-  <data name="copyURL.Text" xml:space="preserve">
-    <value>Copy URL</value>
+  <data name="FileSkinListView.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="skinOnAct.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>UPNP Port</value>
@@ -659,6 +668,9 @@
   </data>
   <data name="&gt;&gt;buttonOpen.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonOff.Parent" xml:space="preserve">
+    <value>serverStatus</value>
   </data>
   <data name="&gt;&gt;randomURL.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -714,6 +726,9 @@
   <data name="port.Text" xml:space="preserve">
     <value>10501</value>
   </data>
+  <data name="&gt;&gt;buttonOff.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;BeforeLogLineReadUse.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -726,17 +741,17 @@
   <data name="randomURL.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
   </data>
+  <data name="chatFilter.Text" xml:space="preserve">
+    <value>Using Chat</value>
+  </data>
   <data name="buttonOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 26</value>
   </data>
   <data name="FileSkinListView.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 20</value>
   </data>
-  <data name="&gt;&gt;groupBox3.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="randomURL.Text" xml:space="preserve">
-    <value>random URL</value>
+  <data name="&gt;&gt;Title.Name" xml:space="preserve">
+    <value>Title</value>
   </data>
   <data name="&gt;&gt;buttonOpen.Name" xml:space="preserve">
     <value>buttonOpen</value>
@@ -762,14 +777,11 @@
   <data name="buttonOpenOverlayProcManager.Size" type="System.Drawing.Size, System.Drawing">
     <value>124, 21</value>
   </data>
-  <data name="&gt;&gt;Title.Name" xml:space="preserve">
-    <value>Title</value>
-  </data>
   <data name="buttonOn.Text" xml:space="preserve">
     <value>On</value>
   </data>
-  <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ACTWebSocketMain</value>
   </data>
   <data name="buttonOn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -780,26 +792,20 @@
   <data name="buttonOverlay.Location" type="System.Drawing.Point, System.Drawing">
     <value>318, 173</value>
   </data>
-  <data name="&gt;&gt;buttonAddURL.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
   <data name="copyURL.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 26</value>
   </data>
   <data name="skinOnAct.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
   </data>
-  <data name="&gt;&gt;copyURL.Name" xml:space="preserve">
-    <value>copyURL</value>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>OverlayProc</value>
   </data>
   <data name="BeforeLogLineReadUse.Text" xml:space="preserve">
     <value>Using BeforeLogLineRead</value>
   </data>
   <data name="&gt;&gt;hostdata.Name" xml:space="preserve">
     <value>hostdata</value>
-  </data>
-  <data name="&gt;&gt;buttonOpenOverlayProcManager.Parent" xml:space="preserve">
-    <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;buttonURL.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -831,9 +837,6 @@
   <data name="&gt;&gt;autostartoverlay.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="buttonDownload.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
   <data name="WebSkinListView.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 20</value>
   </data>
@@ -848,6 +851,9 @@
   </data>
   <data name="Title2.Text" xml:space="preserve">
     <value>Title</value>
+  </data>
+  <data name="buttonOverlay.Text" xml:space="preserve">
+    <value>Overlay</value>
   </data>
   <data name="&gt;&gt;randomURL.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -873,8 +879,8 @@
   <data name="&gt;&gt;buttonURL.Name" xml:space="preserve">
     <value>buttonURL</value>
   </data>
-  <data name="&gt;&gt;buttonStartStopOverlayProc.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+  <data name="&gt;&gt;buttonAddURL.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="copyURL.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -882,14 +888,8 @@
   <data name="&gt;&gt;buttonURL.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>ACTWebSocketMain</value>
-  </data>
   <data name="groupBox3.Text" xml:space="preserve">
     <value>File Skins</value>
-  </data>
-  <data name="hostnames.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 20</value>
   </data>
   <data name="uPnPPort.Text" xml:space="preserve">
     <value>10501</value>
@@ -897,8 +897,8 @@
   <data name="&gt;&gt;hostdata.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;buttonOff.Parent" xml:space="preserve">
-    <value>serverStatus</value>
+  <data name="FileSkinListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>388, 120</value>
   </data>
   <data name="skinOnAct.Text" xml:space="preserve">
     <value>Skin Dir On Act/OverlaySkin</value>
@@ -939,8 +939,8 @@
   <data name="&gt;&gt;hostnames.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="skinOnAct.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="hostnames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 20</value>
   </data>
   <data name="buttonURL.Location" type="System.Drawing.Point, System.Drawing">
     <value>84, 173</value>
@@ -990,14 +990,11 @@
   <data name="autostartoverlay.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 20</value>
   </data>
-  <data name="startoption.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+  <data name="&gt;&gt;buttonStartStopOverlayProc.Parent" xml:space="preserve">
+    <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;MiniParseUse.ZOrder" xml:space="preserve">
     <value>3</value>
-  </data>
-  <data name="hostnames.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
   </data>
   <data name="buttonDownload.Location" type="System.Drawing.Point, System.Drawing">
     <value>327, 18</value>
@@ -1014,11 +1011,11 @@
   <data name="buttonAddURL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="WebSkinListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>388, 147</value>
+  <data name="hostnames.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
   </data>
-  <data name="serverStatus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>248, 79</value>
+  <data name="&gt;&gt;copyURL.Name" xml:space="preserve">
+    <value>copyURL</value>
   </data>
   <data name="buttonDownload.Text" xml:space="preserve">
     <value>Download</value>
@@ -1050,29 +1047,29 @@
   <data name="&gt;&gt;autostart.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="buttonOpenOverlayProcManager.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;serverStatus.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="autostartoverlay.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
-  <data name="chatFilter.Text" xml:space="preserve">
-    <value>Using Chat</value>
+  <data name="progressBar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 45</value>
   </data>
   <data name="&gt;&gt;autostart.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="MiniParseUse.Text" xml:space="preserve">
-    <value>Use Miniparse Data</value>
+  <data name="WebSkinListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>388, 147</value>
   </data>
-  <data name="buttonOpen.Text" xml:space="preserve">
-    <value>Open URL</value>
+  <data name="progressBar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>391, 20</value>
   </data>
   <data name="&gt;&gt;serverStatus.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>30, 12</value>
+  <data name="hostnames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>79, 23</value>
   </data>
   <data name="buttonOff.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 46</value>
@@ -1095,8 +1092,8 @@
   <data name="&gt;&gt;skinOnAct.Name" xml:space="preserve">
     <value>skinOnAct</value>
   </data>
-  <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 93</value>
+  <data name="&gt;&gt;buttonOpenOverlayProcManager.Parent" xml:space="preserve">
+    <value>groupBox1</value>
   </data>
   <data name="&gt;&gt;skinOnAct.Parent" xml:space="preserve">
     <value>startoption</value>
@@ -1110,6 +1107,9 @@
   <data name="&gt;&gt;othersets.Name" xml:space="preserve">
     <value>othersets</value>
   </data>
+  <data name="startoption.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
   <data name="UPNPUse.Location" type="System.Drawing.Point, System.Drawing">
     <value>11, 47</value>
   </data>
@@ -1119,8 +1119,8 @@
   <data name="autostartoverlay.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
-  <data name="&gt;&gt;buttonOff.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;label14.Name" xml:space="preserve">
+    <value>label14</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
