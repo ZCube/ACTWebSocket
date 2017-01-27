@@ -497,11 +497,46 @@ namespace ACTWebSocket_Plugin
         #endregion
 
         #endregion
+
+        System.Timers.Timer overlayProcCheckTimer = null;
         public ACTWebSocketMain()
         {
             ChatFilter = false;
             InitializeComponent();
-            UpdateOverlayProc();
+            if (ipc == null)
+            {
+                ipc = new IPC_COPYDATA();
+                ipc.Show();
+                ipc.Text = "Client" + overlayCaption;
+                ipc.onMessage = (code, message) =>
+                {
+                    if (message == ".")
+                        return;
+                    JObject obj = JObject.Parse(message);
+                    JToken token;
+                    if (obj.TryGetValue("cmd", out token))
+                    {
+                        UpdateOverlayProc();
+                        String cmd = token.ToObject<String>();
+                        switch (cmd)
+                        {
+                            case "get_urllist":
+                                ServerUrlChanged();
+                                break;
+                            case "overlay_proc_status_changed":
+                                UpdateOverlayProc();
+                                break;
+                        }
+                    }
+                };
+            }
+            overlayProcCheckTimer = new System.Timers.Timer();
+            overlayProcCheckTimer.Interval = 2000;
+            overlayProcCheckTimer.Elapsed += (o, e) =>
+            {
+                UpdateOverlayProc();
+            };
+            overlayProcCheckTimer.Start();
         }
 
         ~ACTWebSocketMain()
@@ -535,29 +570,7 @@ namespace ACTWebSocket_Plugin
         IPC_COPYDATA ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-            if(ipc == null)
-            {
-                ipc = new IPC_COPYDATA();
-                ipc.Show();
-                ipc.Text = "Client"+overlayCaption;
-                ipc.onMessage = (code, message) =>
-                {
-                    if (message == ".")
-                        return;
-                    JObject obj = JObject.Parse(message);
-                    JToken token;
-                    if (obj.TryGetValue("cmd", out token))
-                    {
-                        String cmd = token.ToObject<String>();
-                        switch(cmd)
-                        {
-                            case "get_urllist":
-                                ServerUrlChanged();
-                                break;
-                        }
-                    }
-                };
-            }
+            UpdateOverlayProc();
             if (core == null)
             {
                 core = new ACTWebSocketCore();
@@ -1327,6 +1340,7 @@ namespace ACTWebSocket_Plugin
                     string source = wc.DownloadString(path);
                     title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
                 }
+                title = title.Trim();
             }
             catch (Exception ex)
             {
@@ -1355,7 +1369,7 @@ namespace ACTWebSocket_Plugin
 
                 if (!find)
                 {
-                    title = title == null ? a : title;
+                    title = (title == null || title == "") ? a : title;
                     ListViewItem lvi = new ListViewItem();
                     lvi.Text = title;
                     lvi.Tag = a;
@@ -1375,7 +1389,7 @@ namespace ACTWebSocket_Plugin
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
-
+        List<Task> tasklist = new List<Task>();
         private void AddFileURL(string a)
         {
             string title = null;
@@ -1396,7 +1410,7 @@ namespace ACTWebSocket_Plugin
 
                 if (!find)
                 {
-                    title = title == null ? a : title;
+                    title = (title == null || title == "") ? a : title;
                     ListViewItem lvi = new ListViewItem();
                     lvi.Text = title;
                     lvi.Tag = a;
@@ -1415,6 +1429,16 @@ namespace ACTWebSocket_Plugin
                     }
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
+            Task finalTask = UITask.ContinueWith((t) =>
+            {
+                tasklist.Remove(UITask);
+                tasklist.Remove(task);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            lock(tasklist)
+            {
+                tasklist.Add(task);
+                tasklist.Add(UITask);
+            }
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
@@ -1434,6 +1458,16 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
             }
+
+            lock (tasklist)
+            {
+                foreach(var task in tasklist)
+                {
+                    task.Wait();
+                }
+                tasklist.Clear();
+            }
+
             FileSkinListView.Items.Clear();
             WebSkinListView.Items.Clear();
             foreach (var a in SkinURLList)
@@ -1494,8 +1528,21 @@ namespace ACTWebSocket_Plugin
         {
             bool b = File.Exists(overlayProcExe);
             buttonOverlay.Enabled = b;
-            buttonStartStopOverlayProc.Enabled = b;
-            buttonOpenOverlayProcManager.Enabled = b;
+            if(SendMessage(overlayCaption, JObject.FromObject(new
+            {
+                cmd = "check"
+            })))
+            {
+                buttonStartStopOverlayProc.Enabled = b;
+                buttonOpenOverlayProcManager.Enabled = true;
+                buttonOverlay.Enabled = true;
+            }
+            else
+            {
+                buttonStartStopOverlayProc.Enabled = b;
+                buttonOpenOverlayProcManager.Enabled = false;
+                buttonOverlay.Enabled = false;
+            }
         }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
@@ -1546,22 +1593,26 @@ namespace ACTWebSocket_Plugin
 
         public bool StartOverlayProc()
         {
-            bool b = File.Exists(overlayProcExe);
-            if(!b)
+            UpdateOverlayProc();
+            if(!buttonOpenOverlayProcManager.Enabled)
             {
-                return false;
-            }
-            try
-            {
-                ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
-                startInfo.WorkingDirectory = overlayProcDir;
-                startInfo.Arguments = "";
-                Process.Start(startInfo);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return false;
+                bool b = File.Exists(overlayProcExe);
+                if (!b)
+                {
+                    return false;
+                }
+                try
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
+                    startInfo.WorkingDirectory = overlayProcDir;
+                    startInfo.Arguments = "";
+                    Process.Start(startInfo);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return false;
+                }
             }
             return true;
         }
