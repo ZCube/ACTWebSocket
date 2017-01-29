@@ -47,6 +47,7 @@ namespace ACTWebSocket_Plugin
             }
             protected override void OnOpen()
             {
+                string path = this.Context.RequestUri.PathAndQuery;
                 string parent_path = "";
                 if (randomDir != null)
                 {
@@ -55,11 +56,15 @@ namespace ACTWebSocket_Plugin
 
                 bool localConnection = false;
                 localConnection = ACTWebSocketCore.addrs.Contains(this.Context.UserEndPoint.Address.ToString());
-                if (!localConnection && this.Context.RequestUri.PathAndQuery.StartsWith(parent_path))
+                if (randomDir != null && !localConnection)
                 {
-                    this.Context.WebSocket.Close();
-                    return;
+                    if (!path.StartsWith(parent_path))
+                    {
+                        this.Context.WebSocket.Close();
+                        return;
+                    }
                 }
+
                 base.OnOpen();
                 overlayAPI.OnOpen(id, this);
             }

@@ -816,22 +816,26 @@ namespace ACTWebSocket_Plugin
         private List<String> addrs = new List<String>();
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
+            String strHostName = string.Empty;
+            strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+
+            addrs.Clear();
+            addrs.Add("127.0.0.1");
+            {
+                IPAddress[] addr = ipEntry.AddressList;
+                for (int i = 0; i < addr.Length; i++)
+                {
+                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        addrs.Add(addr[i].ToString());
+                }
+            }
+            addrs = Utility.Distinct<String>(addrs);
+            addrs.Sort();
+            core.SetAddress(addrs);
+
             Task task = Task.Factory.StartNew(() =>
             {
-                String strHostName = string.Empty;
-                strHostName = Dns.GetHostName();
-                IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
-
-                addrs.Clear();
-                addrs.Add("127.0.0.1");
-                {
-                    IPAddress[] addr = ipEntry.AddressList;
-                    for (int i = 0; i < addr.Length; i++)
-                    {
-                        if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                            addrs.Add(addr[i].ToString());
-                    }
-                }
                 String ipaddress = Utility.GetExternalIp();
                 if (ipaddress.Length > 0)
                     addrs.Add(ipaddress);
