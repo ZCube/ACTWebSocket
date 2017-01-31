@@ -1,1 +1,1 @@
-powershell  -ExecutionPolicy Bypass  "& "".\revision.ps1"""
+rev.py

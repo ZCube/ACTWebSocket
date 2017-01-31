@@ -1,1 +1,1 @@
-powershell  -ExecutionPolicy Bypass  "& "".\setdirty.ps1"""
+rev.py dev
