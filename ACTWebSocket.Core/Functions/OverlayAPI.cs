@@ -42,41 +42,65 @@ namespace ACTWebSocket_Plugin
 
         internal void InstallMessageHandle(ref Dictionary<string, Action<ACTWebSocketCore.WebSocketCommunicateBehavior, JObject>> handle)
         {
-            handle["RequestLastCombat"] = handle["RequestLastCombatData"] = (session, o) => {
-                session.Send(session.id, session.id, SendMessageType.CombatData.ToString(), CreateEncounterJsonData());
+            handle["overlayAPI"] = (session, o) =>
+            {
+                String type = o["msgtype"].ToString();
+                if (type == null)
+                    return;
+                switch (type)
+                {
+                    case "RequestLastCombat":
+                    case "RequestLastCombatData":
+                        session.Send(session.id, session.id, SendMessageType.CombatData.ToString(), CreateEncounterJsonData());
+                        break;
+                    case "RequestEnd":
+                    case "RequestEncounterEnd":
+                        ActGlobals.oFormActMain.EndCombat(false);
+                        break;
+                    case "GetFileList":
+                        {
+                            String arg = ((JToken)o).ToObject<string>();
+                            session.Send(session.id, session.id, "FileList", ListToJSON(GetFiles(arg)));
+                        }
+                        break;
+                    case "GetDirectoryList":
+                        {
+                            String arg = ((JToken)o).ToObject<string>();
+                            session.Send(session.id, session.id, "DirectoryList", ListToJSON(GetDirectories(arg)));
+                        }
+                        break;
+                    case "GetDirectoryNoLastSlash":
+                        {
+                            String arg = ((JToken)o).ToObject<string>();
+                            session.Send(session.id, session.id, "GetDirectoryNoLastSlash", GetDirectoryNoLastSlash(arg));
+                        }
+                        break;
+                    case "FileExists":
+                        {
+                            String arg = ((JToken)o).ToObject<string>();
+                            session.Send(session.id, session.id, "FileExists", FileExists(arg));
+                        }
+                        break;
+                    case "DirectoryExists":
+                        {
+                            String arg = ((JToken)o).ToObject<string>();
+                            session.Send(session.id, session.id, "DirectoryExists", DirectoryExists(arg));
+                        }
+                        break;
+                    //case "ReadFile":
+                    //    {
+                    //        String arg = ((JToken)o).ToObject<string>();
+                    //        session.Send(session.id, session.id, "File", ReadFile(arg));
+                    //    }
+                    //    break;
+                    //case "GetImageBase64":
+                    //    {
+                    //        String arg = ((JToken)o).ToObject<string>();
+                    //        session.Send(session.id, session.id, "ImageBase64", GetImageBASE64(arg));
+                    //    }
+                    //    break;
+                };
             };
-            handle["RequestEnd"] = handle["RequestEncounterEnd"] = (session, o) => {
-                ActGlobals.oFormActMain.EndCombat(false);
-            };
-            handle["GetFileList"] = (session, o) => {
-                String arg = ((JToken)o).ToObject<string>();
-                session.Send(session.id, session.id, "FileList", ListToJSON(GetFiles(arg)));
-            };
-            handle["GetDirectoryList"] = (session, o) => {
-                String arg = ((JToken)o).ToObject<string>();
-                session.Send(session.id, session.id, "DirectoryList", ListToJSON(GetDirectories(arg)));
-            };
-            handle["GetDirectoryNoLastSlash"] = (session, o) => {
-                String arg = ((JToken)o).ToObject<string>();
-                session.Send(session.id, session.id, "GetDirectoryNoLastSlash", GetDirectoryNoLastSlash(arg));
-            };
-            handle["FileExists"] = (session, o) => {
-                String arg = ((JToken)o).ToObject<string>();
-                session.Send(session.id, session.id, "FileExists", FileExists(arg));
-            };
-            handle["DirectoryExists"] = (session, o) => {
-                String arg = ((JToken)o).ToObject<string>();
-                session.Send(session.id, session.id, "DirectoryExists", DirectoryExists(arg));
-            };
-            // security...
-            //handle["ReadFile"] = (session, o) => {
-            //    String arg = ((JToken)o).ToObject<string>();
-            //    session.Send(session.id, session.id, "File", ReadFile(arg));
-            //};
-            //handle["GetImageBase64"] = (session, o) => {
-            //    String arg = ((JToken)o).ToObject<string>();
-            //    session.Send(session.id, session.id, "ImageBase64", GetImageBASE64(arg));
-            //};
         }
         
         public JObject ListToJSON(string[] s)

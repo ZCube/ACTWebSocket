@@ -57,12 +57,20 @@ class ActWebsocketInterface
 		}
 		else
 		{
-			var r = new RegExp('[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}');
-			var id = r.exec(navigator.userAgent);
-			if(id != null && id.length == 1)
+			if(overlayWindowId != undefined)
 			{
-				this.set_id(id[0]);
-				self.id = id;
+				this.set_id(overlayWindowId);
+				self.id = overlayWindowId;
+			}
+			else
+			{
+				var r = new RegExp('[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}');
+				var id = r.exec(navigator.userAgent);
+				if(id != null && id.length == 1)
+				{
+					this.set_id(id[0]);
+					self.id = id;
+				}
 			}
 		}
 	}
@@ -143,6 +151,14 @@ class ActWebsocketInterface
 		var obj = {};
 		obj["type"] = "send";
 		obj["to"] = to;
+		obj["msgtype"] = type;
+		obj["msg"] = msg;
+		this.websocket.send(JSON.stringify(obj));
+	}
+	
+	overlayAPI(type, msg){
+		var obj = {};
+		obj["type"] = "overlayAPI";
 		obj["msgtype"] = type;
 		obj["msg"] = msg;
 		this.websocket.send(JSON.stringify(obj));
