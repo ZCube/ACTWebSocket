@@ -520,6 +520,14 @@ namespace ACTWebSocket_Plugin
                         String cmd = token.ToObject<String>();
                         switch (cmd)
                         {
+                            case "capture":
+                                {
+                                    JToken value = obj["value"];
+                                    String id = value["id"].ToObject<String>();
+                                    String pngBase64 = value["capture"].ToObject<String>();
+                                    pngBase64 = pngBase64;
+                                }
+                                break;
                             case "get_urllist":
                                 ServerUrlChanged();
                                 break;
@@ -1283,12 +1291,15 @@ namespace ACTWebSocket_Plugin
                         {
                             JArray urlConverted = new JArray();
                             JArray array = (JArray)core.skinObject["URLList"];
-                            foreach (JToken obj in array)
+                            if (array != null)
                             {
-                                if(obj["URL"].ToObject<String>() == url)
+                                foreach (JToken obj in array)
                                 {
-                                    obj.Remove();
-                                    break;
+                                    if (obj["URL"].ToObject<String>() == url)
+                                    {
+                                        obj.Remove();
+                                        break;
+                                    }
                                 }
                             }
                             SendMessage(overlayCaption, JObject.FromObject(new
@@ -1386,6 +1397,11 @@ namespace ACTWebSocket_Plugin
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
+                            if (array == null)
+                            {
+                                array = new JArray();
+                                core.skinObject["URLList"] = array;
+                            }
                             array.Add(skinInfo);
                             ServerUrlChanged();
                         }
@@ -1427,6 +1443,11 @@ namespace ACTWebSocket_Plugin
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
+                            if(array == null)
+                            {
+                                array = new JArray();
+                                core.skinObject["URLList"] = array;
+                            }
                             array.Add(skinInfo);
                             ServerUrlChanged();
                         }
@@ -1447,22 +1468,6 @@ namespace ACTWebSocket_Plugin
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            if (core != null)
-            {
-                lock (core.skinObject)
-                {
-                    core.skinObject.RemoveAll();
-                    core.skinObject["Type"] = "URLList";
-                    core.skinObject["HostName"] = hostnames.Text;
-                    core.skinObject["URLList"] = new JArray();
-                    SendMessage(overlayCaption, JObject.FromObject(new
-                    {
-                        cmd = "urllist",
-                        value = core.skinObject
-                    }));
-                }
-            }
-
             lock (tasklist)
             {
                 foreach(var task in tasklist)
@@ -1711,6 +1716,23 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        // sample capture request code
+        public bool captureRequest(String id_)
+        {
+            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            {
+                cmd = "capture",
+                value = new
+                {
+                    id = id_
+                }
+            })))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void buttonOverlay_Click(object sender, EventArgs e)
         {
             if (FileSkinListView.SelectedItems.Count > 0)
@@ -1780,9 +1802,16 @@ namespace ACTWebSocket_Plugin
                     JArray urlConverted = new JArray();
                     JArray array = (JArray)skinObject["URLList"];
                     core.skinObject["Token"] = ACTWebSocketCore.randomDir;
-                    foreach (JToken obj in array)
+                    if (array != null)
                     {
-                        obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                        foreach (JToken obj in array)
+                        {
+                            obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                        }
+                    }
+                    else
+                    {
+                        skinObject["URLList"] = new JArray();
                     }
                     SendMessage(overlayCaption, JObject.FromObject(new
                     {
