@@ -49,6 +49,21 @@ namespace ACTWebSocket_Plugin
                     return;
                 switch (type)
                 {
+                    case "Capture":
+                        {
+                            if (!ACTWebSocketMain.SendMessage(JObject.FromObject(new
+                            {
+                                cmd = "capture",
+                                value = new
+                                {
+                                    id = session.id
+                                }
+                            })))
+                            {
+                                // TODO : 
+                            }
+                        }
+                        break;
                     case "RequestLastCombat":
                     case "RequestLastCombatData":
                         session.Send(session.id, session.id, SendMessageType.CombatData.ToString(), CreateEncounterJsonData());

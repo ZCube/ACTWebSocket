@@ -31,8 +31,7 @@ namespace ACTWebSocket_Plugin
     }
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
-
-        string overlayCaption = "OverlayProcWMCOPYDATA";
+        public static string overlayCaption = "OverlayProcWMCOPYDATA";
         string overlaySkinDirectory { get; set; }
         string pluginDirectory = "";
         private ComboBox hostnames;
@@ -576,13 +575,21 @@ namespace ACTWebSocket_Plugin
 
         JObject overlayWindows = new JObject(); // 설정 전부
 
-        public bool SendMessage(string caption, JObject obj)
+        public static bool SendMessage(string caption, JObject obj)
         {
+            if (ipc == null)
+                return false;
             return ipc.SendMessage(caption, 0, obj.ToString());
         }
 
+        public static bool SendMessage(JObject obj)
+        {
+            if (ipc == null)
+                return false;
+            return ipc.SendMessage(overlayCaption, 0, obj.ToString());
+        }
 
-        IPC_COPYDATA ipc = null;
+        public static IPC_COPYDATA ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
             UpdateOverlayProc();
@@ -666,7 +673,7 @@ namespace ACTWebSocket_Plugin
 
             SaveSettings();
 
-            SendMessage(overlayCaption, JObject.FromObject(new
+            SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             }));
@@ -1309,7 +1316,7 @@ namespace ACTWebSocket_Plugin
                                     }
                                 }
                             }
-                            SendMessage(overlayCaption, JObject.FromObject(new
+                            SendMessage(JObject.FromObject(new
                             {
                                 cmd = "urllist",
                                 value = core.skinObject
@@ -1544,7 +1551,7 @@ namespace ACTWebSocket_Plugin
         {
             bool b = File.Exists(overlayProcExe);
             buttonOverlay.Enabled = b;
-            if(SendMessage(overlayCaption, JObject.FromObject(new
+            if(SendMessage(JObject.FromObject(new
             {
                 cmd = "check"
             })))
@@ -1640,7 +1647,7 @@ namespace ACTWebSocket_Plugin
             {
                 if (File.Exists(overlayProcExe))
                 {
-                    SendMessage(overlayCaption, JObject.FromObject(new
+                    SendMessage(JObject.FromObject(new
                     {
                         cmd = "stop"
                     }));
@@ -1701,7 +1708,7 @@ namespace ACTWebSocket_Plugin
         private void buttonStartStopOverlayProc_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             })))
@@ -1714,7 +1721,7 @@ namespace ACTWebSocket_Plugin
         private void buttonOpenOverlayProcManager_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "manager"
             })))
@@ -1726,7 +1733,7 @@ namespace ACTWebSocket_Plugin
         // sample capture request code
         public bool captureRequest(String id_)
         {
-            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "capture",
                 value = new
@@ -1745,7 +1752,7 @@ namespace ACTWebSocket_Plugin
             if (FileSkinListView.SelectedItems.Count > 0)
             {
                 string url = (string)FileSkinListView.SelectedItems[0].Tag;
-                SendMessage(overlayCaption, JObject.FromObject(new
+                SendMessage(JObject.FromObject(new
                 {
                     cmd = "set",
                     value = new
@@ -1767,7 +1774,7 @@ namespace ACTWebSocket_Plugin
             else if (WebSkinListView.SelectedItems.Count > 0)
             {
                 string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                SendMessage(overlayCaption, JObject.FromObject(new
+                SendMessage(JObject.FromObject(new
                 {
                     cmd = "set",
                     value = new
@@ -1820,7 +1827,7 @@ namespace ACTWebSocket_Plugin
                     {
                         skinObject["URLList"] = new JArray();
                     }
-                    SendMessage(overlayCaption, JObject.FromObject(new
+                    SendMessage(JObject.FromObject(new
                     {
                         cmd = "urllist",
                         value = skinObject
