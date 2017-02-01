@@ -512,29 +512,36 @@ namespace ACTWebSocket_Plugin
                 {
                     if (message == ".")
                         return;
-                    JObject obj = JObject.Parse(message);
-                    JToken token;
-                    if (obj.TryGetValue("cmd", out token))
+                    try
                     {
-                        UpdateOverlayProc();
-                        String cmd = token.ToObject<String>();
-                        switch (cmd)
+                        JObject obj = JObject.Parse(message);
+                        JToken token;
+                        if (obj.TryGetValue("cmd", out token))
                         {
-                            case "capture":
-                                {
-                                    JToken value = obj["value"];
-                                    String id = value["id"].ToObject<String>();
-                                    String pngBase64 = value["capture"].ToObject<String>();
-                                    pngBase64 = pngBase64;
-                                }
-                                break;
-                            case "get_urllist":
-                                ServerUrlChanged();
-                                break;
-                            case "overlay_proc_status_changed":
-                                UpdateOverlayProc();
-                                break;
+                            UpdateOverlayProc();
+                            String cmd = token.ToObject<String>();
+                            switch (cmd)
+                            {
+                                case "capture":
+                                    {
+                                        JToken value = obj["value"];
+                                        String id = value["id"].ToObject<String>();
+                                        String pngBase64 = value["capture"].ToObject<String>();
+                                        pngBase64 = pngBase64;
+                                    }
+                                    break;
+                                case "get_urllist":
+                                    ServerUrlChanged();
+                                    break;
+                                case "overlay_proc_status_changed":
+                                    UpdateOverlayProc();
+                                    break;
+                            }
                         }
+                    }
+                    catch(Exception e)
+                    {
+                        // TODO : What?
                     }
                 };
             }
