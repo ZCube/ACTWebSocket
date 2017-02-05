@@ -92,6 +92,8 @@
     <Reference Include="Advanced Combat Tracker, Version=3.3.0.254, Culture=neutral, PublicKeyToken=a946b61e93d97868, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
+      <HintPath>C:\Advanced Combat Tracker\ACTv3\Advanced Combat Tracker.exe</HintPath>
+      <HintPath>C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

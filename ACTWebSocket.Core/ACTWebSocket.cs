@@ -31,8 +31,7 @@ namespace ACTWebSocket_Plugin
     }
     public class ACTWebSocketMain : UserControl, IActPluginV1, PluginDirectory
     {
-
-        string overlayCaption = "OverlayProcWMCOPYDATA";
+        public static string overlayCaption = "OverlayProcWMCOPYDATA";
         string overlaySkinDirectory { get; set; }
         string pluginDirectory = "";
         private ComboBox hostnames;
@@ -512,21 +511,36 @@ namespace ACTWebSocket_Plugin
                 {
                     if (message == ".")
                         return;
-                    JObject obj = JObject.Parse(message);
-                    JToken token;
-                    if (obj.TryGetValue("cmd", out token))
+                    try
                     {
-                        UpdateOverlayProc();
-                        String cmd = token.ToObject<String>();
-                        switch (cmd)
+                        JObject obj = JObject.Parse(message);
+                        JToken token;
+                        if (obj.TryGetValue("cmd", out token))
                         {
-                            case "get_urllist":
-                                ServerUrlChanged();
-                                break;
-                            case "overlay_proc_status_changed":
-                                UpdateOverlayProc();
-                                break;
+                            UpdateOverlayProc();
+                            String cmd = token.ToObject<String>();
+                            switch (cmd)
+                            {
+                                case "capture":
+                                    {
+                                        JToken value = obj["value"];
+                                        String id = value["id"].ToObject<String>();
+                                        String pngBase64 = value["capture"].ToObject<String>();
+                                        pngBase64 = pngBase64;
+                                    }
+                                    break;
+                                case "get_urllist":
+                                    ServerUrlChanged();
+                                    break;
+                                case "overlay_proc_status_changed":
+                                    UpdateOverlayProc();
+                                    break;
+                            }
                         }
+                    }
+                    catch(Exception e)
+                    {
+                        // TODO : What?
                     }
                 };
             }
@@ -561,13 +575,21 @@ namespace ACTWebSocket_Plugin
 
         JObject overlayWindows = new JObject(); // 설정 전부
 
-        public bool SendMessage(string caption, JObject obj)
+        public static bool SendMessage(string caption, JObject obj)
         {
+            if (ipc == null)
+                return false;
             return ipc.SendMessage(caption, 0, obj.ToString());
         }
 
+        public static bool SendMessage(JObject obj)
+        {
+            if (ipc == null)
+                return false;
+            return ipc.SendMessage(overlayCaption, 0, obj.ToString());
+        }
 
-        IPC_COPYDATA ipc = null;
+        public static IPC_COPYDATA ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
             UpdateOverlayProc();
@@ -651,7 +673,7 @@ namespace ACTWebSocket_Plugin
 
             SaveSettings();
 
-            SendMessage(overlayCaption, JObject.FromObject(new
+            SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             }));
@@ -1283,15 +1305,18 @@ namespace ACTWebSocket_Plugin
                         {
                             JArray urlConverted = new JArray();
                             JArray array = (JArray)core.skinObject["URLList"];
-                            foreach (JToken obj in array)
+                            if (array != null)
                             {
-                                if(obj["URL"].ToObject<String>() == url)
+                                foreach (JToken obj in array)
                                 {
-                                    obj.Remove();
-                                    break;
+                                    if (obj["URL"].ToObject<String>() == url)
+                                    {
+                                        obj.Remove();
+                                        break;
+                                    }
                                 }
                             }
-                            SendMessage(overlayCaption, JObject.FromObject(new
+                            SendMessage(JObject.FromObject(new
                             {
                                 cmd = "urllist",
                                 value = core.skinObject
@@ -1386,6 +1411,11 @@ namespace ACTWebSocket_Plugin
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
+                            if (array == null)
+                            {
+                                array = new JArray();
+                                core.skinObject["URLList"] = array;
+                            }
                             array.Add(skinInfo);
                             ServerUrlChanged();
                         }
@@ -1427,6 +1457,11 @@ namespace ACTWebSocket_Plugin
                             skinInfo["Title"] = title;
                             skinInfo["URL"] = a;
                             JArray array = (JArray)core.skinObject["URLList"];
+                            if(array == null)
+                            {
+                                array = new JArray();
+                                core.skinObject["URLList"] = array;
+                            }
                             array.Add(skinInfo);
                             ServerUrlChanged();
                         }
@@ -1447,22 +1482,6 @@ namespace ACTWebSocket_Plugin
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            if (core != null)
-            {
-                lock (core.skinObject)
-                {
-                    core.skinObject.RemoveAll();
-                    core.skinObject["Type"] = "URLList";
-                    core.skinObject["HostName"] = hostnames.Text;
-                    core.skinObject["URLList"] = new JArray();
-                    SendMessage(overlayCaption, JObject.FromObject(new
-                    {
-                        cmd = "urllist",
-                        value = core.skinObject
-                    }));
-                }
-            }
-
             lock (tasklist)
             {
                 foreach(var task in tasklist)
@@ -1532,7 +1551,7 @@ namespace ACTWebSocket_Plugin
         {
             bool b = File.Exists(overlayProcExe);
             buttonOverlay.Enabled = b;
-            if(SendMessage(overlayCaption, JObject.FromObject(new
+            if(SendMessage(JObject.FromObject(new
             {
                 cmd = "check"
             })))
@@ -1628,7 +1647,7 @@ namespace ACTWebSocket_Plugin
             {
                 if (File.Exists(overlayProcExe))
                 {
-                    SendMessage(overlayCaption, JObject.FromObject(new
+                    SendMessage(JObject.FromObject(new
                     {
                         cmd = "stop"
                     }));
@@ -1689,7 +1708,7 @@ namespace ACTWebSocket_Plugin
         private void buttonStartStopOverlayProc_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             })))
@@ -1702,7 +1721,7 @@ namespace ACTWebSocket_Plugin
         private void buttonOpenOverlayProcManager_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(overlayCaption, JObject.FromObject(new
+            if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "manager"
             })))
@@ -1711,12 +1730,29 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        // sample capture request code
+        public bool captureRequest(String id_)
+        {
+            if (!SendMessage(JObject.FromObject(new
+            {
+                cmd = "capture",
+                value = new
+                {
+                    id = id_
+                }
+            })))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void buttonOverlay_Click(object sender, EventArgs e)
         {
             if (FileSkinListView.SelectedItems.Count > 0)
             {
                 string url = (string)FileSkinListView.SelectedItems[0].Tag;
-                SendMessage(overlayCaption, JObject.FromObject(new
+                SendMessage(JObject.FromObject(new
                 {
                     cmd = "set",
                     value = new
@@ -1738,7 +1774,7 @@ namespace ACTWebSocket_Plugin
             else if (WebSkinListView.SelectedItems.Count > 0)
             {
                 string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                SendMessage(overlayCaption, JObject.FromObject(new
+                SendMessage(JObject.FromObject(new
                 {
                     cmd = "set",
                     value = new
@@ -1780,11 +1816,18 @@ namespace ACTWebSocket_Plugin
                     JArray urlConverted = new JArray();
                     JArray array = (JArray)skinObject["URLList"];
                     core.skinObject["Token"] = ACTWebSocketCore.randomDir;
-                    foreach (JToken obj in array)
+                    if (array != null)
                     {
-                        obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                        foreach (JToken obj in array)
+                        {
+                            obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                        }
                     }
-                    SendMessage(overlayCaption, JObject.FromObject(new
+                    else
+                    {
+                        skinObject["URLList"] = new JArray();
+                    }
+                    SendMessage(JObject.FromObject(new
                     {
                         cmd = "urllist",
                         value = skinObject
