@@ -54,6 +54,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonOverlay;
         private ProgressBar progressBar;
         private Button buttonDownload;
+        private ComboBox qtVersion;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -160,6 +161,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.qtVersion = new System.Windows.Forms.ComboBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -243,12 +245,12 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
@@ -262,7 +264,6 @@ namespace ACTWebSocket_Plugin
             // 
             // hostdata
             // 
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -270,13 +271,14 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.FormattingEnabled = true;
+            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.Name = "hostnames";
             this.hostnames.TextChanged += new System.EventHandler(this.hostnames_TextChanged);
             // 
@@ -306,12 +308,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -325,9 +327,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -380,13 +382,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
             this.groupBox2.Controls.Add(this.copyURL);
             this.groupBox2.Controls.Add(this.buttonAddURL);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -406,12 +408,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.qtVersion);
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
             this.groupBox1.Controls.Add(this.progressBar);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -443,8 +446,8 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox3
             // 
-            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.FileSkinListView);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -467,9 +470,18 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.Title, "Title");
             // 
+            // qtVersion
+            // 
+            this.qtVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.qtVersion.FormattingEnabled = true;
+            this.qtVersion.Items.AddRange(new object[] {
+            resources.GetString("qtVersion.Items"),
+            resources.GetString("qtVersion.Items1")});
+            resources.ApplyResources(this.qtVersion, "qtVersion");
+            this.qtVersion.Name = "qtVersion";
+            // 
             // ACTWebSocketMain
             // 
-            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -478,6 +490,7 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
+            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -839,6 +852,7 @@ namespace ACTWebSocket_Plugin
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             String strHostName = string.Empty;
+            qtVersion.SelectedIndex = 0;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
 
@@ -1653,8 +1667,23 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
                 buttonDownload.Enabled = false;
-                string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+                qtVersion.Enabled = false;
+
+                int idx = qtVersion.SelectedIndex;
+                string url;
+                switch(idx)
+                {
+                    default:
+                    case 0:
+                        url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+                        break;
+                    case 1:
+                        url = "https://www.dropbox.com/sh/7i07svs4ostoahd/AAA4Tn1Q1piI-m9ibwfsb8loa?dl=1";
+                        break;
+                }
+
                 WebClient webClient = new WebClient();
+                progressBar.Value = 0;
                 progressBar.Minimum = 0;
                 progressBar.Maximum = 100;
                 progressBar.Show();
@@ -1666,6 +1695,7 @@ namespace ACTWebSocket_Plugin
             {
                 progressBar.Hide();
                 buttonDownload.Enabled = true;
+                qtVersion.Enabled = true;
                 UpdateOverlayProc();
                 MessageBox.Show(ex.Message);
             }
@@ -1692,16 +1722,23 @@ namespace ACTWebSocket_Plugin
         {
             Task task = Task.Factory.StartNew(() =>
             {
-                ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
-                z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
-                z.ExtractAll(pluginDirectory + "/overlay_proc");
+                try
+                {
+                    ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+                    z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                    z.ExtractAll(pluginDirectory + "/overlay_proc");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             });
             Task UITask = task.ContinueWith((t) =>
             {
                 progressBar.Hide();
                 buttonDownload.Enabled = true;
+                qtVersion.Enabled = true;
                 UpdateOverlayProc();
-                StartOverlayProc();
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
