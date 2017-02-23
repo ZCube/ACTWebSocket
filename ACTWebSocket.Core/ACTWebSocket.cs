@@ -54,7 +54,6 @@ namespace ACTWebSocket_Plugin
         private Button buttonOverlay;
         private ProgressBar progressBar;
         private Button buttonDownload;
-        private ComboBox qtVersion;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -161,7 +160,6 @@ namespace ACTWebSocket_Plugin
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.qtVersion = new System.Windows.Forms.ComboBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -408,7 +406,6 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.qtVersion);
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
@@ -469,16 +466,6 @@ namespace ACTWebSocket_Plugin
             // Title
             // 
             resources.ApplyResources(this.Title, "Title");
-            // 
-            // qtVersion
-            // 
-            this.qtVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.qtVersion.FormattingEnabled = true;
-            this.qtVersion.Items.AddRange(new object[] {
-            resources.GetString("qtVersion.Items"),
-            resources.GetString("qtVersion.Items1")});
-            resources.ApplyResources(this.qtVersion, "qtVersion");
-            this.qtVersion.Name = "qtVersion";
             // 
             // ACTWebSocketMain
             // 
@@ -852,7 +839,6 @@ namespace ACTWebSocket_Plugin
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             String strHostName = string.Empty;
-            qtVersion.SelectedIndex = 0;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
 
@@ -1667,9 +1653,8 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
                 buttonDownload.Enabled = false;
-                qtVersion.Enabled = false;
 
-                int idx = qtVersion.SelectedIndex;
+                int idx = 0;
                 string url;
                 switch(idx)
                 {
@@ -1695,7 +1680,6 @@ namespace ACTWebSocket_Plugin
             {
                 progressBar.Hide();
                 buttonDownload.Enabled = true;
-                qtVersion.Enabled = true;
                 UpdateOverlayProc();
                 MessageBox.Show(ex.Message);
             }
@@ -1737,7 +1721,6 @@ namespace ACTWebSocket_Plugin
             {
                 progressBar.Hide();
                 buttonDownload.Enabled = true;
-                qtVersion.Enabled = true;
                 UpdateOverlayProc();
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
