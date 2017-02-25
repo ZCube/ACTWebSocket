@@ -1428,37 +1428,39 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
-                bool find = false;
-                foreach (ListViewItem i in WebSkinListView.Items)
+                lock (core.skinObject)
                 {
-                    if (((string)i.Tag).CompareTo(a) == 0)
+                    bool find = false;
+                    foreach (ListViewItem i in WebSkinListView.Items)
                     {
-                        find = true;
-                    }
-                }
-
-                if (!find)
-                {
-                    title = (title == null || title == "") ? a : title;
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = title;
-                    lvi.Tag = a;
-                    WebSkinListView.Items.Add(lvi);
-                    if (core != null)
-                    {
-                        lock (core.skinObject)
+                        if (((string)i.Tag).CompareTo(a) == 0)
                         {
-                            JObject skinInfo = new JObject();
-                            skinInfo["Title"] = title;
-                            skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["URLList"];
-                            if (array == null)
+                            find = true;
+                        }
+                    }
+
+                    if (!find)
+                    {
+                        title = (title == null || title == "") ? a : title;
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Text = title;
+                        lvi.Tag = a;
+                        WebSkinListView.Items.Add(lvi);
+                        if (core != null)
+                        {
                             {
-                                array = new JArray();
-                                core.skinObject["URLList"] = array;
+                                JObject skinInfo = new JObject();
+                                skinInfo["Title"] = title;
+                                skinInfo["URL"] = a;
+                                JArray array = (JArray)core.skinObject["URLList"];
+                                if (array == null)
+                                {
+                                    array = new JArray();
+                                    core.skinObject["URLList"] = array;
+                                }
+                                array.Add(skinInfo);
+                                ServerUrlChanged();
                             }
-                            array.Add(skinInfo);
-                            ServerUrlChanged();
                         }
                     }
                 }
@@ -1467,6 +1469,7 @@ namespace ACTWebSocket_Plugin
         List<Task> tasklist = new List<Task>();
         private void AddFileURL(string a)
         {
+            a = a.Replace("\\", "/");
             string title = null;
             Task task = Task.Factory.StartNew(() =>
             {
@@ -1474,37 +1477,41 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
-                bool find = false;
-                foreach (ListViewItem i in WebSkinListView.Items)
+                lock (core.skinObject)
                 {
-                    if (((string)i.Tag).CompareTo(a) == 0)
+                    bool find = false;
+                    foreach (ListViewItem i in FileSkinListView.Items)
                     {
-                        find = true;
-                    }
-                }
-
-                if (!find)
-                {
-                    title = (title == null || title == "") ? a : title;
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = title;
-                    lvi.Tag = a;
-                    FileSkinListView.Items.Add(lvi);
-                    if (core != null)
-                    {
-                        lock (core.skinObject)
+                        if (((string)i.Tag).CompareTo(a) == 0)
                         {
-                            JObject skinInfo = new JObject();
-                            skinInfo["Title"] = title;
-                            skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["URLList"];
-                            if(array == null)
+                            find = true;
+                            break;
+                        }
+                    }
+
+                    if (!find)
+                    {
+                        title = (title == null || title == "") ? a : title;
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Text = title;
+                        lvi.Tag = a;
+                        FileSkinListView.Items.Add(lvi);
+                        if (core != null)
+                        {
+                            lock (core.skinObject)
                             {
-                                array = new JArray();
-                                core.skinObject["URLList"] = array;
+                                JObject skinInfo = new JObject();
+                                skinInfo["Title"] = title;
+                                skinInfo["URL"] = a;
+                                JArray array = (JArray)core.skinObject["URLList"];
+                                if (array == null)
+                                {
+                                    array = new JArray();
+                                    core.skinObject["URLList"] = array;
+                                }
+                                array.Add(skinInfo);
+                                ServerUrlChanged();
                             }
-                            array.Add(skinInfo);
-                            ServerUrlChanged();
                         }
                     }
                 }
@@ -1532,6 +1539,12 @@ namespace ACTWebSocket_Plugin
                 tasklist.Clear();
             }
 
+            lock (core.skinObject)
+            {
+                JArray array = (JArray)core.skinObject["URLList"];
+                array = new JArray();
+                core.skinObject["URLList"] = array;
+            }
             FileSkinListView.Items.Clear();
             WebSkinListView.Items.Clear();
             foreach (var a in SkinURLList)
