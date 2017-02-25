@@ -1451,7 +1451,7 @@ namespace ACTWebSocket_Plugin
                             {
                                 JObject skinInfo = new JObject();
                                 skinInfo["Title"] = title;
-                                skinInfo["URL"] = a;
+                                skinInfo["URL"] = getURLPath(a);
                                 JArray array = (JArray)core.skinObject["URLList"];
                                 if (array == null)
                                 {
