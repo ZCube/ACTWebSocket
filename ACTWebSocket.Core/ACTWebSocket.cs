@@ -23,6 +23,7 @@ namespace ACTWebSocket_Plugin
     using System.ComponentModel;
     using Ionic.Zip;
     using System.Text.RegularExpressions;
+    using Tmds.MDns;
 
     public interface PluginDirectory
     {
@@ -1032,6 +1033,18 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = false;
             buttonOff.Enabled = true;
+
+
+            string serviceType = "_overlay._tcp";
+
+            ServiceBrowser serviceBrowser = new ServiceBrowser();
+            serviceBrowser.ServiceAdded += onServiceAdded;
+            serviceBrowser.ServiceRemoved += onServiceRemoved;
+            serviceBrowser.ServiceChanged += onServiceChanged;
+
+            Console.WriteLine("Browsing for type: {0}", serviceType);
+            serviceBrowser.StartBrowse(serviceType);
+            Console.ReadLine();
         }
 
         public void StopServer()
@@ -1239,6 +1252,34 @@ namespace ACTWebSocket_Plugin
         {
             UpdateFormSettings();
             StartServer();
+        }
+
+        void onServiceChanged(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('~', e.Announcement);
+        }
+
+        void onServiceRemoved(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('-', e.Announcement);
+        }
+
+        void onServiceAdded(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('+', e.Announcement);
+            Uri uri = new Uri("http://" + e.Announcement.Addresses[0].ToString() + ":" + e.Announcement.Port + "/");
+            HttpWebRequest webRequest = WebRequest.CreateHttp(uri);
+            webRequest.Headers.Add("Port", Port.ToString());
+            webRequest.Headers.Add("IP", hostnames.Text.ToString());
+            webRequest.BeginGetResponse(null, webRequest);
+        }
+
+        void printService(char startChar, ServiceAnnouncement service)
+        {
+            Console.WriteLine("{0} '{1}' on {2}", startChar, service.Instance, service.NetworkInterface.Name);
+            Console.WriteLine("\tHost: {0} ({1})", service.Hostname, string.Join(", ", service.Addresses));
+            Console.WriteLine("\tPort: {0}", service.Port);
+            Console.WriteLine("\tTxt : [{0}]", string.Join(", ", service.Txt));
         }
 
         private void buttonOff_Click(object sender, EventArgs e)
