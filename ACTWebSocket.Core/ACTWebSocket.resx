@@ -175,7 +175,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;autostart.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="MiniParseUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -361,7 +361,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;UPNPUse.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="randomURL.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -391,7 +391,37 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;randomURL.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
+  </data>
+  <data name="SSLUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="SSLUse.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="SSLUse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 116</value>
+  </data>
+  <data name="SSLUse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 21</value>
+  </data>
+  <data name="SSLUse.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="SSLUse.Text" xml:space="preserve">
+    <value>Use SSL (Self-Signed)</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Name" xml:space="preserve">
+    <value>SSLUse</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Parent" xml:space="preserve">
+    <value>startoption</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="skinOnAct.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -400,7 +430,7 @@
     <value>NoControl</value>
   </data>
   <data name="skinOnAct.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 93</value>
+    <value>11, 93</value>
   </data>
   <data name="skinOnAct.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 21</value>
@@ -421,13 +451,13 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="startoption.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
   <data name="startoption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>249, 124</value>
+    <value>249, 151</value>
   </data>
   <data name="startoption.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -580,7 +610,7 @@
     <value>4</value>
   </data>
   <data name="hostdata.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 133</value>
+    <value>2, 160</value>
   </data>
   <data name="hostdata.Size" type="System.Drawing.Size, System.Drawing">
     <value>249, 109</value>
@@ -637,7 +667,7 @@
     <value>0</value>
   </data>
   <data name="othersets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 248</value>
+    <value>3, 275</value>
   </data>
   <data name="othersets.Size" type="System.Drawing.Size, System.Drawing">
     <value>248, 125</value>
@@ -661,7 +691,7 @@
     <value>4</value>
   </data>
   <data name="serverStatus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 379</value>
+    <value>3, 406</value>
   </data>
   <data name="serverStatus.Size" type="System.Drawing.Size, System.Drawing">
     <value>248, 79</value>
@@ -865,7 +895,7 @@
     <value>0</value>
   </data>
   <data name="groupBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 248</value>
+    <value>258, 275</value>
   </data>
   <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
     <value>404, 210</value>
@@ -1054,7 +1084,7 @@
     <value>4, 20</value>
   </data>
   <data name="FileSkinListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>388, 120</value>
+    <value>388, 147</value>
   </data>
   <data name="FileSkinListView.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -1075,7 +1105,7 @@
     <value>258, 90</value>
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>404, 152</value>
+    <value>404, 179</value>
   </data>
   <data name="groupBox3.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
@@ -1105,7 +1135,7 @@
     <value>700, 500</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 500</value>
+    <value>755, 553</value>
   </data>
   <data name="&gt;&gt;Title2.Name" xml:space="preserve">
     <value>Title2</value>

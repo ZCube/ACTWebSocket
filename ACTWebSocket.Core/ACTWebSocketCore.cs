@@ -1,5 +1,13 @@
 ﻿using Advanced_Combat_Tracker;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Prng;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +25,12 @@ namespace ACTWebSocket_Plugin
 {
     public partial class ACTWebSocketCore
     {
-        public ACTWebSocketCore()
+        ACTWebSocketMain gui = null;
+        public ACTWebSocketCore(ACTWebSocketMain gui)
         {
             overlayAPI = new FFXIV_OverlayAPI(this);
+            this.gui = gui;
         }
-
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
         public static FFXIV_OverlayAPI overlayAPI;
         public HttpServer httpServer = null;
@@ -43,12 +52,42 @@ namespace ACTWebSocket_Plugin
             Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), overlayAPI.CreateEncounterJsonData());
         }
 
-        internal void StartServer(string address, int port, int extPort, string domain = null, bool skinOnAct = false)
+        static X509Certificate2 GenerateCertificate(string certName)
+        {
+            var keypairgen = new RsaKeyPairGenerator();
+            keypairgen.Init(new KeyGenerationParameters(new SecureRandom(new CryptoApiRandomGenerator()), 2048));
+
+            var keypair = keypairgen.GenerateKeyPair();
+
+            var gen = new X509V3CertificateGenerator();
+
+            var CN = new X509Name("CN=" + certName);
+            var SN = BigInteger.ProbablePrime(120, new Random());
+
+            gen.SetSerialNumber(SN);
+            gen.SetSubjectDN(CN);
+            gen.SetIssuerDN(CN);
+            gen.SetNotAfter(DateTime.MaxValue);
+            gen.SetNotBefore(DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)));
+            gen.SetSignatureAlgorithm("SHA256WithRSA");
+            gen.SetPublicKey(keypair.Public);
+
+            var newCert = gen.Generate(keypair.Private);
+            
+            X509Certificate2 cert = new X509Certificate2(DotNetUtilities.ToX509Certificate((Org.BouncyCastle.X509.X509Certificate)newCert));
+            cert.PrivateKey = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters) keypair.Private);
+            return cert;
+        }
+        internal void StartServer(string address, int port, int extPort, string domain = null, bool skinOnAct = false, bool useSSL = false)
         {
             StopServer();
 
-            httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port);
+            httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port, useSSL);
             httpServer.ReuseAddress = true;
+            if (useSSL)
+            {
+                httpServer.SslConfiguration.ServerCertificate = GenerateCertificate(domain);
+            }
 
             // TODO : SSL
             //wssv = new WebSocketServer(System.Net.IPAddress.Parse(address), port, true);
@@ -88,7 +127,7 @@ namespace ACTWebSocket_Plugin
                 var req = e.Request;
             };
 
-            httpServer.OnGet += (sender, e) =>
+            EventHandler < HttpRequestEventArgs > onget = (sender, e) =>
             {
                 var req = e.Request;
                 var res = e.Response;
@@ -124,7 +163,7 @@ namespace ACTWebSocket_Plugin
 
                 if (content == null)
                 {
-                    if (path == "/skins.json")
+                    if (path == "/skins.json" || path == "/pages.json")
                     {
                         if(skinObject != null)
                         {
@@ -132,7 +171,17 @@ namespace ACTWebSocket_Plugin
                             {
                                 res.ContentType = "text/html";
                                 res.ContentEncoding = Encoding.UTF8;
-                                res.WriteContent(res.ContentEncoding.GetBytes(skinObject.ToString()));
+                                var clone = skinObject.DeepClone();
+
+                                JArray array = (JArray)clone["URLList"];
+                                if (array != null)
+                                {
+                                    foreach (JToken obj in array)
+                                    {
+                                        obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
+                                    }
+                                }
+                                res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString()));
                             }
                         }
                         else
@@ -178,13 +227,18 @@ namespace ACTWebSocket_Plugin
                     }
                     host_port += parent_path;
                     res.SetCookie(new Cookie("HOST_PORT", host_port));
-
-                    content = res.ContentEncoding.GetBytes(res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port));
+                    String co = res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port);
+                    if(e.Request.Url.Scheme == "https")
+                    {
+                        co = co.Replace("ws://", "wss://").Replace("http://", "https://");
+                    }
+                    content = res.ContentEncoding.GetBytes(co);
 
                 }
 
                 res.WriteContent(content);
             };
+            httpServer.OnGet += onget;
 
             //// TODO : Basic Auth
             //httpServer.Realm = "ACTWebSocket";
@@ -241,7 +295,7 @@ namespace ACTWebSocket_Plugin
             if (httpServer != null)
             {
                 httpServer.Stop();
-                foreach(var s in httpServer.WebSocketServices.Hosts)
+                foreach (var s in httpServer.WebSocketServices.Hosts)
                 {
                     httpServer.RemoveWebSocketService(s.Path);
                 }
@@ -275,7 +329,7 @@ namespace ACTWebSocket_Plugin
                 foreach (var s in httpServer.WebSocketServices.Hosts)
                 {
                     string x = s.Path;
-                    if(Filters.ContainsKey(v) && Filters[v])
+                    if (Filters.ContainsKey(v) && Filters[v])
                     {
                         if (s.Path.CompareTo(parent_path + v) == 0)
                         {

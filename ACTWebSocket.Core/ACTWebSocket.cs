@@ -24,6 +24,7 @@ namespace ACTWebSocket_Plugin
     using Ionic.Zip;
     using System.Text.RegularExpressions;
     using Tmds.MDns;
+    using System.Security.AccessControl;
 
     public interface PluginDirectory
     {
@@ -55,6 +56,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonOverlay;
         private ProgressBar progressBar;
         private Button buttonDownload;
+        private CheckBox SSLUse;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -161,6 +163,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SSLUse = new System.Windows.Forms.CheckBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -245,6 +248,7 @@ namespace ACTWebSocket_Plugin
             // startoption
             // 
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.SSLUse);
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
@@ -468,6 +472,14 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.Title, "Title");
             // 
+            // SSLUse
+            // 
+            resources.ApplyResources(this.SSLUse, "SSLUse");
+            this.SSLUse.BackColor = System.Drawing.Color.Transparent;
+            this.SSLUse.Name = "SSLUse";
+            this.SSLUse.UseVisualStyleBackColor = false;
+            this.SSLUse.CheckedChanged += new System.EventHandler(this.SSLUse_CheckedChanged);
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -596,7 +608,7 @@ namespace ACTWebSocket_Plugin
             UpdateOverlayProc();
             if (core == null)
             {
-                core = new ACTWebSocketCore();
+                core = new ACTWebSocketCore(this);
                 core.pluginDirectory = pluginDirectory;
                 core.overlaySkinDirectory = overlaySkinDirectory;
                 core.hwnd = Handle;
@@ -608,6 +620,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineReadUse.Checked = BeforeLogLineRead;
             OnLogLineReadUse.Checked = OnLogLineRead;
             MiniParseUse.Checked = MiniParse;
+            SSLUse.Checked = UseSSL;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
             skinOnAct.Checked = SkinOnAct;
@@ -736,6 +749,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseUPnP = false;
                     }
+                    if (obj.TryGetValue("UseSSL", out token))
+                    {
+                        UseSSL = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        UseSSL = false;
+                    }
                     if (obj.TryGetValue("SkinOnAct", out token))
                     {
                         SkinOnAct = token.ToObject<bool>();
@@ -819,6 +840,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("Hostname", Hostname);
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
+            obj.Add("UseSSL", UseSSL);
             obj.Add("AutoRun", AutoRun);
             obj.Add("AutoOverlay", AutoOverlay);
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
@@ -949,6 +971,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        public bool UseSSL { get; set; }
         public bool UseUPnP { get; set; }
         public bool AutoRun { get; set; }
         public bool AutoOverlay { get; set; }
@@ -1009,11 +1032,11 @@ namespace ACTWebSocket_Plugin
             {
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, UseSSL);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, UseSSL);
                 }
             }
             catch (Exception e)
@@ -1025,6 +1048,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = false;
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
+            SSLUse.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             randomURL.Enabled = false;
@@ -1054,6 +1078,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = true;
             //MiniParseUse.Enabled = true;
             //chatFilter.Enabled = true;
+            SSLUse.Enabled = true;
             skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
             randomURL.Enabled = true;
@@ -1150,9 +1175,25 @@ namespace ACTWebSocket_Plugin
         {
             string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
             List<string> list = new List<string>();
-            foreach (string file in Directory.EnumerateFiles(dir, "*.html", SearchOption.AllDirectories))
+            try
             {
-                list.Add(Utility.GetRelativePath(file, dir));
+                foreach (string file in Directory.EnumerateFiles(dir, "*.html", SearchOption.AllDirectories))
+                {
+                    list.Add(Utility.GetRelativePath(file, dir));
+                }
+            }
+            catch(Exception e)
+            {
+                if(!Directory.Exists(dir))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    catch(Exception e2)
+                    {
+                    }
+                }
             }
             return list;
         }
@@ -1188,7 +1229,7 @@ namespace ACTWebSocket_Plugin
                 {
                     try
                     {
-                        string fullURL = "http" + url + Uri.EscapeDataString(skinPath);
+                        string fullURL = (UseSSL ? "https" : "http") + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
                         fullURL = fullURL.Replace("%2F", "/");
                         return fullURL;
@@ -1221,6 +1262,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineRead = BeforeLogLineReadUse.Checked;
             OnLogLineRead = OnLogLineReadUse.Checked;
             MiniParse = MiniParseUse.Checked;
+            UseSSL = SSLUse.Checked;
             UseUPnP = UPNPUse.Checked;
             RandomURL = randomURL.Checked;
             SkinOnAct = skinOnAct.Checked;
@@ -1271,6 +1313,7 @@ namespace ACTWebSocket_Plugin
             HttpWebRequest webRequest = WebRequest.CreateHttp(uri);
             webRequest.Headers.Add("Port", Port.ToString());
             webRequest.Headers.Add("IP", hostnames.Text.ToString());
+            webRequest.Headers.Add("SCHEME", UseSSL ? "https" : "http");
             webRequest.BeginGetResponse(null, webRequest);
         }
 
@@ -1345,7 +1388,7 @@ namespace ACTWebSocket_Plugin
                         lock (core.skinObject)
                         {
                             JArray urlConverted = new JArray();
-                            JArray array = (JArray)core.skinObject["URLList"];
+                            JArray array = (JArray)core.skinObject["URLList"].DeepClone();
                             if (array != null)
                             {
                                 foreach (JToken obj in array)
@@ -1357,6 +1400,7 @@ namespace ACTWebSocket_Plugin
                                     }
                                 }
                             }
+                            core.skinObject["URLList"] = array;
                             SendMessage(JObject.FromObject(new
                             {
                                 cmd = "urllist",
@@ -1451,7 +1495,7 @@ namespace ACTWebSocket_Plugin
                             {
                                 JObject skinInfo = new JObject();
                                 skinInfo["Title"] = title;
-                                skinInfo["URL"] = getURLPath(a);
+                                skinInfo["URL"] = a;
                                 JArray array = (JArray)core.skinObject["URLList"];
                                 if (array == null)
                                 {
@@ -1593,6 +1637,11 @@ namespace ACTWebSocket_Plugin
         private void UPNPUse_CheckedChanged(object sender, EventArgs e)
         {
             uPnPPort.Enabled = UPNPUse.Checked;
+        }
+
+        private void UseSSL_CheckedChanged(object sender, EventArgs e)
+        {
+            UseSSL = SSLUse.Checked;
         }
 
         private void skinOnAct_CheckedChanged(object sender, EventArgs e)
@@ -1910,5 +1959,9 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        private void SSLUse_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
