@@ -52,6 +52,7 @@ namespace ACTWebSocket_Plugin
             var m = new ACTWebSocketMain();
             string pluginDirectory = GetPluginDirectory();
             m.SetSkinDir(Path.Combine(Environment.CurrentDirectory, "OverlaySkin"));
+            m.SetScreenShotDir(Path.Combine(Environment.CurrentDirectory, "ScreenShot"));
             m.SetPluginDirectory(pluginDirectory);
             m.InitPlugin(pluginScreenSpace, pluginStatusText);
             main = m;

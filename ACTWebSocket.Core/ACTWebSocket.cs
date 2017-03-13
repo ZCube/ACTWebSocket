@@ -35,6 +35,7 @@ namespace ACTWebSocket_Plugin
     {
         public static string overlayCaption = "OverlayProcWMCOPYDATA";
         string overlaySkinDirectory { get; set; }
+        string overlayScreenShotDirectory { get; set; }
         string pluginDirectory = "";
         private ComboBox hostnames;
         private Label label2;
@@ -65,6 +66,11 @@ namespace ACTWebSocket_Plugin
         public void SetSkinDir(string path)
         {
             overlaySkinDirectory = path;
+        }
+
+        public void SetScreenShotDir(string path)
+        {
+            overlayScreenShotDirectory = path;
         }
 
         public string GetSkinDir()
@@ -567,22 +573,28 @@ namespace ACTWebSocket_Plugin
                                         String id = value["id"].ToObject<String>();
                                         String pngBase64 = value["capture"].ToObject<String>();
                                         pngBase64 = pngBase64;
+                                        
                                         byte[] data = Convert.FromBase64String(pngBase64);
 
-                                        string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
-                                        string filename;
-                                        int i = 0;
-                                        do
-                                        {
-                                            filename = "ScreenShot_" + DateTime.Now.ToString("yyyyMMddHHmmss") + "_"+ i.ToString() + ".png";
-                                            ++i;
-                                        }
-                                        while (File.Exists(filename));
+                                        string dir = overlayScreenShotDirectory;
                                         try
                                         {
+                                            if (!Directory.Exists(dir))
+                                            {
+                                                Directory.CreateDirectory(dir);
+                                            }
+                                            string filename;
+                                            int i = 0;
+
+                                            do
+                                            {
+                                                filename = "ScreenShot_" + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + i.ToString() + ".png";
+                                                ++i;
+                                            }
+                                            while (File.Exists(dir + "/" + filename));
 
                                             System.IO.FileStream _FileStream =
-                                               new System.IO.FileStream(dir+"/"+filename, System.IO.FileMode.Create,
+                                               new System.IO.FileStream(dir + "/" + filename, System.IO.FileMode.Create,
                                                                         System.IO.FileAccess.Write);
                                             _FileStream.Write(data, 0, data.Length);
                                             _FileStream.Close();
