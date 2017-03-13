@@ -567,6 +567,30 @@ namespace ACTWebSocket_Plugin
                                         String id = value["id"].ToObject<String>();
                                         String pngBase64 = value["capture"].ToObject<String>();
                                         pngBase64 = pngBase64;
+                                        byte[] data = Convert.FromBase64String(pngBase64);
+
+                                        string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
+                                        string filename;
+                                        int i = 0;
+                                        do
+                                        {
+                                            filename = "ScreenShot_" + DateTime.Now.ToString("yyyyMMddHHmmss") + "_"+ i.ToString() + ".png";
+                                            ++i;
+                                        }
+                                        while (File.Exists(filename));
+                                        try
+                                        {
+
+                                            System.IO.FileStream _FileStream =
+                                               new System.IO.FileStream(dir+"/"+filename, System.IO.FileMode.Create,
+                                                                        System.IO.FileAccess.Write);
+                                            _FileStream.Write(data, 0, data.Length);
+                                            _FileStream.Close();
+                                        }
+                                        catch(Exception e)
+                                        {
+                                            
+                                        }
                                     }
                                     break;
                                 case "get_urllist":

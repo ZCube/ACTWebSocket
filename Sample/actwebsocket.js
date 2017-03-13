@@ -4,7 +4,7 @@ class ActWebsocketInterface
 	constructor(uri, path = "MiniParse") {
 		// url check
 		var querySet = this.getQuerySet();
-		if(querySet["HOST_PORT"] != undefined)
+		if(typeof querySet["HOST_PORT"] != 'undefined')
 		{
 		    uri = querySet["HOST_PORT"] + path;
 		}
@@ -32,7 +32,7 @@ class ActWebsocketInterface
 		});
 	}
 	connect() {
-		if(this.websocket != undefined && this.websocket != null)
+		if(typeof this.websocket != "undefined" && this.websocket != null)
 			this.close();
 		this.activate = true;
 		var This = this;
@@ -44,23 +44,22 @@ class ActWebsocketInterface
 	}
 	close() {
 		this.activate = false;
-		if(this.websocket != null && this.websocket != undefined)
+		if(this.websocket != null && typeof this.websocket != "undefined")
 		{
 			this.websocket.close();
 		}
 	}
 	onopen(evt) {
 		// get id from useragent
-		if(this.id != null && this.id != undefined)
+		if(this.id != null && typeof this.id != "undefined")
 		{
 			this.set_id(this.id);
 		}
 		else
 		{
-			if(overlayWindowId != undefined)
+			if(typeof overlayWindowId != "undefined")
 			{
 				this.set_id(overlayWindowId);
-				self.id = overlayWindowId;
 			}
 			else
 			{
@@ -69,7 +68,6 @@ class ActWebsocketInterface
 				if(id != null && id.length == 1)
 				{
 					this.set_id(id[0]);
-					self.id = id;
 				}
 			}
 		}
@@ -140,6 +138,10 @@ class ActWebsocketInterface
 	
 	
 	broadcast(type, msg){
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		var obj = {};
 		obj["type"] = "broadcast";
 		obj["msgtype"] = type;
@@ -148,6 +150,10 @@ class ActWebsocketInterface
 	}
 
 	send(to, type, msg){
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		var obj = {};
 		obj["type"] = "send";
 		obj["to"] = to;
@@ -158,7 +164,12 @@ class ActWebsocketInterface
 	
 	overlayAPI(type, msg){
 		var obj = {};
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		obj["type"] = "overlayAPI";
+		obj["to"] = overlayWindowId;
 		obj["msgtype"] = type;
 		obj["msg"] = msg;
 		this.websocket.send(JSON.stringify(obj));
@@ -168,7 +179,8 @@ class ActWebsocketInterface
 		var obj = {};
 		obj["type"] = "set_id";
 		obj["id"] = id;
-		this.websocket.send(JSON.stringify(obj));
+		this.id = overlayWindowId;
+	this.websocket.send(JSON.stringify(obj));
 	}
 
 	onRecvMessage(e)
