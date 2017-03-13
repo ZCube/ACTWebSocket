@@ -1,3 +1,70 @@
+var QueryString = function () 
+{
+	// This function is anonymous, is executed immediately and 
+	// the return value is assigned to QueryString!
+	var query_string = {};
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) 
+	{
+		var pair = vars[i].split("=");
+			// If first entry with this name
+		if (typeof query_string[pair[0]] === "undefined") 
+		{
+			query_string[pair[0]] = decodeURIComponent(pair[1]);
+			// If second entry with this name
+		} 
+		else if (typeof query_string[pair[0]] === "string") 
+		{
+			var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+			query_string[pair[0]] = arr;
+			// If third or later entry with this name
+		} 
+		else 
+		{
+			query_string[pair[0]].push(decodeURIComponent(pair[1]));
+		}
+	} 
+	return query_string;
+}();
+
+// webs
+var host_port = QueryString["HOST_PORT"];
+
+var host_port = "192.168.0.2///";
+var wsUri = "@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/
+
+while(host_port.endsWith('/')) {
+	host_port = host_port.substring(0, host_port.length - 1);
+}
+
+if(wsUri.indexOf("//") == 0) {
+	wsUri = wsUri.substring(2);
+}
+
+if(wsUri.indexOf("ws://") == 0 || wsUri.indexOf("wss://") == 0)
+{
+	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+	{
+		wsUri = wsUri.replace(/ws:\/\/@HOST_PORT@/im, host_port);
+		wsUri = wsUri.replace(/wss:\/\/@HOST_PORT@/im, host_port);
+	}
+	else
+	{
+		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+}
+else
+{
+	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+	{
+		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+	else
+	{
+		wsUri = "ws://" + wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+}
 
 class ActWebsocketInterface
 {
