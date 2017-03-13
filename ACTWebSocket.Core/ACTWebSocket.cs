@@ -23,6 +23,8 @@ namespace ACTWebSocket_Plugin
     using System.ComponentModel;
     using Ionic.Zip;
     using System.Text.RegularExpressions;
+    using Tmds.MDns;
+    using System.Security.AccessControl;
 
     public interface PluginDirectory
     {
@@ -33,6 +35,7 @@ namespace ACTWebSocket_Plugin
     {
         public static string overlayCaption = "OverlayProcWMCOPYDATA";
         string overlaySkinDirectory { get; set; }
+        string overlayScreenShotDirectory { get; set; }
         string pluginDirectory = "";
         private ComboBox hostnames;
         private Label label2;
@@ -54,11 +57,20 @@ namespace ACTWebSocket_Plugin
         private Button buttonOverlay;
         private ProgressBar progressBar;
         private Button buttonDownload;
+        private GroupBox groupBox4;
+        private Button buttonCopyCode;
+        private Label label1;
+        private TextBox hashCode;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
         {
             overlaySkinDirectory = path;
+        }
+
+        public void SetScreenShotDir(string path)
+        {
+            overlayScreenShotDirectory = path;
         }
 
         public string GetSkinDir()
@@ -160,6 +172,10 @@ namespace ACTWebSocket_Plugin
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FileSkinListView = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonCopyCode = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.hashCode = new System.Windows.Forms.TextBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -167,6 +183,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -243,12 +260,12 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
@@ -262,7 +279,6 @@ namespace ACTWebSocket_Plugin
             // 
             // hostdata
             // 
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -270,13 +286,14 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.FormattingEnabled = true;
+            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.Name = "hostnames";
             this.hostnames.TextChanged += new System.EventHandler(this.hostnames_TextChanged);
             // 
@@ -306,12 +323,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -325,9 +342,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -380,13 +397,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
             this.groupBox2.Controls.Add(this.copyURL);
             this.groupBox2.Controls.Add(this.buttonAddURL);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -406,12 +423,12 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
             this.groupBox1.Controls.Add(this.progressBar);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -443,8 +460,8 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox3
             // 
-            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.FileSkinListView);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -467,10 +484,36 @@ namespace ACTWebSocket_Plugin
             // 
             resources.ApplyResources(this.Title, "Title");
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.buttonCopyCode);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Controls.Add(this.hashCode);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.TabStop = false;
+            // 
+            // buttonCopyCode
+            // 
+            resources.ApplyResources(this.buttonCopyCode, "buttonCopyCode");
+            this.buttonCopyCode.Name = "buttonCopyCode";
+            this.buttonCopyCode.UseVisualStyleBackColor = true;
+            this.buttonCopyCode.Click += new System.EventHandler(this.buttonCopyCode_Click);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // hashCode
+            // 
+            resources.ApplyResources(this.hashCode, "hashCode");
+            this.hashCode.Name = "hashCode";
+            // 
             // ACTWebSocketMain
             // 
-            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -478,6 +521,7 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
+            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -489,6 +533,8 @@ namespace ACTWebSocket_Plugin
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -527,6 +573,36 @@ namespace ACTWebSocket_Plugin
                                         String id = value["id"].ToObject<String>();
                                         String pngBase64 = value["capture"].ToObject<String>();
                                         pngBase64 = pngBase64;
+                                        
+                                        byte[] data = Convert.FromBase64String(pngBase64);
+
+                                        string dir = overlayScreenShotDirectory;
+                                        try
+                                        {
+                                            if (!Directory.Exists(dir))
+                                            {
+                                                Directory.CreateDirectory(dir);
+                                            }
+                                            string filename;
+                                            int i = 0;
+
+                                            do
+                                            {
+                                                filename = "ScreenShot_" + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + i.ToString() + ".png";
+                                                ++i;
+                                            }
+                                            while (File.Exists(dir + "/" + filename));
+
+                                            System.IO.FileStream _FileStream =
+                                               new System.IO.FileStream(dir + "/" + filename, System.IO.FileMode.Create,
+                                                                        System.IO.FileAccess.Write);
+                                            _FileStream.Write(data, 0, data.Length);
+                                            _FileStream.Close();
+                                        }
+                                        catch(Exception e)
+                                        {
+                                            
+                                        }
                                     }
                                     break;
                                 case "get_urllist":
@@ -595,7 +671,7 @@ namespace ACTWebSocket_Plugin
             UpdateOverlayProc();
             if (core == null)
             {
-                core = new ACTWebSocketCore();
+                core = new ACTWebSocketCore(this);
                 core.pluginDirectory = pluginDirectory;
                 core.overlaySkinDirectory = overlaySkinDirectory;
                 core.hwnd = Handle;
@@ -607,6 +683,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineReadUse.Checked = BeforeLogLineRead;
             OnLogLineReadUse.Checked = OnLogLineRead;
             MiniParseUse.Checked = MiniParse;
+            //SSLUse.Checked = UseSSL;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
             skinOnAct.Checked = SkinOnAct;
@@ -735,6 +812,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseUPnP = false;
                     }
+                    //if (obj.TryGetValue("UseSSL", out token))
+                    //{
+                    //    UseSSL = token.ToObject<bool>();
+                    //}
+                    //else
+                    //{
+                    //    UseSSL = false;
+                    //}
                     if (obj.TryGetValue("SkinOnAct", out token))
                     {
                         SkinOnAct = token.ToObject<bool>();
@@ -818,6 +903,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("Hostname", Hostname);
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
+            //obj.Add("UseSSL", UseSSL);
             obj.Add("AutoRun", AutoRun);
             obj.Add("AutoOverlay", AutoOverlay);
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
@@ -948,6 +1034,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
+        //public bool UseSSL { get; set; }
         public bool UseUPnP { get; set; }
         public bool AutoRun { get; set; }
         public bool AutoOverlay { get; set; }
@@ -1008,11 +1095,11 @@ namespace ACTWebSocket_Plugin
             {
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, false);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, false);
                 }
             }
             catch (Exception e)
@@ -1024,6 +1111,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = false;
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
+            //SSLUse.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             randomURL.Enabled = false;
@@ -1032,15 +1120,90 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = false;
             buttonOff.Enabled = true;
+
+
+            Task serviceTask = new Task(() =>
+            {
+                try
+                {
+                    string serviceType = "_overlay._tcp";
+                    lock (serviceLock)
+                    {
+                        if (serviceBrowser != null)
+                        {
+                            serviceBrowser.StopBrowse();
+                            serviceBrowser = null;
+                        }
+
+                        {
+                            serviceBrowser = new ServiceBrowser();
+                            serviceBrowser.ServiceAdded += onServiceAdded;
+                            serviceBrowser.ServiceRemoved += onServiceRemoved;
+                            serviceBrowser.ServiceChanged += onServiceChanged;
+
+                            Console.WriteLine("Browsing for type: {0}", serviceType);
+                            serviceBrowser.StartBrowse(serviceType);
+                            Console.ReadLine();
+                        }
+                    }
+
+
+                    String url = ("http") + "://" + Hostname + ":" + Port + "/";
+                    if (ACTWebSocketCore.randomDir != null)
+                    {
+                        url += ACTWebSocketCore.randomDir + "/";
+                    }
+                    string address = string.Format("http://zcube.kr:8585/shorten?longUrl={0}", Uri.EscapeDataString(url));
+
+                    HttpWebRequest request = HttpWebRequest.CreateHttp(address);
+                    WebResponse response = request.GetResponse();
+                    String res = "";
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        res = reader.ReadToEnd();
+                    }
+
+                    res = res;
+                    JObject obj = JObject.Parse(res);
+                    JToken token;
+                    int status_code = 0;
+                    String hash = "";
+                    if (obj.TryGetValue("status_code", out token))
+                    {
+                        status_code = token.ToObject<int>();
+                    }
+
+                    JObject data = (JObject)obj["data"];
+                    if (data != null && data.TryGetValue("hash", out token))
+                    {
+                        hash = token.ToObject<String>();
+                    }
+                    hashCode.Text = hash;
+                }
+                catch (Exception e)
+                {
+
+                }
+            });
+            serviceTask.Start();
         }
 
         public void StopServer()
         {
+            if (serviceBrowser != null)
+            {
+                lock (serviceLock)
+                {
+                    serviceBrowser.StopBrowse();
+                    serviceBrowser = null;
+                }
+            }
             core.StopServer();
             //BeforeLogLineReadUse.Enabled = true;
             //OnLogLineReadUse.Enabled = true;
             //MiniParseUse.Enabled = true;
             //chatFilter.Enabled = true;
+            //SSLUse.Enabled = true;
             skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
             randomURL.Enabled = true;
@@ -1137,9 +1300,25 @@ namespace ACTWebSocket_Plugin
         {
             string dir = SkinOnAct ? overlaySkinDirectory : pluginDirectory;
             List<string> list = new List<string>();
-            foreach (string file in Directory.EnumerateFiles(dir, "*.html", SearchOption.AllDirectories))
+            try
             {
-                list.Add(Utility.GetRelativePath(file, dir));
+                foreach (string file in Directory.EnumerateFiles(dir, "*.html", SearchOption.AllDirectories))
+                {
+                    list.Add(Utility.GetRelativePath(file, dir));
+                }
+            }
+            catch(Exception e)
+            {
+                if(!Directory.Exists(dir))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    catch(Exception e2)
+                    {
+                    }
+                }
             }
             return list;
         }
@@ -1175,7 +1354,7 @@ namespace ACTWebSocket_Plugin
                 {
                     try
                     {
-                        string fullURL = "http" + url + Uri.EscapeDataString(skinPath);
+                        string fullURL = ("http") + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
                         fullURL = fullURL.Replace("%2F", "/");
                         return fullURL;
@@ -1208,6 +1387,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineRead = BeforeLogLineReadUse.Checked;
             OnLogLineRead = OnLogLineReadUse.Checked;
             MiniParse = MiniParseUse.Checked;
+            //UseSSL = SSLUse.Checked;
             UseUPnP = UPNPUse.Checked;
             RandomURL = randomURL.Checked;
             SkinOnAct = skinOnAct.Checked;
@@ -1239,6 +1419,35 @@ namespace ACTWebSocket_Plugin
         {
             UpdateFormSettings();
             StartServer();
+        }
+
+        void onServiceChanged(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('~', e.Announcement);
+        }
+
+        void onServiceRemoved(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('-', e.Announcement);
+        }
+
+        void onServiceAdded(object sender, ServiceAnnouncementEventArgs e)
+        {
+            printService('+', e.Announcement);
+            Uri uri = new Uri("http://" + e.Announcement.Addresses[0].ToString() + ":" + e.Announcement.Port + "/");
+            HttpWebRequest webRequest = WebRequest.CreateHttp(uri);
+            webRequest.Headers.Add("Port", Port.ToString());
+            webRequest.Headers.Add("IP", hostnames.Text.ToString());
+            webRequest.Headers.Add("SCHEME", "http");
+            webRequest.BeginGetResponse(null, webRequest);
+        }
+
+        void printService(char startChar, ServiceAnnouncement service)
+        {
+            Console.WriteLine("{0} '{1}' on {2}", startChar, service.Instance, service.NetworkInterface.Name);
+            Console.WriteLine("\tHost: {0} ({1})", service.Hostname, string.Join(", ", service.Addresses));
+            Console.WriteLine("\tPort: {0}", service.Port);
+            Console.WriteLine("\tTxt : [{0}]", string.Join(", ", service.Txt));
         }
 
         private void buttonOff_Click(object sender, EventArgs e)
@@ -1304,7 +1513,7 @@ namespace ACTWebSocket_Plugin
                         lock (core.skinObject)
                         {
                             JArray urlConverted = new JArray();
-                            JArray array = (JArray)core.skinObject["URLList"];
+                            JArray array = (JArray)core.skinObject["URLList"].DeepClone();
                             if (array != null)
                             {
                                 foreach (JToken obj in array)
@@ -1316,6 +1525,7 @@ namespace ACTWebSocket_Plugin
                                     }
                                 }
                             }
+                            core.skinObject["URLList"] = array;
                             SendMessage(JObject.FromObject(new
                             {
                                 cmd = "urllist",
@@ -1387,45 +1597,51 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
-                bool find = false;
-                foreach (ListViewItem i in WebSkinListView.Items)
                 {
-                    if (((string)i.Tag).CompareTo(a) == 0)
+                    bool find = false;
+                    foreach (ListViewItem i in WebSkinListView.Items)
                     {
-                        find = true;
-                    }
-                }
-
-                if (!find)
-                {
-                    title = (title == null || title == "") ? a : title;
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = title;
-                    lvi.Tag = a;
-                    WebSkinListView.Items.Add(lvi);
-                    if (core != null)
-                    {
-                        lock (core.skinObject)
+                        if (((string)i.Tag).CompareTo(a) == 0)
                         {
-                            JObject skinInfo = new JObject();
-                            skinInfo["Title"] = title;
-                            skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["URLList"];
-                            if (array == null)
+                            find = true;
+                        }
+                    }
+
+                    if (!find)
+                    {
+                        title = (title == null || title == "") ? a : title;
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Text = title;
+                        lvi.Tag = a;
+                        WebSkinListView.Items.Add(lvi);
+                        if (core != null)
+                        {
+                            lock (core.skinObject)
                             {
-                                array = new JArray();
-                                core.skinObject["URLList"] = array;
+                                JObject skinInfo = new JObject();
+                                skinInfo["Title"] = title;
+                                skinInfo["URL"] = a;
+                                JArray array = (JArray)core.skinObject["URLList"];
+                                if (array == null)
+                                {
+                                    array = new JArray();
+                                    core.skinObject["URLList"] = array;
+                                }
+                                array.Add(skinInfo);
+                                ServerUrlChanged();
                             }
-                            array.Add(skinInfo);
-                            ServerUrlChanged();
                         }
                     }
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
         List<Task> tasklist = new List<Task>();
+        private ServiceBrowser serviceBrowser;
+        private Object serviceLock = new Object();
+
         private void AddFileURL(string a)
         {
+            a = a.Replace("\\", "/");
             string title = null;
             Task task = Task.Factory.StartNew(() =>
             {
@@ -1433,37 +1649,40 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
-                bool find = false;
-                foreach (ListViewItem i in WebSkinListView.Items)
                 {
-                    if (((string)i.Tag).CompareTo(a) == 0)
+                    bool find = false;
+                    foreach (ListViewItem i in FileSkinListView.Items)
                     {
-                        find = true;
-                    }
-                }
-
-                if (!find)
-                {
-                    title = (title == null || title == "") ? a : title;
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = title;
-                    lvi.Tag = a;
-                    FileSkinListView.Items.Add(lvi);
-                    if (core != null)
-                    {
-                        lock (core.skinObject)
+                        if (((string)i.Tag).CompareTo(a) == 0)
                         {
-                            JObject skinInfo = new JObject();
-                            skinInfo["Title"] = title;
-                            skinInfo["URL"] = a;
-                            JArray array = (JArray)core.skinObject["URLList"];
-                            if(array == null)
+                            find = true;
+                            break;
+                        }
+                    }
+
+                    if (!find)
+                    {
+                        title = (title == null || title == "") ? a : title;
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Text = title;
+                        lvi.Tag = a;
+                        FileSkinListView.Items.Add(lvi);
+                        if (core != null)
+                        {
+                            lock (core.skinObject)
                             {
-                                array = new JArray();
-                                core.skinObject["URLList"] = array;
+                                JObject skinInfo = new JObject();
+                                skinInfo["Title"] = title;
+                                skinInfo["URL"] = a;
+                                JArray array = (JArray)core.skinObject["URLList"];
+                                if (array == null)
+                                {
+                                    array = new JArray();
+                                    core.skinObject["URLList"] = array;
+                                }
+                                array.Add(skinInfo);
+                                ServerUrlChanged();
                             }
-                            array.Add(skinInfo);
-                            ServerUrlChanged();
                         }
                     }
                 }
@@ -1491,6 +1710,12 @@ namespace ACTWebSocket_Plugin
                 tasklist.Clear();
             }
 
+            lock (core.skinObject)
+            {
+                JArray array = (JArray)core.skinObject["URLList"];
+                array = new JArray();
+                core.skinObject["URLList"] = array;
+            }
             FileSkinListView.Items.Clear();
             WebSkinListView.Items.Clear();
             foreach (var a in SkinURLList)
@@ -1541,10 +1766,33 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = UPNPUse.Checked;
         }
 
+        private void UseSSL_CheckedChanged(object sender, EventArgs e)
+        {
+            //UseSSL = SSLUse.Checked;
+        }
+
         private void skinOnAct_CheckedChanged(object sender, EventArgs e)
         {
             SkinOnAct = skinOnAct.Checked;
             buttonRefresh_Click(sender, e);
+        }
+
+        private void buttonCopyCode_Click(object sender, EventArgs e)
+        {
+            String id = hashCode.Text;
+            Task task = Task.Factory.StartNew(() =>
+            {
+                string url = ("http")  + getURLPath("");
+                string address = string.Format("https://dev.zcube.kr/fcmhelper/v1/message?id={0}&message={1}", Uri.EscapeDataString(id), Uri.EscapeDataString(url));
+
+                HttpWebRequest request = HttpWebRequest.CreateHttp(address);
+                WebResponse response = request.GetResponse();
+                String res = "";
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    res = reader.ReadToEnd();
+                }
+            });
         }
 
         void UpdateOverlayProc()
@@ -1653,8 +1901,22 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
                 buttonDownload.Enabled = false;
-                string url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+
+                int idx = 0;
+                string url;
+                switch(idx)
+                {
+                    default:
+                    case 0:
+                        url = "https://www.dropbox.com/sh/ionr8nkmp49gr8d/AADzOjamXxPGjOzFuhBSthPHa?dl=1";
+                        break;
+                    case 1:
+                        url = "https://www.dropbox.com/sh/7i07svs4ostoahd/AAA4Tn1Q1piI-m9ibwfsb8loa?dl=1";
+                        break;
+                }
+
                 WebClient webClient = new WebClient();
+                progressBar.Value = 0;
                 progressBar.Minimum = 0;
                 progressBar.Maximum = 100;
                 progressBar.Show();
@@ -1692,16 +1954,22 @@ namespace ACTWebSocket_Plugin
         {
             Task task = Task.Factory.StartNew(() =>
             {
-                ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
-                z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
-                z.ExtractAll(pluginDirectory + "/overlay_proc");
+                try
+                {
+                    ZipFile z = new ZipFile(pluginDirectory + "/overlay_proc.zip");
+                    z.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                    z.ExtractAll(pluginDirectory + "/overlay_proc");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             });
             Task UITask = task.ContinueWith((t) =>
             {
                 progressBar.Hide();
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
-                StartOverlayProc();
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -1834,6 +2102,11 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
             }
+        }
+
+        private void SSLUse_CheckedChanged(object sender, EventArgs e)
+        {
+            //UseSSL = SSLUse.Checked;
         }
 
     }

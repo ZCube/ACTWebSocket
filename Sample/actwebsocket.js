@@ -1,10 +1,77 @@
+var QueryString = function () 
+{
+	// This function is anonymous, is executed immediately and 
+	// the return value is assigned to QueryString!
+	var query_string = {};
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) 
+	{
+		var pair = vars[i].split("=");
+			// If first entry with this name
+		if (typeof query_string[pair[0]] === "undefined") 
+		{
+			query_string[pair[0]] = decodeURIComponent(pair[1]);
+			// If second entry with this name
+		} 
+		else if (typeof query_string[pair[0]] === "string") 
+		{
+			var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+			query_string[pair[0]] = arr;
+			// If third or later entry with this name
+		} 
+		else 
+		{
+			query_string[pair[0]].push(decodeURIComponent(pair[1]));
+		}
+	} 
+	return query_string;
+}();
+
+// webs
+var host_port = QueryString["HOST_PORT"];
+
+var host_port = "192.168.0.2///";
+var wsUri = "@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/
+
+while(host_port.endsWith('/')) {
+	host_port = host_port.substring(0, host_port.length - 1);
+}
+
+if(wsUri.indexOf("//") == 0) {
+	wsUri = wsUri.substring(2);
+}
+
+if(wsUri.indexOf("ws://") == 0 || wsUri.indexOf("wss://") == 0)
+{
+	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+	{
+		wsUri = wsUri.replace(/ws:\/\/@HOST_PORT@/im, host_port);
+		wsUri = wsUri.replace(/wss:\/\/@HOST_PORT@/im, host_port);
+	}
+	else
+	{
+		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+}
+else
+{
+	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+	{
+		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+	else
+	{
+		wsUri = "ws://" + wsUri.replace(/@HOST_PORT@/im, host_port);
+	}
+}
 
 class ActWebsocketInterface
 {
 	constructor(uri, path = "MiniParse") {
 		// url check
 		var querySet = this.getQuerySet();
-		if(querySet["HOST_PORT"] != undefined)
+		if(typeof querySet["HOST_PORT"] != 'undefined')
 		{
 		    uri = querySet["HOST_PORT"] + path;
 		}
@@ -32,7 +99,7 @@ class ActWebsocketInterface
 		});
 	}
 	connect() {
-		if(this.websocket != undefined && this.websocket != null)
+		if(typeof this.websocket != "undefined" && this.websocket != null)
 			this.close();
 		this.activate = true;
 		var This = this;
@@ -44,23 +111,22 @@ class ActWebsocketInterface
 	}
 	close() {
 		this.activate = false;
-		if(this.websocket != null && this.websocket != undefined)
+		if(this.websocket != null && typeof this.websocket != "undefined")
 		{
 			this.websocket.close();
 		}
 	}
 	onopen(evt) {
 		// get id from useragent
-		if(this.id != null && this.id != undefined)
+		if(this.id != null && typeof this.id != "undefined")
 		{
 			this.set_id(this.id);
 		}
 		else
 		{
-			if(overlayWindowId != undefined)
+			if(typeof overlayWindowId != "undefined")
 			{
 				this.set_id(overlayWindowId);
-				self.id = overlayWindowId;
 			}
 			else
 			{
@@ -69,7 +135,6 @@ class ActWebsocketInterface
 				if(id != null && id.length == 1)
 				{
 					this.set_id(id[0]);
-					self.id = id;
 				}
 			}
 		}
@@ -140,6 +205,10 @@ class ActWebsocketInterface
 	
 	
 	broadcast(type, msg){
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		var obj = {};
 		obj["type"] = "broadcast";
 		obj["msgtype"] = type;
@@ -148,6 +217,10 @@ class ActWebsocketInterface
 	}
 
 	send(to, type, msg){
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		var obj = {};
 		obj["type"] = "send";
 		obj["to"] = to;
@@ -158,7 +231,12 @@ class ActWebsocketInterface
 	
 	overlayAPI(type, msg){
 		var obj = {};
+		if(typeof overlayWindowId != 'undefined' && this.id != overlayWindowId)
+		{
+			this.set_id(overlayWindowId);
+		}
 		obj["type"] = "overlayAPI";
+		obj["to"] = overlayWindowId;
 		obj["msgtype"] = type;
 		obj["msg"] = msg;
 		this.websocket.send(JSON.stringify(obj));
@@ -168,7 +246,8 @@ class ActWebsocketInterface
 		var obj = {};
 		obj["type"] = "set_id";
 		obj["id"] = id;
-		this.websocket.send(JSON.stringify(obj));
+		this.id = overlayWindowId;
+	this.websocket.send(JSON.stringify(obj));
 	}
 
 	onRecvMessage(e)
