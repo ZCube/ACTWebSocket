@@ -1873,9 +1873,9 @@ namespace ACTWebSocket_Plugin
                 }
                 try
                 {
-                    DwmEnableComposition(DWM_EC_ENABLECOMPOSITION);
+                    uint ret = DwmEnableComposition(DWM_EC_ENABLECOMPOSITION);
 
-                    if (DwmIsCompositionEnabled() == false)
+                    if (ret != 0)
                     {
                         throw new Exception("Windows Aero Glass must be turned on.");
                     }
