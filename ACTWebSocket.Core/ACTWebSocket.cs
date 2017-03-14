@@ -25,6 +25,7 @@ namespace ACTWebSocket_Plugin
     using System.Text.RegularExpressions;
     using Tmds.MDns;
     using System.Security.AccessControl;
+    using System.Runtime.InteropServices;
 
     public interface PluginDirectory
     {
@@ -1872,6 +1873,13 @@ namespace ACTWebSocket_Plugin
                 }
                 try
                 {
+                    DwmEnableComposition(DWM_EC_ENABLECOMPOSITION);
+
+                    if (DwmIsCompositionEnabled() == false)
+                    {
+                        throw new Exception("Windows Aero Glass must be turned on.");
+                    }
+                    
                     ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
                     startInfo.WorkingDirectory = overlayProcDir;
                     startInfo.Arguments = "";
@@ -1885,6 +1893,16 @@ namespace ACTWebSocket_Plugin
             }
             return true;
         }
+
+
+        const uint DWM_EC_DISABLECOMPOSITION = 0;
+        const uint DWM_EC_ENABLECOMPOSITION = 1;
+
+        [DllImport("dwmapi.dll", EntryPoint = "DwmEnableComposition")]
+        extern static uint DwmEnableComposition(uint compositionAction);
+
+        [DllImport("dwmapi.dll", PreserveSig = false)]
+        public static extern bool DwmIsCompositionEnabled();
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
