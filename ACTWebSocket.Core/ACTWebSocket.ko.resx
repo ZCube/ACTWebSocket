@@ -141,13 +141,22 @@
   <data name="randomURL.Text" xml:space="preserve">
     <value>임의의 URL 사용</value>
   </data>
-  <data name="skinOnAct.Text" xml:space="preserve">
-    <value>스킨 경로 Act/OverlaySkin 사용</value>
-  </data>
   <data name="startoption.Text" xml:space="preserve">
     <value>시작 옵션</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="DiscoveryUse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>144, 16</value>
+  </data>
+  <data name="DiscoveryUse.Text" xml:space="preserve">
+    <value>MobileProc 자동 감지</value>
+  </data>
+  <data name="skinOnAct.Text" xml:space="preserve">
+    <value>스킨 경로 Act/OverlaySkin 사용</value>
+  </data>
+  <data name="hostdata.Text" xml:space="preserve">
+    <value>서버</value>
+  </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
   </data>
@@ -170,14 +179,11 @@
   <data name="label14.Text" xml:space="preserve">
     <value>포트</value>
   </data>
-  <data name="hostdata.Text" xml:space="preserve">
-    <value>서버</value>
+  <data name="othersets.Text" xml:space="preserve">
+    <value>메세지 필터</value>
   </data>
   <data name="chatFilter.Text" xml:space="preserve">
     <value>채팅 내용 전달</value>
-  </data>
-  <data name="othersets.Text" xml:space="preserve">
-    <value>메세지 필터</value>
   </data>
   <data name="serverStatus.Text" xml:space="preserve">
     <value>서버 상태</value>
@@ -194,11 +200,11 @@
   <data name="buttonOpen.Text" xml:space="preserve">
     <value>URL 열기</value>
   </data>
-  <data name="buttonOverlay.Text" xml:space="preserve">
-    <value>오버레이</value>
-  </data>
   <data name="groupBox2.Text" xml:space="preserve">
     <value>웹 스킨</value>
+  </data>
+  <data name="buttonOverlay.Text" xml:space="preserve">
+    <value>오버레이</value>
   </data>
   <data name="autostartoverlay.Text" xml:space="preserve">
     <value>오버레이 자동 시작/종료</value>
