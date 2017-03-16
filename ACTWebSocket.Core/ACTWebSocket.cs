@@ -65,6 +65,7 @@ namespace ACTWebSocket_Plugin
         private CheckBox DiscoveryUse;
         private TextBox updateLabel;
         private Button buttonInstall;
+        private ComboBox comboBoxOverlayProcType;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -170,6 +171,7 @@ namespace ACTWebSocket_Plugin
             this.buttonOverlay = new System.Windows.Forms.Button();
             this.autostartoverlay = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxOverlayProcType = new System.Windows.Forms.ComboBox();
             this.updateLabel = new System.Windows.Forms.TextBox();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonStartStopOverlayProc = new System.Windows.Forms.Button();
@@ -267,13 +269,13 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
             this.startoption.Controls.Add(this.DiscoveryUse);
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
             // 
@@ -293,7 +295,6 @@ namespace ACTWebSocket_Plugin
             // 
             // hostdata
             // 
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -301,13 +302,14 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.FormattingEnabled = true;
+            resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.Name = "hostnames";
             this.hostnames.TextChanged += new System.EventHandler(this.hostnames_TextChanged);
             // 
@@ -337,12 +339,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -356,9 +358,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -411,13 +413,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
             this.groupBox2.Controls.Add(this.copyURL);
             this.groupBox2.Controls.Add(this.buttonAddURL);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -437,15 +439,28 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.comboBoxOverlayProcType);
             this.groupBox1.Controls.Add(this.updateLabel);
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
             this.groupBox1.Controls.Add(this.progressBar);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            // 
+            // comboBoxOverlayProcType
+            // 
+            this.comboBoxOverlayProcType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOverlayProcType.FormattingEnabled = true;
+            this.comboBoxOverlayProcType.Items.AddRange(new object[] {
+            resources.GetString("comboBoxOverlayProcType.Items"),
+            resources.GetString("comboBoxOverlayProcType.Items1"),
+            resources.GetString("comboBoxOverlayProcType.Items2"),
+            resources.GetString("comboBoxOverlayProcType.Items3")});
+            resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
+            this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
             // 
             // updateLabel
             // 
@@ -480,8 +495,8 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox3
             // 
-            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.FileSkinListView);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -506,11 +521,11 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox4
             // 
-            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Controls.Add(this.buttonInstall);
             this.groupBox4.Controls.Add(this.buttonCopyCode);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.hashCode);
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
             // 
@@ -540,7 +555,6 @@ namespace ACTWebSocket_Plugin
             // 
             // ACTWebSocketMain
             // 
-            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -550,6 +564,7 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
+            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
@@ -915,7 +930,15 @@ namespace ACTWebSocket_Plugin
                     {
                         MiniParse = true;
                     }
-                    if(obj.TryGetValue("SkinURLList", out token))
+                    if (obj.TryGetValue("OverlayProcType", out token))
+                    {
+                        comboBoxOverlayProcType.Text = token.ToObject<String>();
+                    }
+                    else
+                    {
+                        comboBoxOverlayProcType.SelectedIndex = 0;
+                    }
+                    if (obj.TryGetValue("SkinURLList", out token))
                     {
                         SkinURLList.Clear();
                         foreach (var a in token.Values<string>())
@@ -937,6 +960,7 @@ namespace ACTWebSocket_Plugin
         {
             UpdateFormSettings();
             JObject obj = new JObject();
+            obj.Add("OverlayProcType", comboBoxOverlayProcType.Text);
             obj.Add("Port", Port);
             obj.Add("UPnPPort", UPnPPort);
             obj.Add("Hostname", Hostname);
@@ -1939,7 +1963,7 @@ namespace ACTWebSocket_Plugin
                     WebClient webClient = new WebClient();
                     string extractDir = pluginDirectory + "/overlay_proc";
                     string revisionFile = extractDir + "/.revision";
-                    string baseurl = "https://static.zcube.kr/publish/OverlayProc/x86_QT5.8.0/";
+                    string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+comboBoxOverlayProcType.Text.Trim()+"/";
                     string infourl = baseurl + "info.json";
                     byte[] info = webClient.DownloadData(infourl);
                     String infotext = System.Text.Encoding.UTF8.GetString(info);
@@ -2046,10 +2070,9 @@ namespace ACTWebSocket_Plugin
 
                 // updater
                 string extractDir = pluginDirectory + "/overlay_proc";
-
                 string revisionFile = extractDir + "/.revision";
 
-                string baseurl = "https://static.zcube.kr/publish/OverlayProc/x86_QT5.8.0/";
+                string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
                 string infourl = baseurl + "info.json";
                 byte[] info = webClient.DownloadData(infourl);
                 String infotext = System.Text.Encoding.UTF8.GetString(info);
@@ -2228,6 +2251,7 @@ namespace ACTWebSocket_Plugin
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
                 CheckUpdate();
+                SaveSettings();
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
