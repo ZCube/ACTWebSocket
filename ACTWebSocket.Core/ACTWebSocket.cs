@@ -2059,6 +2059,7 @@ namespace ACTWebSocket_Plugin
                     }));
                 }
                 buttonDownload.Enabled = false;
+                comboBoxOverlayProcType.Enabled = false;
 
                 string url;
                 string savefile = pluginDirectory + "/overlay_proc.zip";
@@ -2098,6 +2099,7 @@ namespace ACTWebSocket_Plugin
                 {
                     // 이미 업데이트 되어 있음
                     progressBar.Hide();
+                    comboBoxOverlayProcType.Enabled = true;
                     buttonDownload.Enabled = true;
                     UpdateOverlayProc();
                     return;
@@ -2170,6 +2172,7 @@ namespace ACTWebSocket_Plugin
                                     }
                                 }
                             }
+                            zipArchive.Dispose();
                             File.WriteAllText(revisionFile, revision);
                         }
                         catch (Exception ex)
@@ -2180,9 +2183,11 @@ namespace ACTWebSocket_Plugin
                     Task UITask = task.ContinueWith((t) =>
                     {
                         progressBar.Hide();
+                        comboBoxOverlayProcType.Enabled = true;
                         buttonDownload.Enabled = true;
                         UpdateOverlayProc();
                         CheckUpdate();
+                        SaveSettings();
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 };
                 //+= new AsyncCompletedEventHandler(Completed);
@@ -2193,8 +2198,11 @@ namespace ACTWebSocket_Plugin
             catch (Exception ex)
             {
                 progressBar.Hide();
+                comboBoxOverlayProcType.Enabled = true;
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
+                CheckUpdate();
+                SaveSettings();
                 MessageBox.Show(ex.Message);
             }
         }
@@ -2223,7 +2231,7 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     var zipArchive = SharpCompress.Archives.Zip.ZipArchive.Open(pluginDirectory + "/overlay_proc.zip");
-                    foreach  (var entry in zipArchive.Entries)
+                    foreach (var entry in zipArchive.Entries)
                     {
                         if (!entry.IsDirectory)
                         {
@@ -2240,6 +2248,7 @@ namespace ACTWebSocket_Plugin
                             }
                         }
                     }
+                    zipArchive.Dispose();
                 }
                 catch(Exception ex)
                 {
@@ -2249,6 +2258,7 @@ namespace ACTWebSocket_Plugin
             Task UITask = task.ContinueWith((t) =>
             {
                 progressBar.Hide();
+                comboBoxOverlayProcType.Enabled = true;
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
                 CheckUpdate();
