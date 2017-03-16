@@ -456,9 +456,7 @@ namespace ACTWebSocket_Plugin
             this.comboBoxOverlayProcType.FormattingEnabled = true;
             this.comboBoxOverlayProcType.Items.AddRange(new object[] {
             resources.GetString("comboBoxOverlayProcType.Items"),
-            resources.GetString("comboBoxOverlayProcType.Items1"),
-            resources.GetString("comboBoxOverlayProcType.Items2"),
-            resources.GetString("comboBoxOverlayProcType.Items3")});
+            resources.GetString("comboBoxOverlayProcType.Items1")});
             resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
             this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
             this.comboBoxOverlayProcType.SelectedIndexChanged += new System.EventHandler(this.comboBoxOverlayProcType_SelectedIndexChanged);
