@@ -2136,7 +2136,8 @@ namespace ACTWebSocket_Plugin
                     throw new Exception("patch not found");
                 }
 
-                string url_ = baseurl + path;
+                string url_ = (path.StartsWith("http://") || path.StartsWith("https://") || path.StartsWith("ftp://")) ? path : baseurl + path;
+
                 webClient.DownloadFileCompleted += (s, e2) =>
                 {
                     progressBar.Value = 100;
