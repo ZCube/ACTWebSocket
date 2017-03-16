@@ -461,6 +461,7 @@ namespace ACTWebSocket_Plugin
             resources.GetString("comboBoxOverlayProcType.Items3")});
             resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
             this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
+            this.comboBoxOverlayProcType.SelectedIndexChanged += new System.EventHandler(this.comboBoxOverlayProcType_SelectedIndexChanged);
             // 
             // updateLabel
             // 
@@ -2401,6 +2402,11 @@ namespace ACTWebSocket_Plugin
             {
 
             }
+        }
+
+        private void comboBoxOverlayProcType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckUpdate();
         }
     }
 }
