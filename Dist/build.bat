@@ -19,7 +19,7 @@ xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Newtonsoft*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Open.Nat*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
-xcopy /hrkysd ACTWebSocket.Loader\bin\Release\DotNetZip*.dll Dist\temp
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\SharpCompress*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Tmds*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%

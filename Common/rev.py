@@ -15,10 +15,10 @@ if len(var) < 3:
   var = var + ['0'] * (3 - len(arr))
 
 if dev:
-  vars = var + [arr[-1][0]]
+  vars = var + [arr[-1].split('-')[0]]
   varl = var + [arr[-1][0]+'-'+sys.argv[1]]
 else:
-  vars = var + [arr[-1][0]]
+  vars = var + [arr[-1].split('-')[0]]
   varl = var + [arr[-1]]
 
 def tagOnly():
