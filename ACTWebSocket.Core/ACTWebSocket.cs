@@ -25,6 +25,7 @@ namespace ACTWebSocket_Plugin
     using System.Text.RegularExpressions;
     using Tmds.MDns;
     using System.Security.AccessControl;
+    using System.Runtime.InteropServices;
 
     public interface PluginDirectory
     {
@@ -61,6 +62,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonCopyCode;
         private Label label1;
         private TextBox hashCode;
+        private CheckBox DiscoveryUse;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -145,6 +147,7 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
             this.startoption = new System.Windows.Forms.GroupBox();
+            this.DiscoveryUse = new System.Windows.Forms.CheckBox();
             this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
             this.hostnames = new System.Windows.Forms.ComboBox();
@@ -260,14 +263,21 @@ namespace ACTWebSocket_Plugin
             // 
             // startoption
             // 
+            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.DiscoveryUse);
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
             this.startoption.Controls.Add(this.randomURL);
             this.startoption.Controls.Add(this.autostart);
-            resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
+            // 
+            // DiscoveryUse
+            // 
+            resources.ApplyResources(this.DiscoveryUse, "DiscoveryUse");
+            this.DiscoveryUse.Name = "DiscoveryUse";
+            this.DiscoveryUse.UseVisualStyleBackColor = true;
             // 
             // skinOnAct
             // 
@@ -279,6 +289,7 @@ namespace ACTWebSocket_Plugin
             // 
             // hostdata
             // 
+            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.BackColor = System.Drawing.Color.Transparent;
             this.hostdata.Controls.Add(this.hostnames);
             this.hostdata.Controls.Add(this.label2);
@@ -286,14 +297,13 @@ namespace ACTWebSocket_Plugin
             this.hostdata.Controls.Add(this.label15);
             this.hostdata.Controls.Add(this.label14);
             this.hostdata.Controls.Add(this.port);
-            resources.ApplyResources(this.hostdata, "hostdata");
             this.hostdata.Name = "hostdata";
             this.hostdata.TabStop = false;
             // 
             // hostnames
             // 
-            this.hostnames.FormattingEnabled = true;
             resources.ApplyResources(this.hostnames, "hostnames");
+            this.hostnames.FormattingEnabled = true;
             this.hostnames.Name = "hostnames";
             this.hostnames.TextChanged += new System.EventHandler(this.hostnames_TextChanged);
             // 
@@ -323,12 +333,12 @@ namespace ACTWebSocket_Plugin
             // 
             // othersets
             // 
+            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.BackColor = System.Drawing.Color.Transparent;
             this.othersets.Controls.Add(this.chatFilter);
             this.othersets.Controls.Add(this.BeforeLogLineReadUse);
             this.othersets.Controls.Add(this.OnLogLineReadUse);
             this.othersets.Controls.Add(this.MiniParseUse);
-            resources.ApplyResources(this.othersets, "othersets");
             this.othersets.Name = "othersets";
             this.othersets.TabStop = false;
             // 
@@ -342,9 +352,9 @@ namespace ACTWebSocket_Plugin
             // 
             // serverStatus
             // 
+            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Controls.Add(this.buttonOn);
             this.serverStatus.Controls.Add(this.buttonOff);
-            resources.ApplyResources(this.serverStatus, "serverStatus");
             this.serverStatus.Name = "serverStatus";
             this.serverStatus.TabStop = false;
             // 
@@ -397,13 +407,13 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.buttonOverlay);
             this.groupBox2.Controls.Add(this.buttonOpen);
             this.groupBox2.Controls.Add(this.buttonURL);
             this.groupBox2.Controls.Add(this.WebSkinListView);
             this.groupBox2.Controls.Add(this.copyURL);
             this.groupBox2.Controls.Add(this.buttonAddURL);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -423,12 +433,12 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.buttonDownload);
             this.groupBox1.Controls.Add(this.buttonStartStopOverlayProc);
             this.groupBox1.Controls.Add(this.buttonOpenOverlayProcManager);
             this.groupBox1.Controls.Add(this.autostartoverlay);
             this.groupBox1.Controls.Add(this.progressBar);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -460,8 +470,8 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.FileSkinListView);
             resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Controls.Add(this.FileSkinListView);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -486,10 +496,10 @@ namespace ACTWebSocket_Plugin
             // 
             // groupBox4
             // 
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Controls.Add(this.buttonCopyCode);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.hashCode);
-            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
             // 
@@ -512,6 +522,7 @@ namespace ACTWebSocket_Plugin
             // 
             // ACTWebSocketMain
             // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -521,10 +532,10 @@ namespace ACTWebSocket_Plugin
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
             this.Controls.Add(this.startoption);
-            resources.ApplyResources(this, "$this");
             this.Name = "ACTWebSocketMain";
             this.Load += new System.EventHandler(this.ACTWebSocket_Load);
             this.startoption.ResumeLayout(false);
+            this.startoption.PerformLayout();
             this.hostdata.ResumeLayout(false);
             this.hostdata.PerformLayout();
             this.othersets.ResumeLayout(false);
@@ -684,6 +695,7 @@ namespace ACTWebSocket_Plugin
             OnLogLineReadUse.Checked = OnLogLineRead;
             MiniParseUse.Checked = MiniParse;
             //SSLUse.Checked = UseSSL;
+            DiscoveryUse.Checked = UseDiscovery;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
             skinOnAct.Checked = SkinOnAct;
@@ -812,6 +824,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseUPnP = false;
                     }
+                    if (obj.TryGetValue("UseDiscovery", out token))
+                    {
+                        UseDiscovery = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        UseDiscovery = false;
+                    }
                     //if (obj.TryGetValue("UseSSL", out token))
                     //{
                     //    UseSSL = token.ToObject<bool>();
@@ -903,6 +923,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("Hostname", Hostname);
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
+            obj.Add("UseDiscovery", UseDiscovery);
             //obj.Add("UseSSL", UseSSL);
             obj.Add("AutoRun", AutoRun);
             obj.Add("AutoOverlay", AutoOverlay);
@@ -1036,6 +1057,7 @@ namespace ACTWebSocket_Plugin
 
         //public bool UseSSL { get; set; }
         public bool UseUPnP { get; set; }
+        public bool UseDiscovery { get; set; }
         public bool AutoRun { get; set; }
         public bool AutoOverlay { get; set; }
         public bool ChatFilter { get; set; }
@@ -1114,6 +1136,7 @@ namespace ACTWebSocket_Plugin
             //SSLUse.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
+            DiscoveryUse.Enabled = false;
             randomURL.Enabled = false;
             buttonOn.Enabled = false;
             port.Enabled = false;
@@ -1122,80 +1145,54 @@ namespace ACTWebSocket_Plugin
             buttonOff.Enabled = true;
 
 
-            Task serviceTask = new Task(() =>
+            if(UseDiscovery)
             {
-                try
+                Task serviceTask = new Task(() =>
                 {
-                    string serviceType = "_overlay._tcp";
-                    lock (serviceLock)
+                    try
                     {
-                        if (serviceBrowser != null)
+                        string serviceType = "_overlay._tcp";
+                        lock (serviceLock)
                         {
-                            serviceBrowser.StopBrowse();
-                            serviceBrowser = null;
+                            if (serviceBrowser != null)
+                            {
+                                serviceBrowser.StopBrowse();
+                                serviceBrowser = null;
+                            }
+
+                            {
+                                serviceBrowser = new ServiceBrowser();
+                                serviceBrowser.ServiceAdded += onServiceAdded;
+                                serviceBrowser.ServiceRemoved += onServiceRemoved;
+                                serviceBrowser.ServiceChanged += onServiceChanged;
+
+                                Console.WriteLine("Browsing for type: {0}", serviceType);
+                                serviceBrowser.StartBrowse(serviceType);
+                                Console.ReadLine();
+                            }
                         }
 
-                        {
-                            serviceBrowser = new ServiceBrowser();
-                            serviceBrowser.ServiceAdded += onServiceAdded;
-                            serviceBrowser.ServiceRemoved += onServiceRemoved;
-                            serviceBrowser.ServiceChanged += onServiceChanged;
-
-                            Console.WriteLine("Browsing for type: {0}", serviceType);
-                            serviceBrowser.StartBrowse(serviceType);
-                            Console.ReadLine();
-                        }
                     }
-
-
-                    String url = ("http") + "://" + Hostname + ":" + Port + "/";
-                    if (ACTWebSocketCore.randomDir != null)
+                    catch (Exception e)
                     {
-                        url += ACTWebSocketCore.randomDir + "/";
-                    }
-                    string address = string.Format("http://zcube.kr:8585/shorten?longUrl={0}", Uri.EscapeDataString(url));
 
-                    HttpWebRequest request = HttpWebRequest.CreateHttp(address);
-                    WebResponse response = request.GetResponse();
-                    String res = "";
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                    {
-                        res = reader.ReadToEnd();
                     }
-
-                    res = res;
-                    JObject obj = JObject.Parse(res);
-                    JToken token;
-                    int status_code = 0;
-                    String hash = "";
-                    if (obj.TryGetValue("status_code", out token))
-                    {
-                        status_code = token.ToObject<int>();
-                    }
-
-                    JObject data = (JObject)obj["data"];
-                    if (data != null && data.TryGetValue("hash", out token))
-                    {
-                        hash = token.ToObject<String>();
-                    }
-                    hashCode.Text = hash;
-                }
-                catch (Exception e)
-                {
-
-                }
-            });
-            serviceTask.Start();
+                });
+                serviceTask.Start();
+            }
         }
 
         public void StopServer()
         {
-            if (serviceBrowser != null)
+            if(UseDiscovery)
             {
-                lock (serviceLock)
+                if (serviceBrowser != null)
                 {
-                    serviceBrowser.StopBrowse();
-                    serviceBrowser = null;
+                    lock (serviceLock)
+                    {
+                        serviceBrowser.StopBrowse();
+                        serviceBrowser = null;
+                    }
                 }
             }
             core.StopServer();
@@ -1206,6 +1203,7 @@ namespace ACTWebSocket_Plugin
             //SSLUse.Enabled = true;
             skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
+            DiscoveryUse.Enabled = true;
             randomURL.Enabled = true;
             buttonOn.Enabled = true;
             port.Enabled = true;
@@ -1389,6 +1387,7 @@ namespace ACTWebSocket_Plugin
             MiniParse = MiniParseUse.Checked;
             //UseSSL = SSLUse.Checked;
             UseUPnP = UPNPUse.Checked;
+            UseDiscovery = DiscoveryUse.Checked;
             RandomURL = randomURL.Checked;
             SkinOnAct = skinOnAct.Checked;
             ChatFilter = chatFilter.Checked;
@@ -1874,6 +1873,13 @@ namespace ACTWebSocket_Plugin
                 }
                 try
                 {
+                    uint ret = DwmEnableComposition(DWM_EC_ENABLECOMPOSITION);
+
+                    if (ret != 0)
+                    {
+                        throw new Exception("Windows Aero Glass must be turned on.");
+                    }
+                    
                     ProcessStartInfo startInfo = new ProcessStartInfo(overlayProcExe);
                     startInfo.WorkingDirectory = overlayProcDir;
                     startInfo.Arguments = "";
@@ -1887,6 +1893,16 @@ namespace ACTWebSocket_Plugin
             }
             return true;
         }
+
+
+        const uint DWM_EC_DISABLECOMPOSITION = 0;
+        const uint DWM_EC_ENABLECOMPOSITION = 1;
+
+        [DllImport("dwmapi.dll", EntryPoint = "DwmEnableComposition")]
+        extern static uint DwmEnableComposition(uint compositionAction);
+
+        [DllImport("dwmapi.dll", PreserveSig = false)]
+        public static extern bool DwmIsCompositionEnabled();
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
