@@ -1914,7 +1914,7 @@ namespace ACTWebSocket_Plugin
                 RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, "").
                 OpenSubKey(@"SOFTWARE\Classes\Installer\Dependencies\{e2803110-78b3-4664-a479-3611a381656a}\"))
             {
-                if (ndpKey.ValueCount > 0 && ndpKey.SubKeyCount > 0)
+                if (ndpKey != null && ndpKey.ValueCount > 0 && ndpKey.SubKeyCount > 0)
                     return true;
             }
             return false;
@@ -1926,7 +1926,7 @@ namespace ACTWebSocket_Plugin
                 RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, "").
                 OpenSubKey(@"SOFTWARE\Classes\Installer\Dependencies\{d992c12e-cab2-426f-bde3-fb8c53950b0d}\"))
             {
-                if (ndpKey.ValueCount > 0 && ndpKey.SubKeyCount > 0)
+                if (ndpKey != null && ndpKey.ValueCount > 0 && ndpKey.SubKeyCount > 0)
                     return true;
                 return true;
             }
