@@ -988,6 +988,7 @@ namespace ACTWebSocket_Plugin
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             comboBoxOverlayProcType.SelectedIndex = 0;
+            hostnames.Text = "127.0.0.1";
             String strHostName = string.Empty;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
