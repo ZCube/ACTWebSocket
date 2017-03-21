@@ -27,6 +27,7 @@ namespace ACTWebSocket_Plugin
     using System.Runtime.InteropServices;
     using SharpCompress.Readers;
     using Microsoft.Win32;
+    using System.Reflection;
 
     public interface PluginDirectory
     {
@@ -67,6 +68,17 @@ namespace ACTWebSocket_Plugin
         private TextBox updateLabel;
         private Button buttonInstall;
         private ComboBox comboBoxOverlayProcType;
+        private GroupBox groupBox5;
+        private Label labelLatest;
+        private TextBox latestVersion;
+        private Label labelRelease;
+        private Label labelCurrent;
+        private TextBox currentVersion;
+        private Button buttonGitHub;
+        private TextBox releaseVersion;
+        private Button buttonLatest;
+        private Button buttonRelease;
+        private Button buttonVersionCheck;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -82,6 +94,11 @@ namespace ACTWebSocket_Plugin
         public string GetSkinDir()
         {
             return overlaySkinDirectory;
+        }
+
+        public void SetPluginPath(string path)
+        {
+            pluginPath = path;
         }
 
         public void SetPluginDirectory(string path)
@@ -186,6 +203,17 @@ namespace ACTWebSocket_Plugin
             this.buttonCopyCode = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.hashCode = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.labelLatest = new System.Windows.Forms.Label();
+            this.latestVersion = new System.Windows.Forms.TextBox();
+            this.labelRelease = new System.Windows.Forms.Label();
+            this.labelCurrent = new System.Windows.Forms.Label();
+            this.currentVersion = new System.Windows.Forms.TextBox();
+            this.buttonGitHub = new System.Windows.Forms.Button();
+            this.releaseVersion = new System.Windows.Forms.TextBox();
+            this.buttonVersionCheck = new System.Windows.Forms.Button();
+            this.buttonRelease = new System.Windows.Forms.Button();
+            this.buttonLatest = new System.Windows.Forms.Button();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -194,6 +222,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -553,9 +582,87 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.hashCode, "hashCode");
             this.hashCode.Name = "hashCode";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.buttonLatest);
+            this.groupBox5.Controls.Add(this.buttonRelease);
+            this.groupBox5.Controls.Add(this.buttonVersionCheck);
+            this.groupBox5.Controls.Add(this.labelLatest);
+            this.groupBox5.Controls.Add(this.latestVersion);
+            this.groupBox5.Controls.Add(this.labelRelease);
+            this.groupBox5.Controls.Add(this.labelCurrent);
+            this.groupBox5.Controls.Add(this.currentVersion);
+            this.groupBox5.Controls.Add(this.buttonGitHub);
+            this.groupBox5.Controls.Add(this.releaseVersion);
+            resources.ApplyResources(this.groupBox5, "groupBox5");
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.TabStop = false;
+            // 
+            // labelLatest
+            // 
+            resources.ApplyResources(this.labelLatest, "labelLatest");
+            this.labelLatest.Name = "labelLatest";
+            // 
+            // latestVersion
+            // 
+            resources.ApplyResources(this.latestVersion, "latestVersion");
+            this.latestVersion.Name = "latestVersion";
+            this.latestVersion.ReadOnly = true;
+            // 
+            // labelRelease
+            // 
+            resources.ApplyResources(this.labelRelease, "labelRelease");
+            this.labelRelease.Name = "labelRelease";
+            // 
+            // labelCurrent
+            // 
+            resources.ApplyResources(this.labelCurrent, "labelCurrent");
+            this.labelCurrent.Name = "labelCurrent";
+            // 
+            // currentVersion
+            // 
+            resources.ApplyResources(this.currentVersion, "currentVersion");
+            this.currentVersion.Name = "currentVersion";
+            this.currentVersion.ReadOnly = true;
+            // 
+            // buttonGitHub
+            // 
+            resources.ApplyResources(this.buttonGitHub, "buttonGitHub");
+            this.buttonGitHub.Name = "buttonGitHub";
+            this.buttonGitHub.UseVisualStyleBackColor = true;
+            this.buttonGitHub.Click += new System.EventHandler(this.buttonGitHub_Click);
+            // 
+            // releaseVersion
+            // 
+            resources.ApplyResources(this.releaseVersion, "releaseVersion");
+            this.releaseVersion.Name = "releaseVersion";
+            this.releaseVersion.ReadOnly = true;
+            // 
+            // buttonVersionCheck
+            // 
+            resources.ApplyResources(this.buttonVersionCheck, "buttonVersionCheck");
+            this.buttonVersionCheck.Name = "buttonVersionCheck";
+            this.buttonVersionCheck.UseVisualStyleBackColor = true;
+            this.buttonVersionCheck.Click += new System.EventHandler(this.buttonVersionCheck_Click);
+            // 
+            // buttonRelease
+            // 
+            resources.ApplyResources(this.buttonRelease, "buttonRelease");
+            this.buttonRelease.Name = "buttonRelease";
+            this.buttonRelease.UseVisualStyleBackColor = true;
+            this.buttonRelease.Click += new System.EventHandler(this.buttonRelease_Click);
+            // 
+            // buttonLatest
+            // 
+            resources.ApplyResources(this.buttonLatest, "buttonLatest");
+            this.buttonLatest.Name = "buttonLatest";
+            this.buttonLatest.UseVisualStyleBackColor = true;
+            this.buttonLatest.Click += new System.EventHandler(this.buttonLatest_Click);
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -580,6 +687,8 @@ namespace ACTWebSocket_Plugin
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -986,6 +1095,11 @@ namespace ACTWebSocket_Plugin
         }
 
         private List<String> addrs = new List<String>();
+        String releaseTag = null;
+        String currentTag = null;
+        String currentVersionString = null;
+        String latestVersionString = null;
+
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             comboBoxOverlayProcType.SelectedIndex = 0;
@@ -1017,7 +1131,6 @@ namespace ACTWebSocket_Plugin
                 addrs = Utility.Distinct<String>(addrs);
                 addrs.Sort();
                 core.SetAddress(addrs);
-
             });
             Task UITask = task.ContinueWith((t) =>
             {
@@ -1026,8 +1139,74 @@ namespace ACTWebSocket_Plugin
                     hostnames.Items.Add(addr);
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
-
+            VersionCheck();
             CheckUpdate();
+        }
+
+        void VersionCheck()
+        {
+
+            try
+            {
+                Version version = AssemblyName.GetAssemblyName(pluginPath).Version;
+                currentTag = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString();
+                currentVersionString = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString() + "." + version.Revision.ToString();
+                currentVersion.Text = currentVersionString;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            Task task2 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    releaseTag = Utility.ReleaseTag();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            Task UITask2 = task2.ContinueWith((t) =>
+            {
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    releaseVersion.Text = releaseTag + ".0";
+                    labelRelease.ForeColor = (releaseVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            Task task3 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    latestVersionString = Utility.DevelVersion();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            Task UITask3 = task3.ContinueWith((t) =>
+            {
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    latestVersion.Text = latestVersionString;
+                    labelLatest.ForeColor = (latestVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private bool IsChattings(LogLineEventArgs e)
@@ -1985,6 +2164,7 @@ namespace ACTWebSocket_Plugin
 
         const uint DWM_EC_DISABLECOMPOSITION = 0;
         const uint DWM_EC_ENABLECOMPOSITION = 1;
+        string pluginPath = null;
 
         [DllImport("dwmapi.dll", EntryPoint = "DwmEnableComposition")]
         extern static uint DwmEnableComposition(uint compositionAction);
@@ -2460,6 +2640,26 @@ namespace ACTWebSocket_Plugin
         private void comboBoxOverlayProcType_SelectedIndexChanged(object sender, EventArgs e)
         {
             CheckUpdate();
+        }
+
+        private void buttonGitHub_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ZCube/ACTWebSocket");
+        }
+
+        private void buttonRelease_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ZCube/ACTWebSocket/releases");
+        }
+
+        private void buttonLatest_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1");
+        }
+
+        private void buttonVersionCheck_Click(object sender, EventArgs e)
+        {
+            VersionCheck();
         }
     }
 }
