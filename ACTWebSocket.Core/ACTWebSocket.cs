@@ -2124,19 +2124,19 @@ namespace ACTWebSocket_Plugin
                 }
                 try
                 {
-                    if (comboBoxOverlayProcType.Text.IndexOf("x86") >= 0)
-                    {
-                        if (!CheckMSVC2015_x86())
-                        {
-                            Process.Start("https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe");
-                            throw new Exception("You need Visual C++ Redistributable for Visual Studio 2015");
-                        }
-                    }
-                    if (comboBoxOverlayProcType.Text.IndexOf("x64") >= 0)
+                    if (Environment.Is64BitOperatingSystem)
                     {
                         if(!CheckMSVC2015_x64())
                         {
                             Process.Start("https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x64.exe");
+                            throw new Exception("You need Visual C++ Redistributable for Visual Studio 2015");
+                        }
+                    }
+                    else
+                    {
+                        if (!CheckMSVC2015_x86())
+                        {
+                            Process.Start("https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe");
                             throw new Exception("You need Visual C++ Redistributable for Visual Studio 2015");
                         }
                     }
