@@ -114,9 +114,27 @@ namespace ACTWebSocket_Plugin
                         break;
                     case MessageType.AddBuff:
                         Combatants[Convert.ToUInt32(data[7], 16)].AddBuff(Convert.ToInt32(data[2], 16), Convert.ToInt32(data[4]));
+                        SendJSON(SendMessageType.AddBuff,
+                            JObject.FromObject(new
+                            {
+                                buffid = Convert.ToUInt32(data[2], 16),
+                                buffname = data[3],
+                                bufftick = Convert.ToDouble(data[4]),
+                                actor = data[7],
+                                target = data[9]
+                            }));
                         break;
                     case MessageType.RemoveBuff:
                         Combatants[Convert.ToUInt32(data[7], 16)].RemoveBuff(Convert.ToInt32(data[2], 16));
+                        SendJSON(SendMessageType.RemoveBuff,
+                            JObject.FromObject(new
+                            {
+                                buffid = Convert.ToUInt32(data[2], 16),
+                                buffname = data[3],
+                                bufftick = Convert.ToDouble(data[4]),
+                                actor = data[7],
+                                target = data[9]
+                            }));
                         break;
                     case MessageType.OutgoingAbility:
                         // 메모리?
