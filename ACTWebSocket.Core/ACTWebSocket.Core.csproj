@@ -120,7 +120,6 @@
     <Compile Include="ACTWebSocket_Overlay.cs" />
     <Compile Include="Classes\CombatData.cs" />
     <Compile Include="Classes\MP3.cs" />
-    <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\StaticAPI.cs" />
     <Compile Include="IPC_COPYDATA.cs">
       <SubType>Form</SubType>

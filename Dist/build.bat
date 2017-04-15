@@ -46,3 +46,5 @@ if not exist "%dropBoxRoot%\share" mkdir "%dropBoxRoot%\share"
 if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd  "%CD%\ACTWebSocket_latest.7z" /exclude:exclude_files.txt "%dropBoxRoot%\share"
 if %errorlevel% neq 0 exit /b %errorlevel%
+copy /y "%CD%\..\Common\version" "%dropBoxRoot%\share\ACTWebSocket_version"
+if %errorlevel% neq 0 exit /b %errorlevel%

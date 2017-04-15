@@ -94,7 +94,46 @@ namespace ACTWebSocket.Core
             }
             return ipAddress;
         }
-
+        public static String ReleaseTag()
+        {
+            string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases";
+            ToggleAllowUnsafeHeaderParsing(true);
+            WebClient wc = new WebClient();
+            UTF8Encoding utf8 = new UTF8Encoding();
+            ///ZCube/ACTWebSocket/tree/
+            string releaseTag = null;
+            try
+            {
+                releaseTag = utf8.GetString(wc.DownloadData(releaseURL));
+                //<a href="/ZCube/ACTWebSocket/tree/1.1.3" class="css-truncate">
+                var zz = Regex.Match(releaseTag, "/tree/(?<tag>[^\"]*)", RegexOptions.IgnoreCase);
+                releaseTag = zz.Groups["tag"].Value;
+            }
+            catch (WebException we)
+            {
+                Console.Write(we.ToString());
+            }
+            return releaseTag;
+        }
+        public static String DevelVersion()
+        {
+            string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1";
+            ToggleAllowUnsafeHeaderParsing(true);
+            WebClient wc = new WebClient();
+            UTF8Encoding utf8 = new UTF8Encoding();
+            ///ZCube/ACTWebSocket/tree/
+            string version = null;
+            try
+            {
+                version = utf8.GetString(wc.DownloadData(versionURL)).Trim();
+            }
+            catch (WebException we)
+            {
+                Console.Write(we.ToString());
+            }
+            return version;
+        }
+        
         public static string Base64Encoding(string EncodingText, Encoding oEncoding = null)
         {
             if (oEncoding == null)

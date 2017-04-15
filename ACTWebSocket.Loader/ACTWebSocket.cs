@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace ACTWebSocket_Plugin
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -28,7 +29,6 @@ namespace ACTWebSocket_Plugin
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
-
             string pluginDirectory = GetPluginDirectory();
             var directories = new List<string>();
             directories.Add(pluginDirectory);
@@ -51,6 +51,8 @@ namespace ACTWebSocket_Plugin
 
             var m = new ACTWebSocketMain();
             string pluginDirectory = GetPluginDirectory();
+            string pluginPath = GetPluginPath();
+            m.SetPluginPath(pluginPath);
             m.SetSkinDir(Path.Combine(Environment.CurrentDirectory, "OverlaySkin"));
             m.SetScreenShotDir(Path.Combine(Environment.CurrentDirectory, "ScreenShot"));
             m.SetPluginDirectory(pluginDirectory);
@@ -70,6 +72,19 @@ namespace ACTWebSocket_Plugin
             if (plugin != null)
             {
                 return Path.GetDirectoryName(plugin.pluginFile.FullName);
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
+        private string GetPluginPath()
+        {
+            var plugin = ActGlobals.oFormActMain.ActPlugins.Where(x => x.pluginObj == this).FirstOrDefault();
+            if (plugin != null)
+            {
+                return plugin.pluginFile.FullName;
             }
             else
             {

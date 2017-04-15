@@ -108,7 +108,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ACTWebSocket.cs" />
     <Compile Include="AssemblyResolver.cs" />
-    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
