@@ -13,6 +13,11 @@ namespace ACTWebSocket.Core
 {
     class Utility
     {
+        public static long ToUnixTimestamp(DateTime value)
+        {
+            return (long)Math.Truncate((value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
         public static string GetRelativePath(string filespec, string folder)
         {
             Uri pathUri = new Uri(filespec);

@@ -195,13 +195,20 @@ namespace ACTWebSocket.Core
 
         public static bool EnumProc(IntPtr hWnd, ref SearchData data)
         {
-            // Check classname and title 
-            // This is different from FindWindow() in that the code below allows partial matches
             StringBuilder sb = new StringBuilder(1024);
-            GetWindowText(hWnd, sb, sb.Capacity);
-            if (sb.ToString().StartsWith(data.TitleKeyword))
+            int ret = GetClassName(hWnd, sb, sb.Capacity);
+            if(ret == 0)
             {
-                data.overlayWindowTitles.Add(sb.ToString());
+                return true;
+            }
+            sb = new StringBuilder(1024);
+            ret = GetWindowText(hWnd, sb, sb.Capacity);
+            if(ret != 0)
+            {
+                if (sb.ToString().StartsWith(data.TitleKeyword))
+                {
+                    data.overlayWindowTitles.Add(sb.ToString());
+                }
             }
             return true;
         }

@@ -28,6 +28,7 @@ namespace ACTWebSocket_Plugin
     using SharpCompress.Readers;
     using Microsoft.Win32;
     using System.Reflection;
+    using System.Linq;
 
     public interface PluginDirectory
     {
@@ -704,10 +705,18 @@ namespace ACTWebSocket_Plugin
             InitializeComponent();
             if (ipc == null)
             {
-                ipc = new IPC_COPYDATA();
-                ipc.Show();
-                ipc.Text = "Client" + overlayCaption;
-                ipc.onMessage = (code, message) =>
+                // 테스트 중
+                //IPC_WebSocket ipc_socket = new IPC_WebSocket(9991);
+                //ipc = ipc_socket;
+                //ipc.onOpen += () =>
+                //{
+                //    ServerUrlChanged();
+                //};
+                IPC_COPYDATA ipc_form = new IPC_COPYDATA(overlayCaption);
+                ipc_form.Show();
+                ipc_form.Text = "Client" + overlayCaption;
+                ipc = ipc_form;
+                ipc.onMessage += (code, message) =>
                 {
                     if (message == ".")
                         return;
@@ -726,7 +735,6 @@ namespace ACTWebSocket_Plugin
                                         JToken value = obj["value"];
                                         String id = value["id"].ToObject<String>();
                                         String pngBase64 = value["capture"].ToObject<String>();
-                                        pngBase64 = pngBase64;
                                         
                                         byte[] data = Convert.FromBase64String(pngBase64);
 
@@ -774,6 +782,7 @@ namespace ACTWebSocket_Plugin
                     }
                 };
             }
+
             overlayProcCheckTimer = new System.Timers.Timer();
             overlayProcCheckTimer.Interval = 2000;
             overlayProcCheckTimer.Elapsed += (o, e) =>
@@ -805,21 +814,14 @@ namespace ACTWebSocket_Plugin
 
         JObject overlayWindows = new JObject(); // 설정 전부
 
-        public static bool SendMessage(string caption, JObject obj)
-        {
-            if (ipc == null)
-                return false;
-            return ipc.SendMessage(caption, 0, obj.ToString());
-        }
-
         public static bool SendMessage(JObject obj)
         {
             if (ipc == null)
                 return false;
-            return ipc.SendMessage(overlayCaption, 0, obj.ToString());
+            return ipc.SendMessage(0, obj.ToString());
         }
 
-        public static IPC_COPYDATA ipc = null;
+        public static IPC_Base ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
             UpdateOverlayProc();
@@ -1143,6 +1145,33 @@ namespace ACTWebSocket_Plugin
             CheckUpdate();
         }
 
+        int VersionCompare(String version0, String version1)
+        {
+            var version0s = version0.Trim().Split('.').Select(Int32.Parse).ToList();
+            var version1s = version1.Trim().Split('.').Select(Int32.Parse).ToList();
+            int count = version0s.Count < version1s.Count ? version0s.Count : version1s.Count;
+            for(int i=0;i<count;++i)
+            {
+                if(version0s[i] < version1s[i])
+                {
+                    return -1;
+                }
+                else if (version0s[i] > version1s[i])
+                {
+                    return 1;
+                }
+            }
+            if (version0s.Count < version1s.Count)
+            {
+                return -1;
+            }
+            else if (version0s.Count > version1s.Count)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
         void VersionCheck()
         {
 
@@ -1175,7 +1204,7 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     releaseVersion.Text = releaseTag + ".0";
-                    labelRelease.ForeColor = (releaseVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                    labelRelease.ForeColor = (VersionCompare(releaseVersion.Text, currentVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
                 {
@@ -1200,7 +1229,7 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     latestVersion.Text = latestVersionString;
-                    labelLatest.ForeColor = (latestVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                    labelLatest.ForeColor = (VersionCompare(latestVersion.Text, currentVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
                 {
@@ -2492,12 +2521,18 @@ namespace ACTWebSocket_Plugin
         private void buttonStartStopOverlayProc_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(JObject.FromObject(new
+            bool boverlayenabled = buttonOpenOverlayProcManager.Enabled;
+                // 종료에 2초 이상 걸릴시 갱신되어
+                // 재실행 되는 오류 발생 가능.
+                if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             })))
             {
                 // run instance
+            }
+            if(!boverlayenabled)
+            {
                 StartOverlayProc();
             }
         }

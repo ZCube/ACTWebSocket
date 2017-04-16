@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACTWebSocket.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,16 +9,54 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WebSocketSharp;
 
 namespace ACTWebSocket_Plugin
 {
-    public partial class IPC_COPYDATA : Form
+    public delegate void OnOpen();
+    public delegate void OnMessage(int code, string message);
+    public interface IPC_Base
     {
-        public delegate void OnMessage(int code, string message) ;
+        event OnMessage onMessage;
+        event OnOpen onOpen;
+        bool SendMessage(int code, string msg);
+    }
+
+    public partial class IPC_COPYDATA : Form, IPC_Base
+    {
         public OnMessage onMessage;
-        public IPC_COPYDATA()
+        public OnOpen onOpen;
+        String overlayCaption;
+
+
+        public IPC_COPYDATA(String overlayCaption)
         {
+            this.overlayCaption = overlayCaption;
             InitializeComponent();
+        }
+
+        event ACTWebSocket_Plugin.OnMessage IPC_Base.onMessage
+        {
+            add
+            {
+                this.onMessage += value;
+            }
+
+            remove
+            {
+                this.onMessage -= value;
+            }
+        }
+
+        event OnOpen IPC_Base.onOpen
+        {
+            add
+            {
+            }
+
+            remove
+            {
+            }
         }
 
         private void Form_COPYDATA_Load(object sender, EventArgs e)
@@ -64,8 +103,9 @@ namespace ACTWebSocket_Plugin
             base.WndProc(ref m);
         }
 
-        public bool SendMessage(string caption, int code, string msg)
+        public bool SendMessage(int code, string msg)
         {
+            String caption = overlayCaption;
             IntPtr hwnd = FindWindow(null, caption);
             if (hwnd != IntPtr.Zero)
             {
@@ -80,6 +120,87 @@ namespace ACTWebSocket_Plugin
             }
             return false;
         }
+    }
 
+    public class IPC_WebSocket : IPC_Base
+    {
+        public OnMessage onMessage;
+        public OnOpen onOpen;
+        WebSocket ws = null;
+        Boolean onOpend = false;
+        int serverPort;
+        long lastTimestamp;
+        event ACTWebSocket_Plugin.OnMessage IPC_Base.onMessage
+        {
+            add
+            {
+                this.onMessage += value;
+            }
+
+            remove
+            {
+                this.onMessage -= value;
+            }
+        }
+
+        event OnOpen IPC_Base.onOpen
+        {
+            add
+            {
+                this.onOpen += value;
+            }
+
+            remove
+            {
+                this.onOpen -= value;
+            }
+        }
+
+        public IPC_WebSocket(int serverPort)
+        {
+            this.serverPort = serverPort;
+            ConnectAsync(null);
+        }
+
+        void ConnectAsync(Action<WebSocket> callback)
+        {
+            lastTimestamp = Utility.ToUnixTimestamp(DateTime.UtcNow);
+            if (ws != null)
+            {
+                ws.Close();
+            }
+            ws = new WebSocket("ws://localhost:" + serverPort.ToString());
+            if (ws != null)
+            {
+                ws.OnMessage += (sender, e) =>
+                {
+                    onMessage(0, e.Data);
+                };
+                ws.OnOpen += (sender, e) =>
+                {
+                    if (callback != null)
+                    {
+                        this.onOpen();
+                        callback(ws);
+                    }
+                };
+                ws.ConnectAsync();
+            }
+        }
+
+        public bool SendMessage(int code, string msg)
+        {
+            if (ws == null || (!ws.IsAlive && (Utility.ToUnixTimestamp(DateTime.UtcNow) - lastTimestamp) > 5))
+            {
+                ConnectAsync((ws) =>
+                {
+                    ws.SendAsync(msg, null);
+                });
+                return false;
+            }
+            ws.SendAsync(msg, null);
+            Boolean b = ws.IsAlive;
+            return ws.IsAlive;
+        }
     }
 }

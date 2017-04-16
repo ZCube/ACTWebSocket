@@ -121,114 +121,121 @@ namespace ACTWebSocket_Plugin
 
             EventHandler < HttpRequestEventArgs > onget = (sender, e) =>
             {
-                var req = e.Request;
-                var res = e.Response;
-                HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
-                var path = req.RawUrl;
-
-                bool localConnection = false;
-                localConnection = addrs.Contains(req.RemoteEndPoint.Address.ToString());
-
-                if (randomDir != null && !localConnection)
+                try
                 {
-                    if (!path.StartsWith(parent_path))
+                    var req = e.Request;
+                    var res = e.Response;
+                    HttpListenerContext context = (HttpListenerContext)req.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(req);
+                    var path = req.RawUrl;
+
+                    bool localConnection = false;
+                    localConnection = addrs.Contains(req.RemoteEndPoint.Address.ToString());
+
+                    if (randomDir != null && !localConnection)
                     {
-                        res.StatusCode = (int)HttpStatusCode.NotFound;
-                        return;
-                    }
-                }
-
-                if (path.StartsWith(parent_path))
-                {
-                    path = path.Substring(parent_path.Length);
-                }
-
-                if (path == "/")
-                    path += "index.html";
-
-                Uri uri = new Uri("http://localhost" + path);
-                path = uri.AbsolutePath;
-                path = Uri.UnescapeDataString(path);
-                //uri.Query;
-                //uri.AbsolutePath;
-                var content = httpServer.GetFile(path);
-
-                if (content == null)
-                {
-                    if (path == "/skins.json" || path == "/pages.json")
-                    {
-                        if(skinObject != null)
+                        if (!path.StartsWith(parent_path))
                         {
-                            lock (skinObject)
-                            {
-                                res.ContentType = "text/html";
-                                res.ContentEncoding = Encoding.UTF8;
-                                var clone = skinObject.DeepClone();
+                            res.StatusCode = (int)HttpStatusCode.NotFound;
+                            return;
+                        }
+                    }
 
-                                JArray array = (JArray)clone["URLList"];
-                                if (array != null)
+                    if (path.StartsWith(parent_path))
+                    {
+                        path = path.Substring(parent_path.Length);
+                    }
+
+                    if (path == "/")
+                        path += "index.html";
+
+                    Uri uri = new Uri("http://localhost" + path);
+                    path = uri.AbsolutePath;
+                    path = Uri.UnescapeDataString(path);
+                    //uri.Query;
+                    //uri.AbsolutePath;
+                    var content = httpServer.GetFile(path);
+
+                    if (content == null)
+                    {
+                        if (path == "/skins.json" || path == "/pages.json")
+                        {
+                            if (skinObject != null)
+                            {
+                                lock (skinObject)
                                 {
-                                    foreach (JToken obj in array)
+                                    res.ContentType = "text/html";
+                                    res.ContentEncoding = Encoding.UTF8;
+                                    var clone = skinObject.DeepClone();
+
+                                    JArray array = (JArray)clone["URLList"];
+                                    if (array != null)
                                     {
-                                        obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
+                                        foreach (JToken obj in array)
+                                        {
+                                            obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
+                                        }
                                     }
+                                    res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString()));
                                 }
-                                res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString()));
+                            }
+                            else
+                            {
+                                res.StatusCode = (int)HttpStatusCode.NotFound;
                             }
                         }
                         else
                         {
                             res.StatusCode = (int)HttpStatusCode.NotFound;
                         }
+                        return;
                     }
-                    else
-                    {
-                        res.StatusCode = (int)HttpStatusCode.NotFound;
-                    }
-                    return;
-                }
 
-                string extension = System.IO.Path.GetExtension(path);
-                extension = extension.ToLower();
-                res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
-                if (extension == ".html" || extension == ".js")
+                    string extension = System.IO.Path.GetExtension(path);
+                    extension = extension.ToLower();
+                    res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
+                    if (extension == ".html" || extension == ".js")
+                    {
+                        res.ContentType = "text/html";
+                        res.ContentEncoding = Encoding.UTF8;
+                        string host = "";
+                        if (address == "127.0.0.1" || address == "localhost")
+                        {
+                            host = "localhost";
+                        }
+                        else if (domain != null && domain.Length > 0)
+                        {
+                            host = domain;
+                        }
+
+                        string host_port = host + ":" + extPort.ToString();
+                        if (context.User != null)
+                        {
+                            string username = context.User.Identity.Name;
+                            NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
+                            string password = cred.Password;
+                            host_port = username + ":" + password + "@" + host + ":" + extPort.ToString();
+                        }
+                        else
+                        {
+                            host_port = host + ":" + extPort.ToString();
+                        }
+                        host_port += parent_path;
+                        res.SetCookie(new Cookie("HOST_PORT", host_port));
+                        String co = res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port);
+                        if (e.Request.Url.Scheme == "https")
+                        {
+                            co = co.Replace("ws://", "wss://").Replace("http://", "https://");
+                        }
+                        content = res.ContentEncoding.GetBytes(co);
+
+                    }
+
+                    res.WriteContent(content);
+                }
+                catch(Exception ex)
                 {
-                    res.ContentType = "text/html";
-                    res.ContentEncoding = Encoding.UTF8;
-                    string host = "";
-                    if (address == "127.0.0.1" || address == "localhost")
-                    {
-                        host = "localhost";
-                    }
-                    else  if (domain != null && domain.Length >0)
-                    {
-                        host = domain;
-                    }
-
-                    string host_port = host + ":" + extPort.ToString();
-                    if (context.User != null)
-                    {
-                        string username = context.User.Identity.Name;
-                        NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
-                        string password = cred.Password;
-                        host_port = username + ":" + password + "@" + host + ":" + extPort.ToString();
-                    }
-                    else
-                    {
-                        host_port = host + ":" + extPort.ToString();
-                    }
-                    host_port += parent_path;
-                    res.SetCookie(new Cookie("HOST_PORT", host_port));
-                    String co = res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port);
-                    if(e.Request.Url.Scheme == "https")
-                    {
-                        co = co.Replace("ws://", "wss://").Replace("http://", "https://");
-                    }
-                    content = res.ContentEncoding.GetBytes(co);
-
+                    // TODO:
                 }
-
-                res.WriteContent(content);
             };
             httpServer.OnGet += onget;
 
