@@ -195,6 +195,15 @@ namespace ACTWebSocket.Core
 
         public static bool EnumProc(IntPtr hWnd, ref SearchData data)
         {
+            // 종료 과정 중 자신의 프로세스 체크시 정지되는 경우 있음.
+            // 만악의 근원
+            uint id = 0;
+            GetWindowThreadProcessId(hWnd, out id);
+            if(GetCurrentProcessId() == id)
+            {
+                return true;
+            }
+
             StringBuilder sb = new StringBuilder(1024);
             int ret = GetClassName(hWnd, sb, sb.Capacity);
             if(ret == 0)
@@ -220,6 +229,12 @@ namespace ACTWebSocket.Core
         }
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("kernel32.dll")]
+        static extern uint GetCurrentProcessId();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
