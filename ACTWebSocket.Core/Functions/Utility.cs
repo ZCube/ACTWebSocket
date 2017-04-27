@@ -84,7 +84,7 @@ namespace ACTWebSocket.Core
         }
         public static String GetExternalIp()
         {
-            string whatIsMyIp = "http://act.project.so/ip.php";
+            string whatIsMyIp = "https://api.ipify.org";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
             UTF8Encoding utf8 = new UTF8Encoding();

@@ -1124,6 +1124,11 @@ namespace ACTWebSocket_Plugin
             addrs.Sort();
             core.SetAddress(addrs);
 
+            foreach (var addr in addrs)
+            {
+                hostnames.Items.Add(addr);
+            }
+
             Task task = Task.Factory.StartNew(() =>
             {
                 String ipaddress = Utility.GetExternalIp();
@@ -1136,6 +1141,7 @@ namespace ACTWebSocket_Plugin
             });
             Task UITask = task.ContinueWith((t) =>
             {
+                hostnames.Items.Clear();
                 foreach (var addr in addrs)
                 {
                     hostnames.Items.Add(addr);
