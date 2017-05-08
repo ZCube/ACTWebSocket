@@ -31,7 +31,6 @@ var QueryString = function ()
 // webs
 var host_port = QueryString["HOST_PORT"];
 
-var host_port = "192.168.0.2///";
 var wsUri = "@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/
 
 while(host_port.endsWith('/')) {
