@@ -205,6 +205,9 @@ namespace ACTWebSocket_Plugin
             this.label1 = new System.Windows.Forms.Label();
             this.hashCode = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonLatest = new System.Windows.Forms.Button();
+            this.buttonRelease = new System.Windows.Forms.Button();
+            this.buttonVersionCheck = new System.Windows.Forms.Button();
             this.labelLatest = new System.Windows.Forms.Label();
             this.latestVersion = new System.Windows.Forms.TextBox();
             this.labelRelease = new System.Windows.Forms.Label();
@@ -212,9 +215,6 @@ namespace ACTWebSocket_Plugin
             this.currentVersion = new System.Windows.Forms.TextBox();
             this.buttonGitHub = new System.Windows.Forms.Button();
             this.releaseVersion = new System.Windows.Forms.TextBox();
-            this.buttonVersionCheck = new System.Windows.Forms.Button();
-            this.buttonRelease = new System.Windows.Forms.Button();
-            this.buttonLatest = new System.Windows.Forms.Button();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -487,7 +487,9 @@ namespace ACTWebSocket_Plugin
             this.comboBoxOverlayProcType.FormattingEnabled = true;
             this.comboBoxOverlayProcType.Items.AddRange(new object[] {
             resources.GetString("comboBoxOverlayProcType.Items"),
-            resources.GetString("comboBoxOverlayProcType.Items1")});
+            resources.GetString("comboBoxOverlayProcType.Items1"),
+            resources.GetString("comboBoxOverlayProcType.Items2"),
+            resources.GetString("comboBoxOverlayProcType.Items3")});
             resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
             this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
             this.comboBoxOverlayProcType.SelectedIndexChanged += new System.EventHandler(this.comboBoxOverlayProcType_SelectedIndexChanged);
@@ -599,6 +601,27 @@ namespace ACTWebSocket_Plugin
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.TabStop = false;
             // 
+            // buttonLatest
+            // 
+            resources.ApplyResources(this.buttonLatest, "buttonLatest");
+            this.buttonLatest.Name = "buttonLatest";
+            this.buttonLatest.UseVisualStyleBackColor = true;
+            this.buttonLatest.Click += new System.EventHandler(this.buttonLatest_Click);
+            // 
+            // buttonRelease
+            // 
+            resources.ApplyResources(this.buttonRelease, "buttonRelease");
+            this.buttonRelease.Name = "buttonRelease";
+            this.buttonRelease.UseVisualStyleBackColor = true;
+            this.buttonRelease.Click += new System.EventHandler(this.buttonRelease_Click);
+            // 
+            // buttonVersionCheck
+            // 
+            resources.ApplyResources(this.buttonVersionCheck, "buttonVersionCheck");
+            this.buttonVersionCheck.Name = "buttonVersionCheck";
+            this.buttonVersionCheck.UseVisualStyleBackColor = true;
+            this.buttonVersionCheck.Click += new System.EventHandler(this.buttonVersionCheck_Click);
+            // 
             // labelLatest
             // 
             resources.ApplyResources(this.labelLatest, "labelLatest");
@@ -638,27 +661,6 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.releaseVersion, "releaseVersion");
             this.releaseVersion.Name = "releaseVersion";
             this.releaseVersion.ReadOnly = true;
-            // 
-            // buttonVersionCheck
-            // 
-            resources.ApplyResources(this.buttonVersionCheck, "buttonVersionCheck");
-            this.buttonVersionCheck.Name = "buttonVersionCheck";
-            this.buttonVersionCheck.UseVisualStyleBackColor = true;
-            this.buttonVersionCheck.Click += new System.EventHandler(this.buttonVersionCheck_Click);
-            // 
-            // buttonRelease
-            // 
-            resources.ApplyResources(this.buttonRelease, "buttonRelease");
-            this.buttonRelease.Name = "buttonRelease";
-            this.buttonRelease.UseVisualStyleBackColor = true;
-            this.buttonRelease.Click += new System.EventHandler(this.buttonRelease_Click);
-            // 
-            // buttonLatest
-            // 
-            resources.ApplyResources(this.buttonLatest, "buttonLatest");
-            this.buttonLatest.Name = "buttonLatest";
-            this.buttonLatest.UseVisualStyleBackColor = true;
-            this.buttonLatest.Click += new System.EventHandler(this.buttonLatest_Click);
             // 
             // ACTWebSocketMain
             // 
