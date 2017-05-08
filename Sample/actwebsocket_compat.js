@@ -15,8 +15,7 @@ class WebSocketImpl extends ActWebsocketInterface
   {
       if (e.detail.msgtype == "CombatData")
       {
-          //document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
-          onOverlayDataUpdate({ detail: e.detail.msg });
+          document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: e.detail.msg }));
       }
   }
 };
