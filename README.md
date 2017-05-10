@@ -31,7 +31,6 @@ WebSocket Plugin for Advanced Combat Tracker v3
   ...
 	<script src="https://ZCube.github.io/ACTWebSocket/Sample/actwebsocket.js"></script>
 	<script src="https://ZCube.github.io/ACTWebSocket/Sample/actwebsocket_compat.js"></script>
-	<script>var wsUri = "ws://@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/</script>
   ...
 ```
 
