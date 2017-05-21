@@ -78,3 +78,5 @@ Release : [download](https://github.com/ZCube/ACTWebSocket/releases)
 ## License ##
 
 ACTWebSocket is provided under The MIT License.
+
+NO WARRANTY. ANY USE OF THE SOFTWARE IS ENTIRELY AT YOUR OWN RISK.
