@@ -2981,7 +2981,7 @@ namespace ACTWebSocket_Plugin
                 {
                     game.SelectedIndex = 4;
                 }
-                else if (filepath.ToLower() == "ffxiv.exe")
+                else if (filepath.ToLower() == "ffxiv_dx11.exe")
                 {
                     game.SelectedIndex = 4;
                 }

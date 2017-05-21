@@ -127,7 +127,9 @@ namespace ACTWebSocket_Plugin
             catch(Exception err)
             {
                 // 예외처리 필요.
-                SendErrorJSON(err.ToString());
+                // TODO : exception....
+                // Log(LogLevel.Debug, err.ToString());
+                //SendErrorJSON(err.ToString());
             }
         }
 
