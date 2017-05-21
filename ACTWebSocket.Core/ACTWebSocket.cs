@@ -80,6 +80,28 @@ namespace ACTWebSocket_Plugin
         private Button buttonLatest;
         private Button buttonRelease;
         private Button buttonVersionCheck;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private GroupBox groupBox6;
+        private Button buttonFindDirectory;
+        private Label label5;
+        private Label label4;
+        private Label label3;
+        private ComboBox game;
+        private TextBox textBox1;
+        private Button buttonDXInstall;
+        private ProgressBar dx_progress;
+        private TextBox gamepath;
+        private GroupBox groupBox7;
+        private Button buttonOverlayVersionCheck;
+        private Label labelOverlayLatest;
+        private TextBox latestOverlayVersion;
+        private Label labelOverlayRelease;
+        private Label labelOverlayCurrent;
+        private TextBox currentOverlayVersion;
+        private Button buttonOverlayGitHub;
+        private TextBox releaseOverlayVersion;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -215,6 +237,28 @@ namespace ACTWebSocket_Plugin
             this.currentVersion = new System.Windows.Forms.TextBox();
             this.buttonGitHub = new System.Windows.Forms.Button();
             this.releaseVersion = new System.Windows.Forms.TextBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.buttonOverlayVersionCheck = new System.Windows.Forms.Button();
+            this.labelOverlayLatest = new System.Windows.Forms.Label();
+            this.latestOverlayVersion = new System.Windows.Forms.TextBox();
+            this.labelOverlayRelease = new System.Windows.Forms.Label();
+            this.labelOverlayCurrent = new System.Windows.Forms.Label();
+            this.currentOverlayVersion = new System.Windows.Forms.TextBox();
+            this.buttonOverlayGitHub = new System.Windows.Forms.Button();
+            this.releaseOverlayVersion = new System.Windows.Forms.TextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.buttonFindDirectory = new System.Windows.Forms.Button();
+            this.gamepath = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.game = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonDXInstall = new System.Windows.Forms.Button();
+            this.dx_progress = new System.Windows.Forms.ProgressBar();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -224,6 +268,11 @@ namespace ACTWebSocket_Plugin
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -662,14 +711,173 @@ namespace ACTWebSocket_Plugin
             this.releaseVersion.Name = "releaseVersion";
             this.releaseVersion.ReadOnly = true;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox4);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Controls.Add(this.groupBox3);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBox7);
+            this.tabPage2.Controls.Add(this.groupBox6);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.buttonOverlayVersionCheck);
+            this.groupBox7.Controls.Add(this.labelOverlayLatest);
+            this.groupBox7.Controls.Add(this.latestOverlayVersion);
+            this.groupBox7.Controls.Add(this.labelOverlayRelease);
+            this.groupBox7.Controls.Add(this.labelOverlayCurrent);
+            this.groupBox7.Controls.Add(this.currentOverlayVersion);
+            this.groupBox7.Controls.Add(this.buttonOverlayGitHub);
+            this.groupBox7.Controls.Add(this.releaseOverlayVersion);
+            resources.ApplyResources(this.groupBox7, "groupBox7");
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.TabStop = false;
+            // 
+            // buttonOverlayVersionCheck
+            // 
+            resources.ApplyResources(this.buttonOverlayVersionCheck, "buttonOverlayVersionCheck");
+            this.buttonOverlayVersionCheck.Name = "buttonOverlayVersionCheck";
+            this.buttonOverlayVersionCheck.UseVisualStyleBackColor = true;
+            this.buttonOverlayVersionCheck.Click += new System.EventHandler(this.buttonOverlayVersionCheck_Click);
+            // 
+            // labelOverlayLatest
+            // 
+            resources.ApplyResources(this.labelOverlayLatest, "labelOverlayLatest");
+            this.labelOverlayLatest.Name = "labelOverlayLatest";
+            // 
+            // latestOverlayVersion
+            // 
+            resources.ApplyResources(this.latestOverlayVersion, "latestOverlayVersion");
+            this.latestOverlayVersion.Name = "latestOverlayVersion";
+            this.latestOverlayVersion.ReadOnly = true;
+            // 
+            // labelOverlayRelease
+            // 
+            resources.ApplyResources(this.labelOverlayRelease, "labelOverlayRelease");
+            this.labelOverlayRelease.Name = "labelOverlayRelease";
+            // 
+            // labelOverlayCurrent
+            // 
+            resources.ApplyResources(this.labelOverlayCurrent, "labelOverlayCurrent");
+            this.labelOverlayCurrent.Name = "labelOverlayCurrent";
+            // 
+            // currentOverlayVersion
+            // 
+            resources.ApplyResources(this.currentOverlayVersion, "currentOverlayVersion");
+            this.currentOverlayVersion.Name = "currentOverlayVersion";
+            this.currentOverlayVersion.ReadOnly = true;
+            // 
+            // buttonOverlayGitHub
+            // 
+            resources.ApplyResources(this.buttonOverlayGitHub, "buttonOverlayGitHub");
+            this.buttonOverlayGitHub.Name = "buttonOverlayGitHub";
+            this.buttonOverlayGitHub.UseVisualStyleBackColor = true;
+            this.buttonOverlayGitHub.Click += new System.EventHandler(this.buttonOverlayGitHub_Click);
+            // 
+            // releaseOverlayVersion
+            // 
+            resources.ApplyResources(this.releaseOverlayVersion, "releaseOverlayVersion");
+            this.releaseOverlayVersion.Name = "releaseOverlayVersion";
+            this.releaseOverlayVersion.ReadOnly = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.buttonFindDirectory);
+            this.groupBox6.Controls.Add(this.gamepath);
+            this.groupBox6.Controls.Add(this.label5);
+            this.groupBox6.Controls.Add(this.label4);
+            this.groupBox6.Controls.Add(this.label3);
+            this.groupBox6.Controls.Add(this.game);
+            this.groupBox6.Controls.Add(this.textBox1);
+            this.groupBox6.Controls.Add(this.buttonDXInstall);
+            this.groupBox6.Controls.Add(this.dx_progress);
+            resources.ApplyResources(this.groupBox6, "groupBox6");
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.TabStop = false;
+            // 
+            // buttonFindDirectory
+            // 
+            resources.ApplyResources(this.buttonFindDirectory, "buttonFindDirectory");
+            this.buttonFindDirectory.Name = "buttonFindDirectory";
+            this.buttonFindDirectory.UseVisualStyleBackColor = true;
+            this.buttonFindDirectory.Click += new System.EventHandler(this.buttonFindDirectory_Click);
+            // 
+            // gamepath
+            // 
+            resources.ApplyResources(this.gamepath, "gamepath");
+            this.gamepath.Name = "gamepath";
+            this.gamepath.ReadOnly = true;
+            this.gamepath.TextChanged += new System.EventHandler(this.gamepath_TextChanged);
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // game
+            // 
+            this.game.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.game.FormattingEnabled = true;
+            this.game.Items.AddRange(new object[] {
+            resources.GetString("game.Items"),
+            resources.GetString("game.Items1"),
+            resources.GetString("game.Items2"),
+            resources.GetString("game.Items3"),
+            resources.GetString("game.Items4")});
+            resources.ApplyResources(this.game, "game");
+            this.game.Name = "game";
+            this.game.SelectedIndexChanged += new System.EventHandler(this.game_SelectedIndexChanged);
+            // 
+            // textBox1
+            // 
+            resources.ApplyResources(this.textBox1, "textBox1");
+            this.textBox1.Name = "textBox1";
+            // 
+            // buttonDXInstall
+            // 
+            resources.ApplyResources(this.buttonDXInstall, "buttonDXInstall");
+            this.buttonDXInstall.Name = "buttonDXInstall";
+            this.buttonDXInstall.UseVisualStyleBackColor = true;
+            this.buttonDXInstall.Click += new System.EventHandler(this.buttonDXInstall_Click);
+            // 
+            // dx_progress
+            // 
+            resources.ApplyResources(this.dx_progress, "dx_progress");
+            this.dx_progress.Name = "dx_progress";
+            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.serverStatus);
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
@@ -692,6 +900,13 @@ namespace ACTWebSocket_Plugin
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1150,6 +1365,7 @@ namespace ACTWebSocket_Plugin
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
             VersionCheck();
+            OverlayVersionCheck();
             CheckUpdate();
         }
 
@@ -1397,6 +1613,7 @@ namespace ACTWebSocket_Plugin
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
             //SSLUse.Enabled = false;
+            buttonDXInstall.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             DiscoveryUse.Enabled = false;
@@ -2703,6 +2920,283 @@ namespace ACTWebSocket_Plugin
         private void buttonVersionCheck_Click(object sender, EventArgs e)
         {
             VersionCheck();
+        }
+        
+        private void buttonFindDirectory_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            switch(game.SelectedIndex)
+            {
+                case 4:
+                    ofd.Filter = "ffxiv,exe|ffxiv.exe;ffxiv_dx11.exe";
+                    break;
+                default:
+                    ofd.Filter = "*.exe|*.exe";
+                    break;
+            }
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK) // Test result.
+            {
+                gamepath.Text = ofd.FileName;
+                buttonDXInstall.Enabled = true;
+            }
+        }
+
+        private void gamepath_TextChanged(object sender, EventArgs e)
+        {
+            string filepath = Path.GetFileName(gamepath.Text);
+            if (filepath.ToLower() == "ffxiv.exe")
+            {
+                game.SelectedIndex = 4;
+            }
+            else if (filepath.ToLower() == "ffxiv.exe")
+            {
+                game.SelectedIndex = 4;
+            }
+            OverlayVersionCheck(gamepath.Text);
+        }
+
+        private void buttonDXInstall_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                buttonDXInstall.Enabled = false;
+                gamepath.Enabled = false;
+                game.Enabled = false;
+
+                string url = "https://www.dropbox.com/s/rcypgitu9icz7kp/ACTWebSocketOverlay_latest.zip?dl=1";
+                string savefile = Directory.GetParent(gamepath.Text).FullName + "/ACTWebsocketOverlay_latest.zip";
+
+                WebClient webClient = new WebClient();
+                dx_progress.Value = 0;
+                dx_progress.Minimum = 0;
+                dx_progress.Maximum = 100;
+                dx_progress.Show();
+
+                // updater
+                string extractDir = Directory.GetParent(gamepath.Text).FullName;
+                string versionFile = Directory.GetParent(gamepath.Text).FullName + "/overlay_version";
+
+                string filename = Path.GetFileNameWithoutExtension(gamepath.Text);
+
+                webClient.DownloadFileCompleted += (s, e2) =>
+                {
+                    progressBar.Value = 100;
+                    Task task = Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            string version = Utility.DevelVersion("https://www.dropbox.com/s/cqxosnmm073a0u5/ACTWebSocketOverlay_version?dl=1");
+                            string dir = Directory.GetCurrentDirectory();
+
+                            var zipArchive = SharpCompress.Archives.Zip.ZipArchive.Open(savefile);
+                            foreach (var entry in zipArchive.Entries)
+                            {
+                                if (!entry.IsDirectory)
+                                {
+                                    string filepath = extractDir + "/" + entry.Key;
+                                    if (!Directory.Exists(Directory.GetParent(filepath).FullName))
+                                    {
+                                        Directory.CreateDirectory(Directory.GetParent(filepath).FullName);
+                                    }
+                                    if(File.Exists(filepath))
+                                    {
+                                        File.Delete(filepath);
+                                    }
+                                    using (var fileStream = File.Create(filepath))
+                                    {
+                                        Stream stream = entry.OpenEntryStream();
+                                        stream.CopyTo(fileStream);
+                                        stream.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    string filepath = extractDir + "/" + entry.Key;
+                                    if (!Directory.Exists(filepath))
+                                    {
+                                        Directory.CreateDirectory(filepath);
+                                    }
+                                }
+                            }
+                            switch(game.SelectedIndex)
+                            {
+                                //32bit dx9
+                                case 0:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/d3d9.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //32bit dx11
+                                case 1:
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //64bit dx9
+                                case 2:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //64bit dx11                                
+                                case 3:
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade64.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //ffxiv
+                                case 4:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/ffxiv_mod.dll");
+                                    System.IO.File.Delete(extractDir + "/ffxiv_dx11_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/d3d9.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade64.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/ffxiv_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/ffxiv_dx11_mod.dll");
+                                    break;
+                            }
+                            zipArchive.Dispose();
+                            File.WriteAllText(versionFile, version);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    });
+                    Task UITask = task.ContinueWith((t) =>
+                    {
+                        buttonDXInstall.Enabled = true;
+                        gamepath.Enabled = true;
+                        game.Enabled = true;
+                        OverlayVersionCheck();
+                        SaveSettings();
+                        MessageBox.Show("Successfully installed");
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                };
+                //+= new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(OverlayProgressChanged);
+
+                webClient.DownloadFileAsync(new Uri(url), savefile);
+
+            }
+            catch (Exception ex)
+            {
+                buttonDXInstall.Enabled = true;
+                gamepath.Enabled = true;
+                game.Enabled = true;
+                OverlayVersionCheck();
+                SaveSettings();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void OverlayProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.TotalBytesToReceive == -1)
+            {
+                if (dx_progress.Style != ProgressBarStyle.Marquee)
+                {
+                    dx_progress.Value = 100;
+                    dx_progress.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            else
+            {
+                dx_progress.Value = e.ProgressPercentage;
+                dx_progress.Style = ProgressBarStyle.Blocks;
+            }
+        }
+        
+        private void game_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonFindDirectory.Enabled = game.SelectedIndex >= 0;
+        }
+
+        private void buttonOverlayGitHub_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ZCube/ACTWebSocketOverlay");
+        }
+
+        private void buttonOverlayVersionCheck_Click(object sender, EventArgs e)
+        {
+            OverlayVersionCheck();
+        }
+
+        String releaseOverlayTag = null;
+        String currentOverlayTag = null;
+        String currentOverlayVersionString = null;
+        String latestOverlayVersionString = null;
+
+        void OverlayVersionCheck(String filepath = null)
+        {
+            try
+            {
+                if (filepath != null)
+                {
+                    currentOverlayVersionString = File.ReadAllText(Directory.GetParent(filepath).FullName + "/overlay_version").Trim();
+                    currentOverlayVersion.Text = currentOverlayVersionString;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            Task task2 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    releaseOverlayTag = Utility.ReleaseTag("https://github.com/ZCube/ACTWebSocketOverlay/releases");
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            Task UITask2 = task2.ContinueWith((t) =>
+            {
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    releaseOverlayVersion.Text = releaseOverlayTag + ".0";
+                    labelOverlayRelease.ForeColor = (VersionCompare(releaseOverlayVersion.Text, currentOverlayVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            Task task3 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    latestOverlayVersionString = Utility.DevelVersion("https://www.dropbox.com/s/cqxosnmm073a0u5/ACTWebSocketOverlay_version?dl=1");
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            });
+            Task UITask3 = task3.ContinueWith((t) =>
+            {
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    latestOverlayVersion.Text = latestOverlayVersionString;
+                    labelOverlayLatest.ForeColor = (VersionCompare(latestOverlayVersion.Text, currentOverlayVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
 }

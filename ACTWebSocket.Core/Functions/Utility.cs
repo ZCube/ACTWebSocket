@@ -99,9 +99,8 @@ namespace ACTWebSocket.Core
             }
             return ipAddress;
         }
-        public static String ReleaseTag()
+        public static String ReleaseTag(string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases")
         {
-            string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
             UTF8Encoding utf8 = new UTF8Encoding();
@@ -120,9 +119,8 @@ namespace ACTWebSocket.Core
             }
             return releaseTag;
         }
-        public static String DevelVersion()
+        public static String DevelVersion(string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1")
         {
-            string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
             UTF8Encoding utf8 = new UTF8Encoding();

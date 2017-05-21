@@ -337,7 +337,10 @@ namespace ACTWebSocket_Plugin
                             obj["msgtype"] = type;
                             obj["msg"] = message;
                             String str = obj.ToString();
-                            s.Sessions.Broadcast(str);
+                            lock (s)
+                            {
+                                s.Sessions.Broadcast(str);
+                            }
                         }
                     }
                 }
