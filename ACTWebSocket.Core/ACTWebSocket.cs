@@ -80,7 +80,7 @@ namespace ACTWebSocket_Plugin
         private Button buttonLatest;
         private Button buttonRelease;
         private Button buttonVersionCheck;
-        private TabControl tabControl1;
+        private TabControl overlayTab;
         private TabPage tabPage1;
         private TabPage tabPage2;
         private GroupBox groupBox6;
@@ -237,7 +237,7 @@ namespace ACTWebSocket_Plugin
             this.currentVersion = new System.Windows.Forms.TextBox();
             this.buttonGitHub = new System.Windows.Forms.Button();
             this.releaseVersion = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.overlayTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -268,7 +268,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.overlayTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -711,13 +711,13 @@ namespace ACTWebSocket_Plugin
             this.releaseVersion.Name = "releaseVersion";
             this.releaseVersion.ReadOnly = true;
             // 
-            // tabControl1
+            // overlayTab
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            resources.ApplyResources(this.tabControl1, "tabControl1");
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
+            this.overlayTab.Controls.Add(this.tabPage1);
+            this.overlayTab.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.overlayTab, "overlayTab");
+            this.overlayTab.Name = "overlayTab";
+            this.overlayTab.SelectedIndex = 0;
             // 
             // tabPage1
             // 
@@ -877,7 +877,7 @@ namespace ACTWebSocket_Plugin
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.overlayTab);
             this.Controls.Add(this.serverStatus);
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
@@ -900,7 +900,7 @@ namespace ACTWebSocket_Plugin
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.overlayTab.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
@@ -1146,6 +1146,34 @@ namespace ACTWebSocket_Plugin
                     String s = File.ReadAllText(settingsFile);
                     obj = JObject.Parse(s);
                     JToken token;
+                    if (obj.TryGetValue("DXInstalledPath", out token))
+                    {
+                        gamepath.Text = token.ToObject<string>();
+                    }
+                    else
+                    {
+                    }
+                    if (obj.TryGetValue("DXInstalledType", out token))
+                    {
+                        game.SelectedIndex = token.ToObject<int>();
+                    }
+                    else
+                    {
+                    }
+                    if (obj.TryGetValue("OverlayTab", out token))
+                    {
+                        try
+                        {
+                            overlayTab.SelectedIndex = token.ToObject<int>();
+                        }
+                        catch(Exception)
+                        {
+                        }
+                        
+                    }
+                    else
+                    {
+                    }
                     if (obj.TryGetValue("Port", out token))
                     {
                         Port = token.ToObject<int>();
@@ -1288,6 +1316,9 @@ namespace ACTWebSocket_Plugin
         {
             UpdateFormSettings();
             JObject obj = new JObject();
+            obj.Add("DXInstalledPath", gamepath.Text);
+            obj.Add("DXInstalledType", game.SelectedIndex);
+            obj.Add("OverlayTab", overlayTab.SelectedIndex);
             obj.Add("OverlayProcType", comboBoxOverlayProcType.Text);
             obj.Add("Port", Port);
             obj.Add("UPnPPort", UPnPPort);
@@ -1613,7 +1644,6 @@ namespace ACTWebSocket_Plugin
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
             //SSLUse.Enabled = false;
-            buttonDXInstall.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             DiscoveryUse.Enabled = false;
@@ -2944,16 +2974,24 @@ namespace ACTWebSocket_Plugin
 
         private void gamepath_TextChanged(object sender, EventArgs e)
         {
-            string filepath = Path.GetFileName(gamepath.Text);
-            if (filepath.ToLower() == "ffxiv.exe")
+            if (File.Exists(gamepath.Text))
             {
-                game.SelectedIndex = 4;
+                string filepath = Path.GetFileName(gamepath.Text);
+                if (filepath.ToLower() == "ffxiv.exe")
+                {
+                    game.SelectedIndex = 4;
+                }
+                else if (filepath.ToLower() == "ffxiv.exe")
+                {
+                    game.SelectedIndex = 4;
+                }
+                buttonDXInstall.Enabled = true;
+                OverlayVersionCheck(gamepath.Text);
             }
-            else if (filepath.ToLower() == "ffxiv.exe")
+            else
             {
-                game.SelectedIndex = 4;
+                buttonDXInstall.Enabled = false;
             }
-            OverlayVersionCheck(gamepath.Text);
         }
 
         private void buttonDXInstall_Click(object sender, EventArgs e)
