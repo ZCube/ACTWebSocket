@@ -1396,7 +1396,7 @@ namespace ACTWebSocket_Plugin
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
             VersionCheck();
-            OverlayVersionCheck();
+            OverlayVersionCheck(gamepath.Text);
             CheckUpdate();
         }
 
@@ -3101,6 +3101,7 @@ namespace ACTWebSocket_Plugin
                             }
                             zipArchive.Dispose();
                             File.WriteAllText(versionFile, version);
+                            MessageBox.Show("Successfully installed");
                         }
                         catch (Exception ex)
                         {
@@ -3112,9 +3113,8 @@ namespace ACTWebSocket_Plugin
                         buttonDXInstall.Enabled = true;
                         gamepath.Enabled = true;
                         game.Enabled = true;
-                        OverlayVersionCheck();
+                        OverlayVersionCheck(gamepath.Text);
                         SaveSettings();
-                        MessageBox.Show("Successfully installed");
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 };
                 //+= new AsyncCompletedEventHandler(Completed);
@@ -3128,7 +3128,7 @@ namespace ACTWebSocket_Plugin
                 buttonDXInstall.Enabled = true;
                 gamepath.Enabled = true;
                 game.Enabled = true;
-                OverlayVersionCheck();
+                OverlayVersionCheck(gamepath.Text);
                 SaveSettings();
                 MessageBox.Show(ex.Message);
             }
@@ -3163,7 +3163,7 @@ namespace ACTWebSocket_Plugin
 
         private void buttonOverlayVersionCheck_Click(object sender, EventArgs e)
         {
-            OverlayVersionCheck();
+            OverlayVersionCheck(gamepath.Text);
         }
 
         String releaseOverlayTag = null;
