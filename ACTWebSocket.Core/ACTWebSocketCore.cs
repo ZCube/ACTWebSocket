@@ -1,12 +1,14 @@
 ﻿using Advanced_Combat_Tracker;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using WebSocketSharp;
@@ -17,6 +19,7 @@ namespace ACTWebSocket_Plugin
 {
     public partial class ACTWebSocketCore
     {
+        public static String currentVersionString = "";
         ACTWebSocketMain gui = null;
         public ACTWebSocketCore(ACTWebSocketMain gui)
         {
@@ -26,8 +29,8 @@ namespace ACTWebSocket_Plugin
         public Dictionary<string, bool> Filters = new Dictionary<string, bool>();
         public static FFXIV_OverlayAPI overlayAPI;
         public HttpServer httpServer = null;
-        Timer updateTimer = null;
-        Timer pingTimer = null;
+        System.Timers.Timer updateTimer = null;
+        System.Timers.Timer pingTimer = null;
         internal IntPtr hwnd;
         public JObject skinObject = new JObject();
         static public string randomDir = null;
@@ -73,7 +76,7 @@ namespace ACTWebSocket_Plugin
         internal void StartServer(string address, int port, int extPort, string domain = null, bool skinOnAct = false, bool useSSL = false)
         {
             StopServer();
-
+            
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port, useSSL);
             httpServer.ReuseAddress = true;
             //if (useSSL)
@@ -87,7 +90,7 @@ namespace ACTWebSocket_Plugin
             //  new X509Certificate2("/path/to/cert.pfx", "password for cert.pfx");
 
             string parent_path = "";
-            if(randomDir != null)
+            if (randomDir != null)
             {
                 parent_path = "/" + randomDir;
             }
@@ -119,7 +122,7 @@ namespace ACTWebSocket_Plugin
                 var req = e.Request;
             };
 
-            EventHandler < HttpRequestEventArgs > onget = (sender, e) =>
+            EventHandler<HttpRequestEventArgs> onget = (sender, e) =>
             {
                 try
                 {
@@ -175,7 +178,7 @@ namespace ACTWebSocket_Plugin
                                             obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
                                         }
                                     }
-                                    res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString()));
+                                    res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString(Newtonsoft.Json.Formatting.None)));
                                 }
                             }
                             else
@@ -232,7 +235,7 @@ namespace ACTWebSocket_Plugin
 
                     res.WriteContent(content);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     // TODO:
                 }
@@ -253,7 +256,7 @@ namespace ACTWebSocket_Plugin
 
             httpServer.Start();
 
-            pingTimer = new Timer();
+            pingTimer = new System.Timers.Timer();
             pingTimer.Interval = 2000;
             pingTimer.Elapsed += (o, e) =>
             {
@@ -271,7 +274,7 @@ namespace ACTWebSocket_Plugin
             };
             pingTimer.Start();
 
-            updateTimer = new Timer();
+            updateTimer = new System.Timers.Timer();
             updateTimer.Interval = 1000;
             updateTimer.Elapsed += (o, e) =>
             {
@@ -313,7 +316,6 @@ namespace ACTWebSocket_Plugin
                 pingTimer.Close();
                 pingTimer = null;
             }
-
         }
 
         internal void Broadcast(string v, string type, JToken message)
@@ -336,11 +338,8 @@ namespace ACTWebSocket_Plugin
                             obj["type"] = "broadcast";
                             obj["msgtype"] = type;
                             obj["msg"] = message;
-                            String str = obj.ToString();
-                            lock (s)
-                            {
-                                s.Sessions.Broadcast(str);
-                            }
+                            String str = obj.ToString(Newtonsoft.Json.Formatting.None);
+                            s.Sessions.BroadcastAsync(str, null);
                         }
                     }
                 }

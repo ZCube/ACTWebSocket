@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACTWebSocket_Plugin;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -87,6 +88,8 @@ namespace ACTWebSocket.Core
             string whatIsMyIp = "https://api.ipify.org";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
+
             UTF8Encoding utf8 = new UTF8Encoding();
             string ipAddress = "";
             try
@@ -103,6 +106,7 @@ namespace ACTWebSocket.Core
         {
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
             UTF8Encoding utf8 = new UTF8Encoding();
             ///ZCube/ACTWebSocket/tree/
             string releaseTag = null;
@@ -123,6 +127,7 @@ namespace ACTWebSocket.Core
         {
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
             UTF8Encoding utf8 = new UTF8Encoding();
             ///ZCube/ACTWebSocket/tree/
             string version = null;
