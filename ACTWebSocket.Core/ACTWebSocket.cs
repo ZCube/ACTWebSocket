@@ -103,6 +103,10 @@ namespace ACTWebSocket_Plugin
         private Button buttonOverlayGitHub;
         private TextBox releaseOverlayVersion;
         private Button buttonUninstall;
+        private GroupBox groupBox8;
+        private ListView backupFiles;
+        private Button buttonRestore;
+        private Button buttonBackup;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -116,7 +120,7 @@ namespace ACTWebSocket_Plugin
                 }
                 catch(Exception e)
                 { 
-}
+                }
             }
         }
 
@@ -251,6 +255,7 @@ namespace ACTWebSocket_Plugin
             this.overlayTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.buttonOverlayVersionCheck = new System.Windows.Forms.Button();
             this.labelOverlayLatest = new System.Windows.Forms.Label();
@@ -260,7 +265,7 @@ namespace ACTWebSocket_Plugin
             this.currentOverlayVersion = new System.Windows.Forms.TextBox();
             this.buttonOverlayGitHub = new System.Windows.Forms.Button();
             this.releaseOverlayVersion = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.buttonUninstall = new System.Windows.Forms.Button();
             this.buttonFindDirectory = new System.Windows.Forms.Button();
             this.gamepath = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -270,7 +275,10 @@ namespace ACTWebSocket_Plugin
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonDXInstall = new System.Windows.Forms.Button();
             this.dx_progress = new System.Windows.Forms.ProgressBar();
-            this.buttonUninstall = new System.Windows.Forms.Button();
+            this.buttonBackup = new System.Windows.Forms.Button();
+            this.buttonRestore = new System.Windows.Forms.Button();
+            this.backupFiles = new System.Windows.Forms.ListView();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -283,8 +291,9 @@ namespace ACTWebSocket_Plugin
             this.overlayTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -748,6 +757,24 @@ namespace ACTWebSocket_Plugin
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.groupBox8);
+            this.groupBox6.Controls.Add(this.groupBox7);
+            this.groupBox6.Controls.Add(this.buttonUninstall);
+            this.groupBox6.Controls.Add(this.buttonFindDirectory);
+            this.groupBox6.Controls.Add(this.gamepath);
+            this.groupBox6.Controls.Add(this.label5);
+            this.groupBox6.Controls.Add(this.label4);
+            this.groupBox6.Controls.Add(this.label3);
+            this.groupBox6.Controls.Add(this.game);
+            this.groupBox6.Controls.Add(this.textBox1);
+            this.groupBox6.Controls.Add(this.buttonDXInstall);
+            this.groupBox6.Controls.Add(this.dx_progress);
+            resources.ApplyResources(this.groupBox6, "groupBox6");
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.TabStop = false;
+            // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.buttonOverlayVersionCheck);
@@ -809,22 +836,12 @@ namespace ACTWebSocket_Plugin
             this.releaseOverlayVersion.Name = "releaseOverlayVersion";
             this.releaseOverlayVersion.ReadOnly = true;
             // 
-            // groupBox6
+            // buttonUninstall
             // 
-            this.groupBox6.Controls.Add(this.groupBox7);
-            this.groupBox6.Controls.Add(this.buttonUninstall);
-            this.groupBox6.Controls.Add(this.buttonFindDirectory);
-            this.groupBox6.Controls.Add(this.gamepath);
-            this.groupBox6.Controls.Add(this.label5);
-            this.groupBox6.Controls.Add(this.label4);
-            this.groupBox6.Controls.Add(this.label3);
-            this.groupBox6.Controls.Add(this.game);
-            this.groupBox6.Controls.Add(this.textBox1);
-            this.groupBox6.Controls.Add(this.buttonDXInstall);
-            this.groupBox6.Controls.Add(this.dx_progress);
-            resources.ApplyResources(this.groupBox6, "groupBox6");
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.TabStop = false;
+            resources.ApplyResources(this.buttonUninstall, "buttonUninstall");
+            this.buttonUninstall.Name = "buttonUninstall";
+            this.buttonUninstall.UseVisualStyleBackColor = true;
+            this.buttonUninstall.Click += new System.EventHandler(this.buttonUninstall_Click);
             // 
             // buttonFindDirectory
             // 
@@ -886,12 +903,37 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.dx_progress, "dx_progress");
             this.dx_progress.Name = "dx_progress";
             // 
-            // buttonUninstall
+            // buttonBackup
             // 
-            resources.ApplyResources(this.buttonUninstall, "buttonUninstall");
-            this.buttonUninstall.Name = "buttonUninstall";
-            this.buttonUninstall.UseVisualStyleBackColor = true;
-            this.buttonUninstall.Click += new System.EventHandler(this.buttonUninstall_Click);
+            resources.ApplyResources(this.buttonBackup, "buttonBackup");
+            this.buttonBackup.Name = "buttonBackup";
+            this.buttonBackup.UseVisualStyleBackColor = true;
+            this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
+            // 
+            // buttonRestore
+            // 
+            resources.ApplyResources(this.buttonRestore, "buttonRestore");
+            this.buttonRestore.Name = "buttonRestore";
+            this.buttonRestore.UseVisualStyleBackColor = true;
+            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
+            // 
+            // backupFiles
+            // 
+            this.backupFiles.GridLines = true;
+            resources.ApplyResources(this.backupFiles, "backupFiles");
+            this.backupFiles.MultiSelect = false;
+            this.backupFiles.Name = "backupFiles";
+            this.backupFiles.UseCompatibleStateImageBehavior = false;
+            this.backupFiles.View = System.Windows.Forms.View.List;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.backupFiles);
+            this.groupBox8.Controls.Add(this.buttonRestore);
+            this.groupBox8.Controls.Add(this.buttonBackup);
+            resources.ApplyResources(this.groupBox8, "groupBox8");
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.TabStop = false;
             // 
             // ACTWebSocketMain
             // 
@@ -923,10 +965,11 @@ namespace ACTWebSocket_Plugin
             this.overlayTab.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1089,6 +1132,7 @@ namespace ACTWebSocket_Plugin
             progressBar.Hide();
             progressBar.BringToFront();
             StopServer();
+            UpdateBackupFiles();
 
             if (core != null)
             {
@@ -3204,6 +3248,88 @@ namespace ACTWebSocket_Plugin
                 game.Enabled = true;
                 OverlayVersionCheck(gamepath.Text);
                 SaveSettings();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonBackup_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String extractDir = Directory.GetParent(gamepath.Text).FullName;
+                String settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                String backupDir = pluginDirectory + "/SettingsBackup";
+                String backupname = "mod_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
+                String backupFile = backupDir + "/" + backupname;
+
+                if (File.Exists(backupFile))
+                {
+                    DialogResult dialogResult = MessageBox.Show("\'mod.json\' file is already exists. Do you want overwrite it ? ", "Backup error", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+                    File.Delete(backupFile);
+                }
+
+                Directory.CreateDirectory(backupDir);
+                System.IO.File.Copy(settingsFile, backupFile);
+                UpdateBackupFiles();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        void UpdateBackupFiles()
+        {
+            try
+            {
+                backupFiles.Items.Clear();
+                string extractDir = Directory.GetParent(gamepath.Text).FullName;
+                string settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                string backupDir = pluginDirectory + "/SettingsBackup";
+                string[] files = Directory.GetFiles(backupDir, "*.json").Select(Path.GetFileName).ToArray();
+
+                for(int i=0;i<files.Length;++i)
+                {
+                    backupFiles.Items.Add(new ListViewItem(files[i]));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonRestore_Click(object sender, EventArgs e)
+        {
+            if (backupFiles.SelectedItems.Count != 1)
+                return;
+            try
+            {
+                String extractDir = Directory.GetParent(gamepath.Text).FullName;
+                String settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                String backupDir = pluginDirectory + "/SettingsBackup";
+                String backupname = backupFiles.SelectedItems[0].Text;
+                String backupFile = backupDir + "/" + backupname;
+
+                if (File.Exists(settingsFile))
+                {
+                    DialogResult dialogResult = MessageBox.Show("\'mod.json\' file is already exists. Do you want overwrite it ? ", "Restore error", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+                    File.Delete(settingsFile);
+                }
+
+                System.IO.File.Copy(backupFile, settingsFile);
+                UpdateBackupFiles();
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message);
             }
         }
