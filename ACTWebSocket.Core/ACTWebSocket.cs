@@ -3290,11 +3290,14 @@ namespace ACTWebSocket_Plugin
                 string extractDir = Directory.GetParent(gamepath.Text).FullName;
                 string settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
                 string backupDir = pluginDirectory + "/SettingsBackup";
-                string[] files = Directory.GetFiles(backupDir, "*.json").Select(Path.GetFileName).ToArray();
-
-                for(int i=0;i<files.Length;++i)
+                if (Directory.Exists(backupDir))
                 {
-                    backupFiles.Items.Add(new ListViewItem(files[i]));
+                    string[] files = Directory.GetFiles(backupDir, "*.json").Select(Path.GetFileName).ToArray();
+
+                    for (int i = 0; i < files.Length; ++i)
+                    {
+                        backupFiles.Items.Add(new ListViewItem(files[i]));
+                    }
                 }
             }
             catch (Exception ex)

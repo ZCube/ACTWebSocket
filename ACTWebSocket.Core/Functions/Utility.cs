@@ -116,6 +116,16 @@ namespace ACTWebSocket.Core
                 //<a href="/ZCube/ACTWebSocket/tree/1.1.3" class="css-truncate">
                 var zz = Regex.Match(releaseTag, "/tree/(?<tag>[^\"]*)", RegexOptions.IgnoreCase);
                 releaseTag = zz.Groups["tag"].Value;
+
+                int dotCount = releaseTag.Count(x => x == '.');
+                if (dotCount == 0)
+                {
+                    releaseTag = "0.0.0.0";
+                }
+                else if (dotCount < 3 && dotCount > 0)
+                {
+                    releaseTag += string.Concat(Enumerable.Repeat(".0", 3 - dotCount));
+                }
             }
             catch (WebException we)
             {
