@@ -3062,7 +3062,7 @@ namespace ACTWebSocket_Plugin
 
         private void buttonLatest_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1");
+            System.Diagnostics.Process.Start("https://www.dropbox.com/s/jg4qoe7iwj6qgud/ACTWebSocket_latest.zip?dl=1");
         }
 
         private void buttonVersionCheck_Click(object sender, EventArgs e)
