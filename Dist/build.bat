@@ -1,5 +1,5 @@
-@echo off
-if exist call config.bat
+@echo on
+if exist config.bat call config.bat
 
 CALL "%VS140COMNTOOLS%vsvars32.bat"
 pushd ..
@@ -50,9 +50,9 @@ echo %actversion%
 if not exist %actversion% mkdir %actversion%
 xcopy /hrkysd temp %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
-call version_change.bat ACTWebSocket %actversion%
+call version_change.bat ACTWebSocket %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
-call version_change.bat ACTWebSocket_Plugin %actversion%
+call version_change.bat ACTWebSocket_Plugin %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
@@ -69,9 +69,9 @@ echo %actversion%
 if not exist %actversion% mkdir %actversion%
 xcopy /hrkysd temp %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
-call version_change.bat ACTWebSocket %actversion%
+call version_change.bat ACTWebSocket %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
-call version_change.bat ACTWebSocket_Plugin %actversion%
+call version_change.bat ACTWebSocket_Plugin %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
