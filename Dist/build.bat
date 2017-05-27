@@ -1,4 +1,4 @@
-@echo on
+@echo off
 if exist config.bat call config.bat
 
 CALL "%VS140COMNTOOLS%vsvars32.bat"
@@ -39,7 +39,13 @@ pushd temp
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd temp
 
-xcopy /hrkyd ACTWebSocket_latest.7z ACTWebSocket_%version%.*
+if exist ACTWebSocket_latest.zip del ACTWebSocket_latest.zip
+pushd temp
+"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest.zip *
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd temp
+
+xcopy /hrkyd ACTWebSocket_latest.zip ACTWebSocket_%version%.*
 
 SET OWNER=ZCube
 SET REPO=ACTWebSocket
@@ -55,14 +61,14 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 call version_change.bat ACTWebSocket_Plugin %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
+if exist ACTWebSocket_latest_actv3_%actversion%.zip del ACTWebSocket_latest_actv3_%actversion%.zip
 pushd %actversion%
-"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.7z *
+"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.zip *
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd %actversion%
 
-xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.7z ACTWebSocket_%version%_actv3_%actversion%.*
-@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.7z
+xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.zip ACTWebSocket_%version%_actv3_%actversion%.*
+@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.zip
 echo ==========================================================================================
 set actversion=3.3.1.255
 echo %actversion%
@@ -74,14 +80,14 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 call version_change.bat ACTWebSocket_Plugin %actversion% %actversion%
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
+if exist ACTWebSocket_latest_actv3_%actversion%.zip del ACTWebSocket_latest_actv3_%actversion%.zip
 pushd %actversion%
-"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.7z *
+"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.zip *
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd %actversion%
 
-xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.7z ACTWebSocket_%version%_actv3_%actversion%.*
-@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.7z
+xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.zip ACTWebSocket_%version%_actv3_%actversion%.*
+@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.zip
 echo ==========================================================================================
 
 
@@ -93,6 +99,8 @@ for /f "tokens=*" %%a in ( 'powershell -NoProfile -ExecutionPolicy Bypass -Comma
 echo %dropBoxRoot%
 
 if not exist "%dropBoxRoot%\share" mkdir "%dropBoxRoot%\share"
+if %errorlevel% neq 0 exit /b %errorlevel%
+xcopy /hrkysd  "%CD%\ACTWebSocket_latest.zip" /exclude:exclude_files.txt "%dropBoxRoot%\share"
 if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd  "%CD%\ACTWebSocket_latest.7z" /exclude:exclude_files.txt "%dropBoxRoot%\share"
 if %errorlevel% neq 0 exit /b %errorlevel%
