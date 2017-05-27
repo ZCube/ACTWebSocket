@@ -1,4 +1,3 @@
-call config.bat
 if not exist temp2 mkdir temp2
 set filename=%1
 set newver=%2

@@ -1,4 +1,6 @@
 @echo off
+if exist call config.bat
+
 CALL "%VS140COMNTOOLS%vsvars32.bat"
 pushd ..
 if not exist nuget.exe wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
