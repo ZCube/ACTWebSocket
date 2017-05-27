@@ -24,8 +24,11 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\Tmds*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-
 popd
+
+set /p version=<..\Common\version
+set /p tag=<..\Common\tag
+
 xcopy /hrkysd ..\Sample /exclude:exclude_files.txt temp\
 if %errorlevel% neq 0 exit /b %errorlevel%
 if exist ACTWebSocket_latest.7z del ACTWebSocket_latest.7z
@@ -33,6 +36,51 @@ pushd temp
 "c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest.7z *
 if %errorlevel% neq 0 exit /b %errorlevel%
 popd temp
+
+xcopy /hrkyd ACTWebSocket_latest.7z ACTWebSocket_%version%.*
+
+SET OWNER=ZCube
+SET REPO=ACTWebSocket
+
+echo ==========================================================================================
+set actversion=3.3.0.254
+echo %actversion%
+if not exist %actversion% mkdir %actversion%
+xcopy /hrkysd temp %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+call version_change.bat ACTWebSocket %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+call version_change.bat ACTWebSocket_Plugin %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
+pushd %actversion%
+"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.7z *
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd %actversion%
+
+xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.7z ACTWebSocket_%version%_actv3_%actversion%.*
+@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.7z
+echo ==========================================================================================
+set actversion=3.3.1.255
+echo %actversion%
+if not exist %actversion% mkdir %actversion%
+xcopy /hrkysd temp %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+call version_change.bat ACTWebSocket %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+call version_change.bat ACTWebSocket_Plugin %actversion%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+if exist ACTWebSocket_latest_actv3_%actversion%.7z del ACTWebSocket_latest_actv3_%actversion%.7z
+pushd %actversion%
+"c:\Program Files\7-Zip\7z.exe" a ..\ACTWebSocket_latest_actv3_%actversion%.7z *
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd %actversion%
+
+xcopy /hrkyd ACTWebSocket_latest_actv3_%actversion%.7z ACTWebSocket_%version%_actv3_%actversion%.*
+@py -2 github_uploader.py %GITHUB_TOKEN% %OWNER% %REPO% %tag% ACTWebSocket_%version%_actv3_%actversion%.7z
+echo ==========================================================================================
 
 
 :SetVariables

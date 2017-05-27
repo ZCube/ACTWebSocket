@@ -3284,6 +3284,9 @@ namespace ACTWebSocket_Plugin
 
         void UpdateBackupFiles()
         {
+            String dir = gamepath.Text.Trim();
+            if (dir.Length == 0)
+                return;
             try
             {
                 backupFiles.Items.Clear();
