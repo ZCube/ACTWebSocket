@@ -1,5 +1,13 @@
 ﻿using Advanced_Combat_Tracker;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Prng;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -47,42 +55,42 @@ namespace ACTWebSocket_Plugin
             Broadcast("/MiniParse", SendMessageType.CombatData.ToString(), overlayAPI.CreateEncounterJsonData());
         }
 
-        //static X509Certificate2 GenerateCertificate(string certName)
-        //{
-        //    var keypairgen = new RsaKeyPairGenerator();
-        //    keypairgen.Init(new KeyGenerationParameters(new SecureRandom(new CryptoApiRandomGenerator()), 2048));
+        static X509Certificate2 GenerateCertificate(string certName)
+        {
+            var keypairgen = new RsaKeyPairGenerator();
+            keypairgen.Init(new KeyGenerationParameters(new SecureRandom(new CryptoApiRandomGenerator()), 2048));
 
-        //    var keypair = keypairgen.GenerateKeyPair();
+            var keypair = keypairgen.GenerateKeyPair();
 
-        //    var gen = new X509V3CertificateGenerator();
+            var gen = new X509V3CertificateGenerator();
 
-        //    var CN = new X509Name("CN=" + certName);
-        //    var SN = BigInteger.ProbablePrime(120, new Random());
+            var CN = new X509Name("CN=" + certName);
+            var SN = BigInteger.ProbablePrime(120, new Random());
 
-        //    gen.SetSerialNumber(SN);
-        //    gen.SetSubjectDN(CN);
-        //    gen.SetIssuerDN(CN);
-        //    gen.SetNotAfter(DateTime.MaxValue);
-        //    gen.SetNotBefore(DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)));
-        //    gen.SetSignatureAlgorithm("SHA256WithRSA");
-        //    gen.SetPublicKey(keypair.Public);
+            gen.SetSerialNumber(SN);
+            gen.SetSubjectDN(CN);
+            gen.SetIssuerDN(CN);
+            gen.SetNotAfter(DateTime.MaxValue);
+            gen.SetNotBefore(DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)));
+            gen.SetSignatureAlgorithm("SHA256WithRSA");
+            gen.SetPublicKey(keypair.Public);
 
-        //    var newCert = gen.Generate(keypair.Private);
-            
-        //    X509Certificate2 cert = new X509Certificate2(DotNetUtilities.ToX509Certificate((Org.BouncyCastle.X509.X509Certificate)newCert));
-        //    cert.PrivateKey = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters) keypair.Private);
-        //    return cert;
-        //}
+            var newCert = gen.Generate(keypair.Private);
+
+            X509Certificate2 cert = new X509Certificate2(DotNetUtilities.ToX509Certificate((Org.BouncyCastle.X509.X509Certificate)newCert));
+            cert.PrivateKey = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)keypair.Private);
+            return cert;
+        }
         internal void StartServer(string address, int port, int extPort, string domain = null, bool skinOnAct = false, bool useSSL = false)
         {
             StopServer();
             
             httpServer = new HttpServer(System.Net.IPAddress.Parse(address), port, useSSL);
             httpServer.ReuseAddress = true;
-            //if (useSSL)
-            //{
-            //    httpServer.SslConfiguration.ServerCertificate = GenerateCertificate(domain);
-            //}
+            if (useSSL)
+            {
+                httpServer.SslConfiguration.ServerCertificate = GenerateCertificate(domain);
+            }
 
             // TODO : SSL
             //wssv = new WebSocketServer(System.Net.IPAddress.Parse(address), port, true);
@@ -264,7 +272,7 @@ namespace ACTWebSocket_Plugin
                 {
                     if (httpServer != null)
                     {
-                        httpServer.WebSocketServices.Broadcast(".");
+                        httpServer.WebSocketServices.BroadcastAsync(".", null);
                     }
                 }
                 catch (Exception ex)

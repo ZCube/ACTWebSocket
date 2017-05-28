@@ -107,6 +107,7 @@ namespace ACTWebSocket_Plugin
         private ListView backupFiles;
         private Button buttonRestore;
         private Button buttonBackup;
+        private CheckBox SSLUse;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -206,6 +207,7 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
             this.startoption = new System.Windows.Forms.GroupBox();
+            this.SSLUse = new System.Windows.Forms.CheckBox();
             this.DiscoveryUse = new System.Windows.Forms.CheckBox();
             this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
@@ -256,6 +258,10 @@ namespace ACTWebSocket_Plugin
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.backupFiles = new System.Windows.Forms.ListView();
+            this.buttonRestore = new System.Windows.Forms.Button();
+            this.buttonBackup = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.buttonOverlayVersionCheck = new System.Windows.Forms.Button();
             this.labelOverlayLatest = new System.Windows.Forms.Label();
@@ -275,10 +281,6 @@ namespace ACTWebSocket_Plugin
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonDXInstall = new System.Windows.Forms.Button();
             this.dx_progress = new System.Windows.Forms.ProgressBar();
-            this.buttonBackup = new System.Windows.Forms.Button();
-            this.buttonRestore = new System.Windows.Forms.Button();
-            this.backupFiles = new System.Windows.Forms.ListView();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -292,8 +294,8 @@ namespace ACTWebSocket_Plugin
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -371,6 +373,7 @@ namespace ACTWebSocket_Plugin
             // startoption
             // 
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.SSLUse);
             this.startoption.Controls.Add(this.DiscoveryUse);
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
@@ -379,6 +382,13 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
+            // 
+            // SSLUse
+            // 
+            resources.ApplyResources(this.SSLUse, "SSLUse");
+            this.SSLUse.Name = "SSLUse";
+            this.SSLUse.UseVisualStyleBackColor = true;
+            this.SSLUse.CheckedChanged += new System.EventHandler(this.SSLUse_CheckedChanged);
             // 
             // DiscoveryUse
             // 
@@ -775,6 +785,38 @@ namespace ACTWebSocket_Plugin
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.TabStop = false;
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.backupFiles);
+            this.groupBox8.Controls.Add(this.buttonRestore);
+            this.groupBox8.Controls.Add(this.buttonBackup);
+            resources.ApplyResources(this.groupBox8, "groupBox8");
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.TabStop = false;
+            // 
+            // backupFiles
+            // 
+            this.backupFiles.GridLines = true;
+            resources.ApplyResources(this.backupFiles, "backupFiles");
+            this.backupFiles.MultiSelect = false;
+            this.backupFiles.Name = "backupFiles";
+            this.backupFiles.UseCompatibleStateImageBehavior = false;
+            this.backupFiles.View = System.Windows.Forms.View.List;
+            // 
+            // buttonRestore
+            // 
+            resources.ApplyResources(this.buttonRestore, "buttonRestore");
+            this.buttonRestore.Name = "buttonRestore";
+            this.buttonRestore.UseVisualStyleBackColor = true;
+            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
+            // 
+            // buttonBackup
+            // 
+            resources.ApplyResources(this.buttonBackup, "buttonBackup");
+            this.buttonBackup.Name = "buttonBackup";
+            this.buttonBackup.UseVisualStyleBackColor = true;
+            this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
+            // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.buttonOverlayVersionCheck);
@@ -903,38 +945,6 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.dx_progress, "dx_progress");
             this.dx_progress.Name = "dx_progress";
             // 
-            // buttonBackup
-            // 
-            resources.ApplyResources(this.buttonBackup, "buttonBackup");
-            this.buttonBackup.Name = "buttonBackup";
-            this.buttonBackup.UseVisualStyleBackColor = true;
-            this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
-            // 
-            // buttonRestore
-            // 
-            resources.ApplyResources(this.buttonRestore, "buttonRestore");
-            this.buttonRestore.Name = "buttonRestore";
-            this.buttonRestore.UseVisualStyleBackColor = true;
-            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
-            // 
-            // backupFiles
-            // 
-            this.backupFiles.GridLines = true;
-            resources.ApplyResources(this.backupFiles, "backupFiles");
-            this.backupFiles.MultiSelect = false;
-            this.backupFiles.Name = "backupFiles";
-            this.backupFiles.UseCompatibleStateImageBehavior = false;
-            this.backupFiles.View = System.Windows.Forms.View.List;
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.backupFiles);
-            this.groupBox8.Controls.Add(this.buttonRestore);
-            this.groupBox8.Controls.Add(this.buttonBackup);
-            resources.ApplyResources(this.groupBox8, "groupBox8");
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.TabStop = false;
-            // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -967,9 +977,9 @@ namespace ACTWebSocket_Plugin
             this.tabPage2.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1121,7 +1131,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineReadUse.Checked = BeforeLogLineRead;
             OnLogLineReadUse.Checked = OnLogLineRead;
             MiniParseUse.Checked = MiniParse;
-            //SSLUse.Checked = UseSSL;
+            SSLUse.Checked = UseSSL;
             DiscoveryUse.Checked = UseDiscovery;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
@@ -1298,14 +1308,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseDiscovery = false;
                     }
-                    //if (obj.TryGetValue("UseSSL", out token))
-                    //{
-                    //    UseSSL = token.ToObject<bool>();
-                    //}
-                    //else
-                    //{
-                    //    UseSSL = false;
-                    //}
+                    if (obj.TryGetValue("UseSSL", out token))
+                    {
+                        UseSSL = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        UseSSL = false;
+                    }
                     if (obj.TryGetValue("SkinOnAct", out token))
                     {
                         SkinOnAct = token.ToObject<bool>();
@@ -1402,7 +1412,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
             obj.Add("UseDiscovery", UseDiscovery);
-            //obj.Add("UseSSL", UseSSL);
+            obj.Add("UseSSL", UseSSL);
             obj.Add("AutoRun", AutoRun);
             obj.Add("AutoOverlay", AutoOverlay);
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
@@ -1633,7 +1643,7 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        //public bool UseSSL { get; set; }
+        public bool UseSSL { get; set; }
         public bool UseUPnP { get; set; }
         public bool UseDiscovery { get; set; }
         public bool AutoRun { get; set; }
@@ -1695,11 +1705,11 @@ namespace ACTWebSocket_Plugin
             {
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, false);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, UseSSL);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, false);
+                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, UseSSL);
                 }
             }
             catch (Exception e)
@@ -1711,7 +1721,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = false;
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
-            //SSLUse.Enabled = false;
+            SSLUse.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             DiscoveryUse.Enabled = false;
@@ -1778,7 +1788,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = true;
             //MiniParseUse.Enabled = true;
             //chatFilter.Enabled = true;
-            //SSLUse.Enabled = true;
+            SSLUse.Enabled = true;
             skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
             DiscoveryUse.Enabled = true;
@@ -1963,7 +1973,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineRead = BeforeLogLineReadUse.Checked;
             OnLogLineRead = OnLogLineReadUse.Checked;
             MiniParse = MiniParseUse.Checked;
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
             UseUPnP = UPNPUse.Checked;
             UseDiscovery = DiscoveryUse.Checked;
             RandomURL = randomURL.Checked;
@@ -2374,7 +2384,7 @@ namespace ACTWebSocket_Plugin
 
         private void UseSSL_CheckedChanged(object sender, EventArgs e)
         {
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
         }
 
         private void skinOnAct_CheckedChanged(object sender, EventArgs e)
@@ -3030,7 +3040,7 @@ namespace ACTWebSocket_Plugin
 
         private void SSLUse_CheckedChanged(object sender, EventArgs e)
         {
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
         }
 
         private void buttonInstall_Click(object sender, EventArgs e)

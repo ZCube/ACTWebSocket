@@ -11,6 +11,8 @@ devenv ActWebSocket.sln /build "Release"
 if %errorlevel% neq 0 exit /b %errorlevel%
 if not exist Dist\temp mkdir Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
+xcopy /hrkysd ACTWebSocket.Loader\bin\Release\BouncyCastle.*.dll Dist\temp
+if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\ACTWebSocket*.dll Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%
 xcopy /hrkysd ACTWebSocket.Loader\bin\Release\websocket*.dll Dist\temp

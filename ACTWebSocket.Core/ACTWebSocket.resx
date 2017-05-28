@@ -175,7 +175,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;autostart.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="MiniParseUse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -361,7 +361,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;UPNPUse.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="randomURL.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -391,7 +391,37 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;randomURL.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
+  </data>
+  <data name="SSLUse.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="SSLUse.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="SSLUse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>131, 48</value>
+  </data>
+  <data name="SSLUse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>73, 16</value>
+  </data>
+  <data name="SSLUse.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="SSLUse.Text" xml:space="preserve">
+    <value>Use SSL</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Name" xml:space="preserve">
+    <value>SSLUse</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.Parent" xml:space="preserve">
+    <value>startoption</value>
+  </data>
+  <data name="&gt;&gt;SSLUse.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="DiscoveryUse.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -418,7 +448,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;DiscoveryUse.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="skinOnAct.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -448,7 +478,7 @@
     <value>startoption</value>
   </data>
   <data name="&gt;&gt;skinOnAct.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="startoption.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
