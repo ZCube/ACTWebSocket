@@ -1529,7 +1529,7 @@ namespace ACTWebSocket_Plugin
                 //develVersion.Text = latestTag + "." + develVersion;
                 try
                 {
-                    releaseVersion.Text = releaseTag + ".0";
+                    releaseVersion.Text = releaseTag;
                     labelRelease.ForeColor = (VersionCompare(releaseVersion.Text, currentVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
@@ -3451,7 +3451,7 @@ namespace ACTWebSocket_Plugin
                 //develVersion.Text = latestTag + "." + develVersion;
                 try
                 {
-                    releaseOverlayVersion.Text = releaseOverlayTag + ".0";
+                    releaseOverlayVersion.Text = releaseOverlayTag;
                     labelOverlayRelease.ForeColor = (VersionCompare(releaseOverlayVersion.Text, currentOverlayVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
