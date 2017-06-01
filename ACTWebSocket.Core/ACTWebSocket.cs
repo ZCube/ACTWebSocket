@@ -29,6 +29,7 @@ namespace ACTWebSocket_Plugin
     using Microsoft.Win32;
     using System.Reflection;
     using System.Linq;
+    using System.Net.NetworkInformation;
 
     public interface PluginDirectory
     {
@@ -419,6 +420,7 @@ namespace ACTWebSocket_Plugin
             // 
             // hostnames
             // 
+            this.hostnames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.hostnames.FormattingEnabled = true;
             resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.Name = "hostnames";
@@ -988,6 +990,7 @@ namespace ACTWebSocket_Plugin
 
         #endregion
 
+        String externalIP = null;
         System.Timers.Timer overlayProcCheckTimer = null;
         public ACTWebSocketMain()
         {
@@ -1393,7 +1396,19 @@ namespace ACTWebSocket_Plugin
                 catch (Exception e)
                 {
                 }
-                hostnames.Text = Hostname;
+                {
+                    int host = Array.IndexOf(addressMap.Keys.ToArray(), Hostname);
+                    if(host >= 0)
+                    {
+                        hostnames.SelectedIndex = host;
+                    }
+                    else
+                    {
+                        Hostname = "Loopback (127.0.0.1)";
+                        int host2 = Array.IndexOf(addressMap.Keys.ToArray(), Hostname);
+                        hostnames.SelectedIndex = host2;
+                    }
+                }
             }
         }
 
@@ -1436,23 +1451,41 @@ namespace ACTWebSocket_Plugin
         String currentVersionString = null;
         String latestVersionString = null;
 
+        Dictionary<String, String> addressMap = new Dictionary<String, String>();
+
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             comboBoxOverlayProcType.SelectedIndex = 0;
-            hostnames.Text = "127.0.0.1";
             String strHostName = string.Empty;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
 
+            addressMap["Any (0.0.0.0)"] = System.Net.IPAddress.Any.ToString();
+            addressMap["Any IPV6([::])"] = "[" + System.Net.IPAddress.IPv6Any.ToString() + "]";
+            addressMap["Loopback (127.0.0.1)"] = System.Net.IPAddress.Loopback.ToString();
+            addressMap["Loopback IPV6([::1])"] = "[" + System.Net.IPAddress.IPv6Loopback.ToString() + "]";
+
             addrs.Clear();
-            addrs.Add("127.0.0.1");
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                IPAddress[] addr = ipEntry.AddressList;
-                for (int i = 0; i < addr.Length; i++)
+                if(ni.OperationalStatus == OperationalStatus.Up)
                 {
-                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        addrs.Add(addr[i].ToString());
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    {
+                        foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                        {
+                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                addrs.Add(ip.Address.ToString());
+                                addressMap[ip.Address.ToString()] = ip.Address.ToString();
+                            }
+                        }
+                    }
                 }
+            }
+            foreach (var i in addressMap)
+            {
+                addrs.Add(i.Key);
             }
             addrs = Utility.Distinct<String>(addrs);
             addrs.Sort();
@@ -1463,22 +1496,31 @@ namespace ACTWebSocket_Plugin
                 hostnames.Items.Add(addr);
             }
 
+            hostnames.SelectedIndex = 0;
+
             Task task = Task.Factory.StartNew(() =>
             {
                 String ipaddress = Utility.GetExternalIp();
                 if (ipaddress.Length > 0)
-                    addrs.Add(ipaddress);
-
-                addrs = Utility.Distinct<String>(addrs);
-                addrs.Sort();
-                core.SetAddress(addrs);
-
-                hostnames.Items.Clear();
-                foreach (var addr in addrs)
-                {
-                    hostnames.Items.Add(addr);
-                }
+                    externalIP = ipaddress;
             });
+
+            //Task task = Task.Factory.StartNew(() =>
+            //{
+            //    String ipaddress = Utility.GetExternalIp();
+            //    if (ipaddress.Length > 0)
+            //        addrs.Add(ipaddress);
+
+            //    addrs = Utility.Distinct<String>(addrs);
+            //    addrs.Sort();
+            //    core.SetAddress(addrs);
+
+            //    hostnames.Items.Clear();
+            //    foreach (var addr in addrs)
+            //    {
+            //        hostnames.Items.Add(addr);
+            //    }
+            //});
             VersionCheck();
             OverlayVersionCheck(gamepath.Text);
             CheckUpdate();
@@ -1680,19 +1722,6 @@ namespace ACTWebSocket_Plugin
                 upnpTask.Start();
             }
             
-            var addresses = Dns.GetHostAddresses(Hostname);
-
-            bool localhostOnly = false;
-            for(int i=0;i< addresses.Length;++i)
-            {
-                var ip = addresses[i];
-                if (IPAddress.IsLoopback(ip))
-                {
-                    localhostOnly = true;
-                    break;
-                }
-            }
-            
             if (RandomURL)
             {
                 ACTWebSocketCore.randomDir = Guid.NewGuid().ToString();
@@ -1703,13 +1732,18 @@ namespace ACTWebSocket_Plugin
             }
             try
             {
+                String address = IPAddress.Any.ToString();
+                if(Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >=0)
+                {
+                    address = addressMap[Hostname];
+                }
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, UseSSL);
+                    core.StartServer(address, Port, UPnPPort, Hostname, SkinOnAct, UseSSL);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, UseSSL);
+                    core.StartServer(address, Port, Port, Hostname, SkinOnAct, UseSSL);
                 }
             }
             catch (Exception e)
@@ -1913,7 +1947,20 @@ namespace ACTWebSocket_Plugin
         {
             string url = "";
             {
-                url = "://" + Hostname + ":" + Port + "/";
+                String address = IPAddress.Any.ToString();
+                if (Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >= 0)
+                {
+                    address = addressMap[Hostname];
+                    if (address == "[::]")
+                    {
+                        address = (externalIP != null) ? externalIP : "[::1]";
+                    }
+                    if (address == "0.0.0.0")
+                    {
+                        address = (externalIP != null) ? externalIP : "127.0.0.1";
+                    }
+                }
+                url = "://" + address + ":" + Port + "/";
             }
             if (withRandomURL)
             {
@@ -1926,7 +1973,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    Uri uri = new Uri(skinPath + "?HOST_PORT=" + "ws" + url);
+                    Uri uri = new Uri(skinPath + "?HOST_PORT=" + (UseSSL ? "wss" : "ws") + url);
                     return uri.ToString();
                 }
                 catch (Exception e)
@@ -1940,7 +1987,7 @@ namespace ACTWebSocket_Plugin
                 {
                     try
                     {
-                        string fullURL = ("http") + url + Uri.EscapeDataString(skinPath);
+                        string fullURL = (UseSSL ? "https" : "http") + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
                         fullURL = fullURL.Replace("%2F", "/");
                         return fullURL;

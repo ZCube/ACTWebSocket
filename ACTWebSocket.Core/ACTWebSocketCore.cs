@@ -91,7 +91,18 @@ namespace ACTWebSocket_Plugin
             {
                 httpServer.SslConfiguration.ServerCertificate = GenerateCertificate(domain);
             }
-
+            try
+            {
+                // for Parser's MemoryError
+                var field = typeof(WebSocket).GetField("FragmentLength",
+                                    BindingFlags.Static |
+                                    BindingFlags.NonPublic);
+                int value = (int)field.GetValue(null);
+                field.SetValue(null, Int32.MaxValue - 14);
+            }
+            catch(Exception e)
+            {
+            }
             // TODO : SSL
             //wssv = new WebSocketServer(System.Net.IPAddress.Parse(address), port, true);
             //wssv.SslConfiguration.ServerCertificate =
@@ -208,27 +219,14 @@ namespace ACTWebSocket_Plugin
                     {
                         res.ContentType = "text/html";
                         res.ContentEncoding = Encoding.UTF8;
-                        string host = "";
-                        if (address == "127.0.0.1" || address == "localhost")
-                        {
-                            host = "localhost";
-                        }
-                        else if (domain != null && domain.Length > 0)
-                        {
-                            host = domain;
-                        }
 
-                        string host_port = host + ":" + extPort.ToString();
+                        string host_port = req.Url.Host+":"+req.Url.Port.ToString();// host + ":" + extPort.ToString();
                         if (context.User != null)
                         {
                             string username = context.User.Identity.Name;
                             NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
                             string password = cred.Password;
-                            host_port = username + ":" + password + "@" + host + ":" + extPort.ToString();
-                        }
-                        else
-                        {
-                            host_port = host + ":" + extPort.ToString();
+                            host_port = username + ":" + password + "@" + host_port;
                         }
                         host_port += parent_path;
                         res.SetCookie(new Cookie("HOST_PORT", host_port));
