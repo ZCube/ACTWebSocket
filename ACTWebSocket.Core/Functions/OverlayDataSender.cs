@@ -146,7 +146,7 @@ namespace ACTWebSocket_Plugin
                 {
                     try
                     {
-                        if (exportValuePair.Key == "NAME")
+                        if (exportValuePair.Key.StartsWith("NAME"))
                         {
                             continue;
                         }

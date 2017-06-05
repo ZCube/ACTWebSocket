@@ -1397,15 +1397,15 @@ namespace ACTWebSocket_Plugin
                 {
                 }
                 {
-                    int host = Array.IndexOf(addressMap.Keys.ToArray(), Hostname);
+                    int host = hostnames.Items.IndexOf(Hostname);
                     if(host >= 0)
                     {
                         hostnames.SelectedIndex = host;
                     }
                     else
                     {
-                        Hostname = "Loopback (127.0.0.1)";
-                        int host2 = Array.IndexOf(addressMap.Keys.ToArray(), Hostname);
+                        Hostname = "Loopback IPV6([::1])";
+                        int host2 = hostnames.Items.IndexOf(Hostname);
                         hostnames.SelectedIndex = host2;
                     }
                 }
