@@ -1149,9 +1149,9 @@ namespace ACTWebSocket_Plugin
 
             if (core != null)
             {
-                core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
-                core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
-                core.Filters["/MiniParse"] = MiniParseUse.Checked;
+                BeforeLogLineRead = core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
+                OnLogLineRead= core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
+                MiniParse = core.Filters["/MiniParse"] = MiniParseUse.Checked;
                 // not configurable ?
                 core.Config.SortKey = "encdps";
                 core.Config.SortType = MiniParseSortType.NumericDescending;
