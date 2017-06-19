@@ -255,7 +255,25 @@ namespace ACTWebSocket_Plugin
                 return new JObject();
             }
 
+            object o0 = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetCombatant("YOU");
+            object o1 = null;
+            if (CurrentPlayerID != 0)
+            {
+                o1 = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetCombatant(CurrentPlayerName);
+            }
+
+            // CharName Adjust
+            if (o0 != null)
+            {
+                ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.CharName = "YOU";
+            }
+            else if (o1 != null)
+            {
+                ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.CharName = CurrentPlayerName;
+            }
+
             var allies = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+
             Dictionary<string, string> encounter = null;
             List<KeyValuePair<CombatantData, Dictionary<string, string>>> combatant = null;
 
@@ -286,7 +304,16 @@ namespace ACTWebSocket_Plugin
                     {
                         o[pair2.Key] = pair2.Value.ReplaceNaN();
                     }
-                    Combatant[pair.Key.Name] = o;
+                    if (CurrentPlayerID != 0 && pair.Key.Name == CurrentPlayerName)
+                    {
+                        // CharName Adjust
+                        Combatant["YOU"] = o;
+                        Combatant["YOU"]["name"] = "YOU";
+                    }
+                    else
+                    {
+                        Combatant[pair.Key.Name] = o;
+                    }
                 }
                 obj["Combatant"] = Combatant;
                 obj["isActive"] = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Active;

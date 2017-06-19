@@ -16,7 +16,7 @@ if len(var) < 3:
 
 if dev:
   vars = var + [arr[-1].split('-')[0]]
-  varl = var + [arr[-1][0]+'-'+sys.argv[1]]
+  varl = var + [arr[-1].split('-')[0]+'-'+sys.argv[1]]
 else:
   vars = var + [arr[-1].split('-')[0]]
   varl = var + [arr[-1]]

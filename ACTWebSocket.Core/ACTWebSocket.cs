@@ -1999,7 +1999,7 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    return url;
+                    return (UseSSL ? "wss" : "ws") + url;
                 }
             }
             return null;
@@ -3063,7 +3063,28 @@ namespace ACTWebSocket_Plugin
                         JToken skinObject = core.skinObject.DeepClone();
                         JArray urlConverted = new JArray();
                         JArray array = (JArray)skinObject["URLList"];
-                        core.skinObject["Token"] = ACTWebSocketCore.randomDir;
+                        if(core.skinObject["Vars"] == null)
+                        {
+                            core.skinObject["Vars"] = new JObject();
+                        }
+                        core.skinObject["Vars"]["HOST_PORT"] = getURLPath("", ACTWebSocketCore.randomDir != null ? ACTWebSocketCore.randomDir.Length > 0 : false);
+                        String address = IPAddress.Any.ToString();
+                        if (Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >= 0)
+                        {
+                            address = addressMap[Hostname];
+                            if (address == "[::]")
+                            {
+                                address = (externalIP != null) ? externalIP : "[::1]";
+                            }
+                            if (address == "0.0.0.0")
+                            {
+                                address = (externalIP != null) ? externalIP : "127.0.0.1";
+                            }
+                        }
+                        core.skinObject["Vars"]["Address"] = address.ToString();
+                        core.skinObject["Vars"]["Port"] = Port;
+                        core.skinObject["Vars"]["SSL"] = UseSSL;
+                        core.skinObject["Vars"]["Token"] = ACTWebSocketCore.randomDir;
                         if (array != null)
                         {
                             foreach (JToken obj in array)
