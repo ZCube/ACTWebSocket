@@ -1194,14 +1194,52 @@ namespace ACTWebSocket_Plugin
                     MessageBox.Show(ex.Message);
             });
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
-            ActGlobals.oFormActMain.BeforeLogLineRead += oFormActMain_BeforeLogLineRead;
+            AddOnBeforeLogLineRead();
             ActGlobals.oFormActMain.OnLogLineRead += oFormActMain_OnLogLineRead;
             var s = ActGlobals.oFormActMain.ActPlugins;
             lblStatus.Text = "Plugin Started";
 
             Version version = AssemblyName.GetAssemblyName(pluginPath).Version;
             ACTWebSocketCore.currentVersionString = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString() + "." + version.Revision.ToString();
+        }
 
+        // from https://github.com/anoyetta/ACT.SpecialSpellTimer/ACT.SpecialSpellTimer/LogBuffer.cs
+        private void AddOnBeforeLogLineRead()
+        {
+            try
+            {
+                var fi = ActGlobals.oFormActMain.GetType().GetField(
+                    "BeforeLogLineRead",
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
+
+                var beforeLogLineReadDelegate =
+                    fi.GetValue(ActGlobals.oFormActMain)
+                    as Delegate;
+
+                if (beforeLogLineReadDelegate != null)
+                {
+                    var handlers = beforeLogLineReadDelegate.GetInvocationList();
+
+                    // 全てのイベントハンドラを一度解除する
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead -= (LogLineEventDelegate)handler;
+                    }
+
+                    // スペスペのイベントハンドラを最初に登録する
+                    ActGlobals.oFormActMain.BeforeLogLineRead += this.oFormActMain_BeforeLogLineRead;
+
+                    // 解除したイベントハンドラを登録し直す
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead += (LogLineEventDelegate)handler;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Logger.Write("AddOnBeforeLogLineRead error:", ex);
+            }
         }
 
         public void DeInitPlugin()
