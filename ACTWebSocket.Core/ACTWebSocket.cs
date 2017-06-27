@@ -1731,11 +1731,94 @@ namespace ACTWebSocket_Plugin
         public bool ChatFilter { get; set; }
         public List<String> SkinURLList = new List<String>();
 
+        private static void SetLocalIP(object plugin)
+        {
+            var ips = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties();
+            System.Net.IPAddress local = null;
+            foreach (var tcp in ips.GetActiveTcpConnections())
+            {
+                //if (tcp.LocalEndPoint.Port == number
+                // || tcp.RemoteEndPoint.Port == number)
+                //net 195.82.50
+                //net 199.91.189
+                //net 124.150.157
+                //net 183.111.189
+                var ipaddresses = tcp.RemoteEndPoint.Address.GetAddressBytes();
+                if (
+                    (ipaddresses[0] == 195 && ipaddresses[1] == 82 && ipaddresses[2] == 50) ||
+                    (ipaddresses[0] == 199 && ipaddresses[1] == 91 && ipaddresses[2] == 189) ||
+                    (ipaddresses[0] == 124 && ipaddresses[1] == 150 && ipaddresses[2] == 157) ||
+                    (ipaddresses[0] == 183 && ipaddresses[1] == 111 && ipaddresses[2] == 189)
+                    )
+                {
+                    local = tcp.LocalEndPoint.Address;
+                }
+            }
+            if (local != null)
+            {
+                var Settings = plugin.GetType().GetField("Settings", BindingFlags.Public | BindingFlags.Instance).GetValue(plugin);
+                if (Settings != null)
+                {
+                    {
+                        var field = Settings.GetType().GetField("cboNetwork", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (field != null)
+                        {
+                            ComboBox combo = (ComboBox)field.GetValue(Settings);
+                            if (combo != null)
+                            {
+                                try
+                                {
+                                    if (combo.Items.Contains(local.ToString()))
+                                    {
+                                        combo.Invoke((MethodInvoker)delegate
+                                        {
+                                            try
+                                            {
+                                                combo.Text = local.ToString();///*combo.Items[combo.Items.IndexOf(local.ToString())]*/;
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                combo.Text = "All (Default)";
+                                            }
+                                        });
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void StartServer()
         {
             core.Filters["/BeforeLogLineRead"] = true;
             core.Filters["/OnLogLineRead"] = true;
             core.Filters["/MiniParse"] = true;
+
+            // Set Local IP
+            foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+            {
+                if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                {
+                    IActPluginV1 o = x.pluginObj;
+                    if (o != null)
+                    {
+                        try
+                        {
+                            SetLocalIP(o);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                }
+            }
 
             if (UseUPnP)
             {
