@@ -46,7 +46,10 @@ else
 if(need_to_get_host_port)
 {
 	// ws://localhost:10501/
-	host_port = 'ws://' + window.location.host + '/';
+	if(window.location.host != "")
+		host_port = 'ws://' + window.location.host + '/';
+	else
+		host_port = 'ws://localhost:10501/';
 }
 
 // wsUri check
