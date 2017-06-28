@@ -1733,25 +1733,17 @@ namespace ACTWebSocket_Plugin
 
         private static void SetLocalIP(object plugin)
         {
-            var ips = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties();
+            var connections = SocketConnection.GetAllTcpConnections();
             System.Net.IPAddress local = null;
-            foreach (var tcp in ips.GetActiveTcpConnections())
+            foreach (var connection in connections)
             {
-                //if (tcp.LocalEndPoint.Port == number
-                // || tcp.RemoteEndPoint.Port == number)
-                //net 195.82.50
-                //net 199.91.189
-                //net 124.150.157
-                //net 183.111.189
-                var ipaddresses = tcp.RemoteEndPoint.Address.GetAddressBytes();
-                if (
-                    (ipaddresses[0] == 195 && ipaddresses[1] == 82 && ipaddresses[2] == 50) ||
-                    (ipaddresses[0] == 199 && ipaddresses[1] == 91 && ipaddresses[2] == 189) ||
-                    (ipaddresses[0] == 124 && ipaddresses[1] == 150 && ipaddresses[2] == 157) ||
-                    (ipaddresses[0] == 183 && ipaddresses[1] == 111 && ipaddresses[2] == 189)
-                    )
+                string processname = connection.ProcessName.ToLower();
+                if(processname == ("ffxiv") || processname == ("ffxiv_dx11"))
                 {
-                    local = tcp.LocalEndPoint.Address;
+                    if (!IPAddress.IsLoopback(connection.LocalAddress))
+                    {
+                        local = connection.LocalAddress;
+                    }
                 }
             }
             if (local != null)
@@ -1831,9 +1823,9 @@ namespace ACTWebSocket_Plugin
                         var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
                         // not registered when first invoke...
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
                     }
                     catch(Exception e)
                     {

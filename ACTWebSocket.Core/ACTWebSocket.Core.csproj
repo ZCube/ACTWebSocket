@@ -125,6 +125,7 @@
     <Compile Include="Classes\CombatData.cs" />
     <Compile Include="Classes\MP3.cs" />
     <Compile Include="Classes\StaticAPI.cs" />
+    <Compile Include="Functions\SocketConnections.cs" />
     <Compile Include="IPC_COPYDATA.cs">
       <SubType>Form</SubType>
     </Compile>
