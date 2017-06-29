@@ -1292,8 +1292,11 @@ namespace ACTWebSocket_Plugin
                         try
                         {
                             overlayTab.SelectedIndex = token.ToObject<int>();
+                            // prevent blank tab
+                            overlayTab.Invalidate();
+                            overlayTab.SelectedTab.Invalidate();
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
                         }
                         
