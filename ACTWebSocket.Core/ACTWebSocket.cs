@@ -1734,6 +1734,27 @@ namespace ACTWebSocket_Plugin
         public bool ChatFilter { get; set; }
         public List<String> SkinURLList = new List<String>();
 
+        //https://github.com/anoyetta/ACT.MPTimer/blob/master/ACT.MPTimer/Utility/ActInvoker.cs
+        //Copryright(c) 2014, anoyetta
+        public static void Invoke(Action action)
+        {
+            if (ActGlobals.oFormActMain != null &&
+                ActGlobals.oFormActMain.IsHandleCreated &&
+                !ActGlobals.oFormActMain.IsDisposed)
+            {
+                if (ActGlobals.oFormActMain.InvokeRequired)
+                {
+                    ActGlobals.oFormActMain.Invoke((MethodInvoker)delegate
+                    {
+                        action();
+                    });
+                }
+                else
+                {
+                    action();
+                }
+            }
+        }
         private static void SetLocalIP(object plugin)
         {
             var connections = SocketConnection.GetAllTcpConnections();
@@ -1765,7 +1786,7 @@ namespace ACTWebSocket_Plugin
                                 {
                                     if (combo.Items.Contains(local.ToString()))
                                     {
-                                        combo.Invoke((MethodInvoker)delegate
+                                        Invoke(()=>
                                         {
                                             try
                                             {
@@ -1796,24 +1817,34 @@ namespace ACTWebSocket_Plugin
             core.Filters["/MiniParse"] = true;
 
             // Set Local IP
-            foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+            Task task = new Task(() =>
             {
-                if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                try
                 {
-                    IActPluginV1 o = x.pluginObj;
-                    if (o != null)
+                    foreach (var x in ActGlobals.oFormActMain.ActPlugins)
                     {
-                        try
+                        if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
                         {
-                            SetLocalIP(o);
-                        }
-                        catch (Exception)
-                        {
+                            IActPluginV1 o = x.pluginObj;
+                            if (o != null)
+                            {
+                                try
+                                {
+                                    SetLocalIP(o);
+                                }
+                                catch (Exception)
+                                {
 
+                                }
+                            }
                         }
                     }
                 }
-            }
+                catch (Exception)
+                {
+                }
+            });
+            task.Start();
 
             if (UseUPnP)
             {
