@@ -1764,7 +1764,7 @@ namespace ACTWebSocket_Plugin
                 string processname = connection.ProcessName.ToLower();
                 if(processname == ("ffxiv") || processname == ("ffxiv_dx11"))
                 {
-                    if (!IPAddress.IsLoopback(connection.LocalAddress))
+                    if (!IPAddress.IsLoopback(connection.LocalAddress) && !IPAddress.IsLoopback(connection.RemoteAddress))
                     {
                         local = connection.LocalAddress;
                     }
