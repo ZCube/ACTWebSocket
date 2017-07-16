@@ -109,6 +109,8 @@ namespace ACTWebSocket_Plugin
         private Button buttonRestore;
         private Button buttonBackup;
         private CheckBox SSLUse;
+        private Button buttonUpdatePluginAddress;
+        private CheckBox UpdatePluginAddress;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
@@ -208,6 +210,8 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
             this.startoption = new System.Windows.Forms.GroupBox();
+            this.buttonUpdatePluginAddress = new System.Windows.Forms.Button();
+            this.UpdatePluginAddress = new System.Windows.Forms.CheckBox();
             this.SSLUse = new System.Windows.Forms.CheckBox();
             this.DiscoveryUse = new System.Windows.Forms.CheckBox();
             this.skinOnAct = new System.Windows.Forms.CheckBox();
@@ -374,6 +378,8 @@ namespace ACTWebSocket_Plugin
             // startoption
             // 
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.buttonUpdatePluginAddress);
+            this.startoption.Controls.Add(this.UpdatePluginAddress);
             this.startoption.Controls.Add(this.SSLUse);
             this.startoption.Controls.Add(this.DiscoveryUse);
             this.startoption.Controls.Add(this.skinOnAct);
@@ -383,6 +389,22 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
+            // 
+            // buttonUpdatePluginAddress
+            // 
+            resources.ApplyResources(this.buttonUpdatePluginAddress, "buttonUpdatePluginAddress");
+            this.buttonUpdatePluginAddress.Name = "buttonUpdatePluginAddress";
+            this.buttonUpdatePluginAddress.UseVisualStyleBackColor = true;
+            this.buttonUpdatePluginAddress.Click += new System.EventHandler(this.buttonUpdatePluginAddress_Click);
+            // 
+            // UpdatePluginAddress
+            // 
+            resources.ApplyResources(this.UpdatePluginAddress, "UpdatePluginAddress");
+            this.UpdatePluginAddress.Checked = true;
+            this.UpdatePluginAddress.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UpdatePluginAddress.Name = "UpdatePluginAddress";
+            this.UpdatePluginAddress.UseVisualStyleBackColor = true;
+            this.UpdatePluginAddress.CheckedChanged += new System.EventHandler(this.UpdatePluginAddress_CheckedChanged);
             // 
             // SSLUse
             // 
@@ -1142,6 +1164,7 @@ namespace ACTWebSocket_Plugin
             chatFilter.Checked = ChatFilter;
             autostart.Checked = AutoRun;
             autostartoverlay.Checked = AutoOverlay;
+            UpdatePluginAddress.Checked = UpdateAddress;
             progressBar.Hide();
             progressBar.BringToFront();
             StopServer();
@@ -1433,6 +1456,16 @@ namespace ACTWebSocket_Plugin
                         }
                         buttonRefresh_Click(null, null);
                     }
+                    if (obj.TryGetValue("UpdateAddress", out token))
+                    {
+                        UpdateAddress = token.ToObject<bool>();
+                        UpdatePluginAddress.Checked = UpdateAddress;
+                    }
+                    else
+                    {
+                        UpdateAddress = true;
+                        UpdatePluginAddress.Checked = true;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1476,6 +1509,8 @@ namespace ACTWebSocket_Plugin
             obj.Add("MiniParse", MiniParse);
             obj.Add("ChatFilter", ChatFilter);
             obj.Add("SkinOnAct", SkinOnAct);
+            obj.Add("UpdateAddress", UpdateAddress);
+
             JArray skins = new JArray();
             foreach (string a in SkinURLList)
             {
@@ -1732,6 +1767,7 @@ namespace ACTWebSocket_Plugin
         public bool AutoRun { get; set; }
         public bool AutoOverlay { get; set; }
         public bool ChatFilter { get; set; }
+        public bool UpdateAddress { get; set; }
         public List<String> SkinURLList = new List<String>();
 
         //https://github.com/anoyetta/ACT.MPTimer/blob/master/ACT.MPTimer/Utility/ActInvoker.cs
@@ -1755,6 +1791,45 @@ namespace ACTWebSocket_Plugin
                 }
             }
         }
+
+        private void UpdatePluginAddress_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAddress = UpdatePluginAddress.Checked;
+        }
+
+        private void buttonUpdatePluginAddress_Click(object sender, EventArgs e)
+        {
+            // Set Local IP
+            Task task = new Task(() =>
+            {
+                try
+                {
+                    foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+                    {
+                        if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                        {
+                            IActPluginV1 o = x.pluginObj;
+                            if (o != null)
+                            {
+                                try
+                                {
+                                    SetLocalIP(o);
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+            task.Start();
+        }
+
         private static void SetLocalIP(object plugin)
         {
             var connections = SocketConnection.GetAllTcpConnections();
@@ -1790,11 +1865,21 @@ namespace ACTWebSocket_Plugin
                                         {
                                             try
                                             {
-                                                combo.Text = local.ToString();///*combo.Items[combo.Items.IndexOf(local.ToString())]*/;
+                                                int index = combo.Items.IndexOf(local.ToString());
+                                                if (index > 0)
+                                                {
+                                                    combo.SelectedIndex = index;
+                                                }
+                                                else
+                                                {
+                                                    combo.SelectedIndex = 0;
+                                                    //combo.Text = local.ToString();///*combo.Items[combo.Items.IndexOf(local.ToString())]*/;
+                                                }
                                             }
                                             catch (Exception e)
                                             {
-                                                combo.Text = "All (Default)";
+                                                combo.SelectedIndex = 0;
+                                                //combo.Text = "All (Default)";
                                             }
                                         });
                                     }
@@ -1816,35 +1901,38 @@ namespace ACTWebSocket_Plugin
             core.Filters["/OnLogLineRead"] = true;
             core.Filters["/MiniParse"] = true;
 
-            // Set Local IP
-            Task task = new Task(() =>
+            if(UpdateAddress)
             {
-                try
+                // Set Local IP
+                Task task = new Task(() =>
                 {
-                    foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+                    try
                     {
-                        if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                        foreach (var x in ActGlobals.oFormActMain.ActPlugins)
                         {
-                            IActPluginV1 o = x.pluginObj;
-                            if (o != null)
+                            if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
                             {
-                                try
+                                IActPluginV1 o = x.pluginObj;
+                                if (o != null)
                                 {
-                                    SetLocalIP(o);
-                                }
-                                catch (Exception)
-                                {
+                                    try
+                                    {
+                                        SetLocalIP(o);
+                                    }
+                                    catch (Exception)
+                                    {
 
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                catch (Exception)
-                {
-                }
-            });
-            task.Start();
+                    catch (Exception)
+                    {
+                    }
+                });
+                task.Start();
+            }
 
             if (UseUPnP)
             {
@@ -1912,6 +2000,7 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = false;
             buttonOff.Enabled = true;
+            //UpdatePluginAddress.Enabled = false;
 
 
             if(UseDiscovery)
@@ -1979,6 +2068,7 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = true;
             buttonOff.Enabled = false;
+            //UpdatePluginAddress.Enabled = true;
         }
 
         public void consolelog(object s)
@@ -3707,6 +3797,5 @@ namespace ACTWebSocket_Plugin
                 }
             });
         }
-
     }
 }
