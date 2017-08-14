@@ -2881,8 +2881,11 @@ namespace ACTWebSocket_Plugin
 
                     string extractDir = pluginDirectory + "/overlay_proc";
                     string revisionFile = extractDir + "/.revision";
-                    string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+comboBoxOverlayProcType.Text.Trim()+"/";
-                    string infourl = baseurl + "info.json";
+
+                    //string baseurl = "https://static.zcube.kr/publish/OverlayProc/" + comboBoxOverlayProcType.Text.Trim() + "/";
+                    //string infourl = baseurl + "info.json";
+                    string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
+                    string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                     byte[] info = webClient.DownloadData(infourl);
                     String infotext = System.Text.Encoding.UTF8.GetString(info);
                     JObject jobject = JObject.Parse(infotext);
@@ -2989,8 +2992,10 @@ namespace ACTWebSocket_Plugin
                 string extractDir = pluginDirectory + "/overlay_proc";
                 string revisionFile = extractDir + "/.revision";
 
-                string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
-                string infourl = baseurl + "info.json";
+                //string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
+                //string infourl = baseurl + "info.json";
+                string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
+                string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                 byte[] info = webClient.DownloadData(infourl);
                 String infotext = System.Text.Encoding.UTF8.GetString(info);
                 JObject jobject = JObject.Parse(infotext);
