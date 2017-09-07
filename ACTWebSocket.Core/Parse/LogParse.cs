@@ -228,7 +228,7 @@ namespace ACTWebSocket_Plugin
                          * 36|ActorMaxMP
                          * 37|ActorCurrentTP
                          * 38|ActorMaxTP (1000...)
-                         * 39|47.55971
+                         * 39|47.55971 <- 좌표와 관련 있음
                          * 40|-81.14174
                          * 41|54.5
                          * --------ACTORSTATUS
