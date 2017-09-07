@@ -28,6 +28,8 @@ namespace ACTWebSocket_Plugin
     using SharpCompress.Readers;
     using Microsoft.Win32;
     using System.Reflection;
+    using System.Linq;
+    using System.Net.NetworkInformation;
 
     public interface PluginDirectory
     {
@@ -79,11 +81,51 @@ namespace ACTWebSocket_Plugin
         private Button buttonLatest;
         private Button buttonRelease;
         private Button buttonVersionCheck;
+        private TabControl overlayTab;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private GroupBox groupBox6;
+        private Button buttonFindDirectory;
+        private Label label5;
+        private Label label4;
+        private Label label3;
+        private ComboBox game;
+        private TextBox textBox1;
+        private Button buttonDXInstall;
+        private ProgressBar dx_progress;
+        private TextBox gamepath;
+        private GroupBox groupBox7;
+        private Button buttonOverlayVersionCheck;
+        private Label labelOverlayLatest;
+        private TextBox latestOverlayVersion;
+        private Label labelOverlayRelease;
+        private Label labelOverlayCurrent;
+        private TextBox currentOverlayVersion;
+        private Button buttonOverlayGitHub;
+        private TextBox releaseOverlayVersion;
+        private Button buttonUninstall;
+        private GroupBox groupBox8;
+        private ListView backupFiles;
+        private Button buttonRestore;
+        private Button buttonBackup;
+        private CheckBox SSLUse;
+        private Button buttonUpdatePluginAddress;
+        private CheckBox UpdatePluginAddress;
         private CheckBox chatFilter;
 
         public void SetSkinDir(string path)
         {
             overlaySkinDirectory = path;
+            if(!Directory.Exists(overlaySkinDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(overlaySkinDirectory);
+                }
+                catch(Exception e)
+                { 
+                }
+            }
         }
 
         public void SetScreenShotDir(string path)
@@ -168,6 +210,9 @@ namespace ACTWebSocket_Plugin
             this.UPNPUse = new System.Windows.Forms.CheckBox();
             this.randomURL = new System.Windows.Forms.CheckBox();
             this.startoption = new System.Windows.Forms.GroupBox();
+            this.buttonUpdatePluginAddress = new System.Windows.Forms.Button();
+            this.UpdatePluginAddress = new System.Windows.Forms.CheckBox();
+            this.SSLUse = new System.Windows.Forms.CheckBox();
             this.DiscoveryUse = new System.Windows.Forms.CheckBox();
             this.skinOnAct = new System.Windows.Forms.CheckBox();
             this.hostdata = new System.Windows.Forms.GroupBox();
@@ -204,6 +249,9 @@ namespace ACTWebSocket_Plugin
             this.label1 = new System.Windows.Forms.Label();
             this.hashCode = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonLatest = new System.Windows.Forms.Button();
+            this.buttonRelease = new System.Windows.Forms.Button();
+            this.buttonVersionCheck = new System.Windows.Forms.Button();
             this.labelLatest = new System.Windows.Forms.Label();
             this.latestVersion = new System.Windows.Forms.TextBox();
             this.labelRelease = new System.Windows.Forms.Label();
@@ -211,9 +259,33 @@ namespace ACTWebSocket_Plugin
             this.currentVersion = new System.Windows.Forms.TextBox();
             this.buttonGitHub = new System.Windows.Forms.Button();
             this.releaseVersion = new System.Windows.Forms.TextBox();
-            this.buttonVersionCheck = new System.Windows.Forms.Button();
-            this.buttonRelease = new System.Windows.Forms.Button();
-            this.buttonLatest = new System.Windows.Forms.Button();
+            this.overlayTab = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.backupFiles = new System.Windows.Forms.ListView();
+            this.buttonRestore = new System.Windows.Forms.Button();
+            this.buttonBackup = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.buttonOverlayVersionCheck = new System.Windows.Forms.Button();
+            this.labelOverlayLatest = new System.Windows.Forms.Label();
+            this.latestOverlayVersion = new System.Windows.Forms.TextBox();
+            this.labelOverlayRelease = new System.Windows.Forms.Label();
+            this.labelOverlayCurrent = new System.Windows.Forms.Label();
+            this.currentOverlayVersion = new System.Windows.Forms.TextBox();
+            this.buttonOverlayGitHub = new System.Windows.Forms.Button();
+            this.releaseOverlayVersion = new System.Windows.Forms.TextBox();
+            this.buttonUninstall = new System.Windows.Forms.Button();
+            this.buttonFindDirectory = new System.Windows.Forms.Button();
+            this.gamepath = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.game = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonDXInstall = new System.Windows.Forms.Button();
+            this.dx_progress = new System.Windows.Forms.ProgressBar();
             this.startoption.SuspendLayout();
             this.hostdata.SuspendLayout();
             this.othersets.SuspendLayout();
@@ -223,6 +295,12 @@ namespace ACTWebSocket_Plugin
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.overlayTab.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // port
@@ -300,6 +378,9 @@ namespace ACTWebSocket_Plugin
             // startoption
             // 
             this.startoption.BackColor = System.Drawing.Color.Transparent;
+            this.startoption.Controls.Add(this.buttonUpdatePluginAddress);
+            this.startoption.Controls.Add(this.UpdatePluginAddress);
+            this.startoption.Controls.Add(this.SSLUse);
             this.startoption.Controls.Add(this.DiscoveryUse);
             this.startoption.Controls.Add(this.skinOnAct);
             this.startoption.Controls.Add(this.UPNPUse);
@@ -308,6 +389,29 @@ namespace ACTWebSocket_Plugin
             resources.ApplyResources(this.startoption, "startoption");
             this.startoption.Name = "startoption";
             this.startoption.TabStop = false;
+            // 
+            // buttonUpdatePluginAddress
+            // 
+            resources.ApplyResources(this.buttonUpdatePluginAddress, "buttonUpdatePluginAddress");
+            this.buttonUpdatePluginAddress.Name = "buttonUpdatePluginAddress";
+            this.buttonUpdatePluginAddress.UseVisualStyleBackColor = true;
+            this.buttonUpdatePluginAddress.Click += new System.EventHandler(this.buttonUpdatePluginAddress_Click);
+            // 
+            // UpdatePluginAddress
+            // 
+            resources.ApplyResources(this.UpdatePluginAddress, "UpdatePluginAddress");
+            this.UpdatePluginAddress.Checked = true;
+            this.UpdatePluginAddress.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UpdatePluginAddress.Name = "UpdatePluginAddress";
+            this.UpdatePluginAddress.UseVisualStyleBackColor = true;
+            this.UpdatePluginAddress.CheckedChanged += new System.EventHandler(this.UpdatePluginAddress_CheckedChanged);
+            // 
+            // SSLUse
+            // 
+            resources.ApplyResources(this.SSLUse, "SSLUse");
+            this.SSLUse.Name = "SSLUse";
+            this.SSLUse.UseVisualStyleBackColor = true;
+            this.SSLUse.CheckedChanged += new System.EventHandler(this.SSLUse_CheckedChanged);
             // 
             // DiscoveryUse
             // 
@@ -338,6 +442,7 @@ namespace ACTWebSocket_Plugin
             // 
             // hostnames
             // 
+            this.hostnames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.hostnames.FormattingEnabled = true;
             resources.ApplyResources(this.hostnames, "hostnames");
             this.hostnames.Name = "hostnames";
@@ -486,7 +591,9 @@ namespace ACTWebSocket_Plugin
             this.comboBoxOverlayProcType.FormattingEnabled = true;
             this.comboBoxOverlayProcType.Items.AddRange(new object[] {
             resources.GetString("comboBoxOverlayProcType.Items"),
-            resources.GetString("comboBoxOverlayProcType.Items1")});
+            resources.GetString("comboBoxOverlayProcType.Items1"),
+            resources.GetString("comboBoxOverlayProcType.Items2"),
+            resources.GetString("comboBoxOverlayProcType.Items3")});
             resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
             this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
             this.comboBoxOverlayProcType.SelectedIndexChanged += new System.EventHandler(this.comboBoxOverlayProcType_SelectedIndexChanged);
@@ -598,6 +705,27 @@ namespace ACTWebSocket_Plugin
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.TabStop = false;
             // 
+            // buttonLatest
+            // 
+            resources.ApplyResources(this.buttonLatest, "buttonLatest");
+            this.buttonLatest.Name = "buttonLatest";
+            this.buttonLatest.UseVisualStyleBackColor = true;
+            this.buttonLatest.Click += new System.EventHandler(this.buttonLatest_Click);
+            // 
+            // buttonRelease
+            // 
+            resources.ApplyResources(this.buttonRelease, "buttonRelease");
+            this.buttonRelease.Name = "buttonRelease";
+            this.buttonRelease.UseVisualStyleBackColor = true;
+            this.buttonRelease.Click += new System.EventHandler(this.buttonRelease_Click);
+            // 
+            // buttonVersionCheck
+            // 
+            resources.ApplyResources(this.buttonVersionCheck, "buttonVersionCheck");
+            this.buttonVersionCheck.Name = "buttonVersionCheck";
+            this.buttonVersionCheck.UseVisualStyleBackColor = true;
+            this.buttonVersionCheck.Click += new System.EventHandler(this.buttonVersionCheck_Click);
+            // 
             // labelLatest
             // 
             resources.ApplyResources(this.labelLatest, "labelLatest");
@@ -638,35 +766,214 @@ namespace ACTWebSocket_Plugin
             this.releaseVersion.Name = "releaseVersion";
             this.releaseVersion.ReadOnly = true;
             // 
-            // buttonVersionCheck
+            // overlayTab
             // 
-            resources.ApplyResources(this.buttonVersionCheck, "buttonVersionCheck");
-            this.buttonVersionCheck.Name = "buttonVersionCheck";
-            this.buttonVersionCheck.UseVisualStyleBackColor = true;
-            this.buttonVersionCheck.Click += new System.EventHandler(this.buttonVersionCheck_Click);
+            this.overlayTab.Controls.Add(this.tabPage1);
+            this.overlayTab.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.overlayTab, "overlayTab");
+            this.overlayTab.Name = "overlayTab";
+            this.overlayTab.SelectedIndex = 0;
             // 
-            // buttonRelease
+            // tabPage1
             // 
-            resources.ApplyResources(this.buttonRelease, "buttonRelease");
-            this.buttonRelease.Name = "buttonRelease";
-            this.buttonRelease.UseVisualStyleBackColor = true;
-            this.buttonRelease.Click += new System.EventHandler(this.buttonRelease_Click);
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox4);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Controls.Add(this.groupBox3);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // buttonLatest
+            // tabPage2
             // 
-            resources.ApplyResources(this.buttonLatest, "buttonLatest");
-            this.buttonLatest.Name = "buttonLatest";
-            this.buttonLatest.UseVisualStyleBackColor = true;
-            this.buttonLatest.Click += new System.EventHandler(this.buttonLatest_Click);
+            this.tabPage2.Controls.Add(this.groupBox6);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.groupBox8);
+            this.groupBox6.Controls.Add(this.groupBox7);
+            this.groupBox6.Controls.Add(this.buttonUninstall);
+            this.groupBox6.Controls.Add(this.buttonFindDirectory);
+            this.groupBox6.Controls.Add(this.gamepath);
+            this.groupBox6.Controls.Add(this.label5);
+            this.groupBox6.Controls.Add(this.label4);
+            this.groupBox6.Controls.Add(this.label3);
+            this.groupBox6.Controls.Add(this.game);
+            this.groupBox6.Controls.Add(this.textBox1);
+            this.groupBox6.Controls.Add(this.buttonDXInstall);
+            this.groupBox6.Controls.Add(this.dx_progress);
+            resources.ApplyResources(this.groupBox6, "groupBox6");
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.TabStop = false;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.backupFiles);
+            this.groupBox8.Controls.Add(this.buttonRestore);
+            this.groupBox8.Controls.Add(this.buttonBackup);
+            resources.ApplyResources(this.groupBox8, "groupBox8");
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.TabStop = false;
+            // 
+            // backupFiles
+            // 
+            this.backupFiles.GridLines = true;
+            resources.ApplyResources(this.backupFiles, "backupFiles");
+            this.backupFiles.MultiSelect = false;
+            this.backupFiles.Name = "backupFiles";
+            this.backupFiles.UseCompatibleStateImageBehavior = false;
+            this.backupFiles.View = System.Windows.Forms.View.List;
+            // 
+            // buttonRestore
+            // 
+            resources.ApplyResources(this.buttonRestore, "buttonRestore");
+            this.buttonRestore.Name = "buttonRestore";
+            this.buttonRestore.UseVisualStyleBackColor = true;
+            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
+            // 
+            // buttonBackup
+            // 
+            resources.ApplyResources(this.buttonBackup, "buttonBackup");
+            this.buttonBackup.Name = "buttonBackup";
+            this.buttonBackup.UseVisualStyleBackColor = true;
+            this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.buttonOverlayVersionCheck);
+            this.groupBox7.Controls.Add(this.labelOverlayLatest);
+            this.groupBox7.Controls.Add(this.latestOverlayVersion);
+            this.groupBox7.Controls.Add(this.labelOverlayRelease);
+            this.groupBox7.Controls.Add(this.labelOverlayCurrent);
+            this.groupBox7.Controls.Add(this.currentOverlayVersion);
+            this.groupBox7.Controls.Add(this.buttonOverlayGitHub);
+            this.groupBox7.Controls.Add(this.releaseOverlayVersion);
+            resources.ApplyResources(this.groupBox7, "groupBox7");
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.TabStop = false;
+            // 
+            // buttonOverlayVersionCheck
+            // 
+            resources.ApplyResources(this.buttonOverlayVersionCheck, "buttonOverlayVersionCheck");
+            this.buttonOverlayVersionCheck.Name = "buttonOverlayVersionCheck";
+            this.buttonOverlayVersionCheck.UseVisualStyleBackColor = true;
+            this.buttonOverlayVersionCheck.Click += new System.EventHandler(this.buttonOverlayVersionCheck_Click);
+            // 
+            // labelOverlayLatest
+            // 
+            resources.ApplyResources(this.labelOverlayLatest, "labelOverlayLatest");
+            this.labelOverlayLatest.Name = "labelOverlayLatest";
+            // 
+            // latestOverlayVersion
+            // 
+            resources.ApplyResources(this.latestOverlayVersion, "latestOverlayVersion");
+            this.latestOverlayVersion.Name = "latestOverlayVersion";
+            this.latestOverlayVersion.ReadOnly = true;
+            // 
+            // labelOverlayRelease
+            // 
+            resources.ApplyResources(this.labelOverlayRelease, "labelOverlayRelease");
+            this.labelOverlayRelease.Name = "labelOverlayRelease";
+            // 
+            // labelOverlayCurrent
+            // 
+            resources.ApplyResources(this.labelOverlayCurrent, "labelOverlayCurrent");
+            this.labelOverlayCurrent.Name = "labelOverlayCurrent";
+            // 
+            // currentOverlayVersion
+            // 
+            resources.ApplyResources(this.currentOverlayVersion, "currentOverlayVersion");
+            this.currentOverlayVersion.Name = "currentOverlayVersion";
+            this.currentOverlayVersion.ReadOnly = true;
+            // 
+            // buttonOverlayGitHub
+            // 
+            resources.ApplyResources(this.buttonOverlayGitHub, "buttonOverlayGitHub");
+            this.buttonOverlayGitHub.Name = "buttonOverlayGitHub";
+            this.buttonOverlayGitHub.UseVisualStyleBackColor = true;
+            this.buttonOverlayGitHub.Click += new System.EventHandler(this.buttonOverlayGitHub_Click);
+            // 
+            // releaseOverlayVersion
+            // 
+            resources.ApplyResources(this.releaseOverlayVersion, "releaseOverlayVersion");
+            this.releaseOverlayVersion.Name = "releaseOverlayVersion";
+            this.releaseOverlayVersion.ReadOnly = true;
+            // 
+            // buttonUninstall
+            // 
+            resources.ApplyResources(this.buttonUninstall, "buttonUninstall");
+            this.buttonUninstall.Name = "buttonUninstall";
+            this.buttonUninstall.UseVisualStyleBackColor = true;
+            this.buttonUninstall.Click += new System.EventHandler(this.buttonUninstall_Click);
+            // 
+            // buttonFindDirectory
+            // 
+            resources.ApplyResources(this.buttonFindDirectory, "buttonFindDirectory");
+            this.buttonFindDirectory.Name = "buttonFindDirectory";
+            this.buttonFindDirectory.UseVisualStyleBackColor = true;
+            this.buttonFindDirectory.Click += new System.EventHandler(this.buttonFindDirectory_Click);
+            // 
+            // gamepath
+            // 
+            resources.ApplyResources(this.gamepath, "gamepath");
+            this.gamepath.Name = "gamepath";
+            this.gamepath.ReadOnly = true;
+            this.gamepath.TextChanged += new System.EventHandler(this.gamepath_TextChanged);
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // game
+            // 
+            this.game.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.game.FormattingEnabled = true;
+            this.game.Items.AddRange(new object[] {
+            resources.GetString("game.Items"),
+            resources.GetString("game.Items1"),
+            resources.GetString("game.Items2"),
+            resources.GetString("game.Items3"),
+            resources.GetString("game.Items4")});
+            resources.ApplyResources(this.game, "game");
+            this.game.Name = "game";
+            this.game.SelectedIndexChanged += new System.EventHandler(this.game_SelectedIndexChanged);
+            // 
+            // textBox1
+            // 
+            resources.ApplyResources(this.textBox1, "textBox1");
+            this.textBox1.Name = "textBox1";
+            // 
+            // buttonDXInstall
+            // 
+            resources.ApplyResources(this.buttonDXInstall, "buttonDXInstall");
+            this.buttonDXInstall.Name = "buttonDXInstall";
+            this.buttonDXInstall.UseVisualStyleBackColor = true;
+            this.buttonDXInstall.Click += new System.EventHandler(this.buttonDXInstall_Click);
+            // 
+            // dx_progress
+            // 
+            resources.ApplyResources(this.dx_progress, "dx_progress");
+            this.dx_progress.Name = "dx_progress";
             // 
             // ACTWebSocketMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.overlayTab);
             this.Controls.Add(this.serverStatus);
             this.Controls.Add(this.othersets);
             this.Controls.Add(this.hostdata);
@@ -689,6 +996,14 @@ namespace ACTWebSocket_Plugin
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.overlayTab.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -697,6 +1012,7 @@ namespace ACTWebSocket_Plugin
 
         #endregion
 
+        String externalIP = null;
         System.Timers.Timer overlayProcCheckTimer = null;
         public ACTWebSocketMain()
         {
@@ -704,10 +1020,18 @@ namespace ACTWebSocket_Plugin
             InitializeComponent();
             if (ipc == null)
             {
-                ipc = new IPC_COPYDATA();
-                ipc.Show();
-                ipc.Text = "Client" + overlayCaption;
-                ipc.onMessage = (code, message) =>
+                // 테스트 중
+                //IPC_WebSocket ipc_socket = new IPC_WebSocket(9991);
+                //ipc = ipc_socket;
+                //ipc.onOpen += () =>
+                //{
+                //    ServerUrlChanged();
+                //};
+                IPC_COPYDATA ipc_form = new IPC_COPYDATA(overlayCaption);
+                ipc_form.Show();
+                ipc_form.Text = "Client" + overlayCaption;
+                ipc = ipc_form;
+                ipc.onMessage += (code, message) =>
                 {
                     if (message == ".")
                         return;
@@ -726,7 +1050,6 @@ namespace ACTWebSocket_Plugin
                                         JToken value = obj["value"];
                                         String id = value["id"].ToObject<String>();
                                         String pngBase64 = value["capture"].ToObject<String>();
-                                        pngBase64 = pngBase64;
                                         
                                         byte[] data = Convert.FromBase64String(pngBase64);
 
@@ -774,6 +1097,7 @@ namespace ACTWebSocket_Plugin
                     }
                 };
             }
+
             overlayProcCheckTimer = new System.Timers.Timer();
             overlayProcCheckTimer.Interval = 2000;
             overlayProcCheckTimer.Elapsed += (o, e) =>
@@ -805,23 +1129,18 @@ namespace ACTWebSocket_Plugin
 
         JObject overlayWindows = new JObject(); // 설정 전부
 
-        public static bool SendMessage(string caption, JObject obj)
-        {
-            if (ipc == null)
-                return false;
-            return ipc.SendMessage(caption, 0, obj.ToString());
-        }
-
         public static bool SendMessage(JObject obj)
         {
             if (ipc == null)
                 return false;
-            return ipc.SendMessage(overlayCaption, 0, obj.ToString());
+            return ipc.SendMessage(0, obj.ToString(Newtonsoft.Json.Formatting.None));
         }
 
-        public static IPC_COPYDATA ipc = null;
+        public static IPC_Base ipc = null;
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+
             UpdateOverlayProc();
             if (core == null)
             {
@@ -837,7 +1156,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineReadUse.Checked = BeforeLogLineRead;
             OnLogLineReadUse.Checked = OnLogLineRead;
             MiniParseUse.Checked = MiniParse;
-            //SSLUse.Checked = UseSSL;
+            SSLUse.Checked = UseSSL;
             DiscoveryUse.Checked = UseDiscovery;
             UPNPUse.Checked = UseUPnP;
             randomURL.Checked = RandomURL;
@@ -845,60 +1164,110 @@ namespace ACTWebSocket_Plugin
             chatFilter.Checked = ChatFilter;
             autostart.Checked = AutoRun;
             autostartoverlay.Checked = AutoOverlay;
+            UpdatePluginAddress.Checked = UpdateAddress;
             progressBar.Hide();
             progressBar.BringToFront();
             StopServer();
+            UpdateBackupFiles();
 
             if (core != null)
             {
-                core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
-                core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
-                core.Filters["/MiniParse"] = MiniParseUse.Checked;
+                BeforeLogLineRead = core.Filters["/BeforeLogLineRead"] = BeforeLogLineReadUse.Checked;
+                OnLogLineRead= core.Filters["/OnLogLineRead"] = OnLogLineReadUse.Checked;
+                MiniParse = core.Filters["/MiniParse"] = MiniParseUse.Checked;
                 // not configurable ?
                 core.Config.SortKey = "encdps";
                 core.Config.SortType = MiniParseSortType.NumericDescending;
             }
 
-            try
+            Exception ex = null;
+            Task task = Task.Factory.StartNew(() =>
             {
-                if (autostart.Checked)
+                try
                 {
-                    StartServer();
+                    if (autostart.Checked)
+                    {
+                        StartServer();
+                    }
+                    else
+                    {
+                        StopServer();
+                    }
                 }
-                else
+                catch (Exception e)
                 {
+                    ex = e;
                     StopServer();
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                StopServer();
-            }
 
-            try
-            {
-                if (autostartoverlay.Checked)
+                try
                 {
-                    StartOverlayProc();
+                    if (autostartoverlay.Checked)
+                    {
+                        StartOverlayProc();
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                StopServer();
-            }
+                catch (Exception e)
+                {
+                    ex = e;
+                    StopServer();
+                }
 
+                if(ex != null)
+                    MessageBox.Show(ex.Message);
+            });
             // Create some sort of parsing event handler.  After the "+=" hit TAB twice and the code will be generated for you.
-            ActGlobals.oFormActMain.BeforeLogLineRead += oFormActMain_BeforeLogLineRead;
+            AddOnBeforeLogLineRead();
             ActGlobals.oFormActMain.OnLogLineRead += oFormActMain_OnLogLineRead;
             var s = ActGlobals.oFormActMain.ActPlugins;
             lblStatus.Text = "Plugin Started";
+
+            Version version = AssemblyName.GetAssemblyName(pluginPath).Version;
+            ACTWebSocketCore.currentVersionString = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString() + "." + version.Revision.ToString();
+        }
+
+        // from https://github.com/anoyetta/ACT.SpecialSpellTimer/ACT.SpecialSpellTimer/LogBuffer.cs
+        private void AddOnBeforeLogLineRead()
+        {
+            try
+            {
+                var fi = ActGlobals.oFormActMain.GetType().GetField(
+                    "BeforeLogLineRead",
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
+
+                var beforeLogLineReadDelegate =
+                    fi.GetValue(ActGlobals.oFormActMain)
+                    as Delegate;
+
+                if (beforeLogLineReadDelegate != null)
+                {
+                    var handlers = beforeLogLineReadDelegate.GetInvocationList();
+
+                    // 全てのイベントハンドラを一度解除する
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead -= (LogLineEventDelegate)handler;
+                    }
+
+                    // スペスペのイベントハンドラを最初に登録する
+                    ActGlobals.oFormActMain.BeforeLogLineRead += this.oFormActMain_BeforeLogLineRead;
+
+                    // 解除したイベントハンドラを登録し直す
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead += (LogLineEventDelegate)handler;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Logger.Write("AddOnBeforeLogLineRead error:", ex);
+            }
         }
 
         public void DeInitPlugin()
         {
-            //StopServer();
+            StopServer();
             // Unsubscribe from any events you listen to when exiting!
             ActGlobals.oFormActMain.BeforeLogLineRead -= oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= oFormActMain_OnLogLineRead;
@@ -927,6 +1296,37 @@ namespace ACTWebSocket_Plugin
                     String s = File.ReadAllText(settingsFile);
                     obj = JObject.Parse(s);
                     JToken token;
+                    if (obj.TryGetValue("DXInstalledPath", out token))
+                    {
+                        gamepath.Text = token.ToObject<string>();
+                    }
+                    else
+                    {
+                    }
+                    if (obj.TryGetValue("DXInstalledType", out token))
+                    {
+                        game.SelectedIndex = token.ToObject<int>();
+                    }
+                    else
+                    {
+                    }
+                    if (obj.TryGetValue("OverlayTab", out token))
+                    {
+                        try
+                        {
+                            overlayTab.SelectedIndex = token.ToObject<int>();
+                            // prevent blank tab
+                            overlayTab.Invalidate();
+                            overlayTab.SelectedTab.Invalidate();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        
+                    }
+                    else
+                    {
+                    }
                     if (obj.TryGetValue("Port", out token))
                     {
                         Port = token.ToObject<int>();
@@ -975,14 +1375,14 @@ namespace ACTWebSocket_Plugin
                     {
                         UseDiscovery = false;
                     }
-                    //if (obj.TryGetValue("UseSSL", out token))
-                    //{
-                    //    UseSSL = token.ToObject<bool>();
-                    //}
-                    //else
-                    //{
-                    //    UseSSL = false;
-                    //}
+                    if (obj.TryGetValue("UseSSL", out token))
+                    {
+                        UseSSL = token.ToObject<bool>();
+                    }
+                    else
+                    {
+                        UseSSL = false;
+                    }
                     if (obj.TryGetValue("SkinOnAct", out token))
                     {
                         SkinOnAct = token.ToObject<bool>();
@@ -1056,11 +1456,33 @@ namespace ACTWebSocket_Plugin
                         }
                         buttonRefresh_Click(null, null);
                     }
+                    if (obj.TryGetValue("UpdateAddress", out token))
+                    {
+                        UpdateAddress = token.ToObject<bool>();
+                        UpdatePluginAddress.Checked = UpdateAddress;
+                    }
+                    else
+                    {
+                        UpdateAddress = true;
+                        UpdatePluginAddress.Checked = true;
+                    }
                 }
                 catch (Exception e)
                 {
                 }
-                hostnames.Text = Hostname;
+                {
+                    int host = hostnames.Items.IndexOf(Hostname);
+                    if(host >= 0)
+                    {
+                        hostnames.SelectedIndex = host;
+                    }
+                    else
+                    {
+                        Hostname = "Loopback IPV6([::1])";
+                        int host2 = hostnames.Items.IndexOf(Hostname);
+                        hostnames.SelectedIndex = host2;
+                    }
+                }
             }
         }
 
@@ -1069,6 +1491,9 @@ namespace ACTWebSocket_Plugin
         {
             UpdateFormSettings();
             JObject obj = new JObject();
+            obj.Add("DXInstalledPath", gamepath.Text);
+            obj.Add("DXInstalledType", game.SelectedIndex);
+            obj.Add("OverlayTab", overlayTab.SelectedIndex);
             obj.Add("OverlayProcType", comboBoxOverlayProcType.Text);
             obj.Add("Port", Port);
             obj.Add("UPnPPort", UPnPPort);
@@ -1076,7 +1501,7 @@ namespace ACTWebSocket_Plugin
             obj.Add("RandomURL", RandomURL);
             obj.Add("UseUPnP", UseUPnP);
             obj.Add("UseDiscovery", UseDiscovery);
-            //obj.Add("UseSSL", UseSSL);
+            obj.Add("UseSSL", UseSSL);
             obj.Add("AutoRun", AutoRun);
             obj.Add("AutoOverlay", AutoOverlay);
             obj.Add("BeforeLogLineRead", BeforeLogLineRead);
@@ -1084,6 +1509,8 @@ namespace ACTWebSocket_Plugin
             obj.Add("MiniParse", MiniParse);
             obj.Add("ChatFilter", ChatFilter);
             obj.Add("SkinOnAct", SkinOnAct);
+            obj.Add("UpdateAddress", UpdateAddress);
+
             JArray skins = new JArray();
             foreach (string a in SkinURLList)
             {
@@ -1100,47 +1527,106 @@ namespace ACTWebSocket_Plugin
         String currentVersionString = null;
         String latestVersionString = null;
 
+        Dictionary<String, String> addressMap = new Dictionary<String, String>();
+
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
             comboBoxOverlayProcType.SelectedIndex = 0;
-            hostnames.Text = "127.0.0.1";
             String strHostName = string.Empty;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
 
+            addressMap["Any (0.0.0.0)"] = System.Net.IPAddress.Any.ToString();
+            addressMap["Any IPV6([::])"] = "[" + System.Net.IPAddress.IPv6Any.ToString() + "]";
+            addressMap["Loopback (127.0.0.1)"] = System.Net.IPAddress.Loopback.ToString();
+            addressMap["Loopback IPV6([::1])"] = "[" + System.Net.IPAddress.IPv6Loopback.ToString() + "]";
+
             addrs.Clear();
-            addrs.Add("127.0.0.1");
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                IPAddress[] addr = ipEntry.AddressList;
-                for (int i = 0; i < addr.Length; i++)
+                if(ni.OperationalStatus == OperationalStatus.Up)
                 {
-                    if (addr[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        addrs.Add(addr[i].ToString());
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    {
+                        foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                        {
+                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                addrs.Add(ip.Address.ToString());
+                                addressMap[ip.Address.ToString()] = ip.Address.ToString();
+                            }
+                        }
+                    }
                 }
+            }
+            foreach (var i in addressMap)
+            {
+                addrs.Add(i.Key);
             }
             addrs = Utility.Distinct<String>(addrs);
             addrs.Sort();
             core.SetAddress(addrs);
 
+            foreach (var addr in addrs)
+            {
+                hostnames.Items.Add(addr);
+            }
+
+            hostnames.SelectedIndex = 0;
+
             Task task = Task.Factory.StartNew(() =>
             {
                 String ipaddress = Utility.GetExternalIp();
                 if (ipaddress.Length > 0)
-                    addrs.Add(ipaddress);
-
-                addrs = Utility.Distinct<String>(addrs);
-                addrs.Sort();
-                core.SetAddress(addrs);
+                    externalIP = ipaddress;
             });
-            Task UITask = task.ContinueWith((t) =>
-            {
-                foreach (var addr in addrs)
-                {
-                    hostnames.Items.Add(addr);
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            //Task task = Task.Factory.StartNew(() =>
+            //{
+            //    String ipaddress = Utility.GetExternalIp();
+            //    if (ipaddress.Length > 0)
+            //        addrs.Add(ipaddress);
+
+            //    addrs = Utility.Distinct<String>(addrs);
+            //    addrs.Sort();
+            //    core.SetAddress(addrs);
+
+            //    hostnames.Items.Clear();
+            //    foreach (var addr in addrs)
+            //    {
+            //        hostnames.Items.Add(addr);
+            //    }
+            //});
             VersionCheck();
+            OverlayVersionCheck(gamepath.Text);
             CheckUpdate();
+        }
+
+        int VersionCompare(String version0, String version1)
+        {
+            var version0s = version0.Trim().Split('.').Select(Int32.Parse).ToList();
+            var version1s = version1.Trim().Split('.').Select(Int32.Parse).ToList();
+            int count = version0s.Count < version1s.Count ? version0s.Count : version1s.Count;
+            for(int i=0;i<count;++i)
+            {
+                if(version0s[i] < version1s[i])
+                {
+                    return -1;
+                }
+                else if (version0s[i] > version1s[i])
+                {
+                    return 1;
+                }
+            }
+            if (version0s.Count < version1s.Count)
+            {
+                return -1;
+            }
+            else if (version0s.Count > version1s.Count)
+            {
+                return 1;
+            }
+            return 0;
         }
 
         void VersionCheck()
@@ -1155,7 +1641,7 @@ namespace ACTWebSocket_Plugin
             }
             catch (Exception ex)
             {
-
+                currentVersion.Text = currentVersionString = "";
             }
 
             Task task2 = Task.Factory.StartNew(() =>
@@ -1168,20 +1654,17 @@ namespace ACTWebSocket_Plugin
                 {
 
                 }
-            });
-            Task UITask2 = task2.ContinueWith((t) =>
-            {
                 //develVersion.Text = latestTag + "." + develVersion;
                 try
                 {
-                    releaseVersion.Text = releaseTag + ".0";
-                    labelRelease.ForeColor = (releaseVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                    releaseVersion.Text = releaseTag;
+                    labelRelease.ForeColor = (VersionCompare(releaseVersion.Text, currentVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
                 {
 
                 }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            });
 
             Task task3 = Task.Factory.StartNew(() =>
             {
@@ -1193,20 +1676,17 @@ namespace ACTWebSocket_Plugin
                 {
 
                 }
-            });
-            Task UITask3 = task3.ContinueWith((t) =>
-            {
                 //develVersion.Text = latestTag + "." + develVersion;
                 try
                 {
                     latestVersion.Text = latestVersionString;
-                    labelLatest.ForeColor = (latestVersion.Text != currentVersion.Text) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                    labelLatest.ForeColor = (VersionCompare(latestVersion.Text, currentVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 }
                 catch (Exception ex)
                 {
 
                 }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            });
         }
 
         private bool IsChattings(LogLineEventArgs e)
@@ -1281,19 +1761,178 @@ namespace ACTWebSocket_Plugin
             }
         }
 
-        //public bool UseSSL { get; set; }
+        public bool UseSSL { get; set; }
         public bool UseUPnP { get; set; }
         public bool UseDiscovery { get; set; }
         public bool AutoRun { get; set; }
         public bool AutoOverlay { get; set; }
         public bool ChatFilter { get; set; }
+        public bool UpdateAddress { get; set; }
         public List<String> SkinURLList = new List<String>();
+
+        //https://github.com/anoyetta/ACT.MPTimer/blob/master/ACT.MPTimer/Utility/ActInvoker.cs
+        //Copryright(c) 2014, anoyetta
+        public static void Invoke(Action action)
+        {
+            if (ActGlobals.oFormActMain != null &&
+                ActGlobals.oFormActMain.IsHandleCreated &&
+                !ActGlobals.oFormActMain.IsDisposed)
+            {
+                if (ActGlobals.oFormActMain.InvokeRequired)
+                {
+                    ActGlobals.oFormActMain.Invoke((MethodInvoker)delegate
+                    {
+                        action();
+                    });
+                }
+                else
+                {
+                    action();
+                }
+            }
+        }
+
+        private void UpdatePluginAddress_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAddress = UpdatePluginAddress.Checked;
+        }
+
+        private void buttonUpdatePluginAddress_Click(object sender, EventArgs e)
+        {
+            // Set Local IP
+            Task task = new Task(() =>
+            {
+                try
+                {
+                    foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+                    {
+                        if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                        {
+                            IActPluginV1 o = x.pluginObj;
+                            if (o != null)
+                            {
+                                try
+                                {
+                                    SetLocalIP(o);
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+            task.Start();
+        }
+
+        private static void SetLocalIP(object plugin)
+        {
+            var connections = SocketConnection.GetAllTcpConnections();
+            System.Net.IPAddress local = null;
+            foreach (var connection in connections)
+            {
+                string processname = connection.ProcessName.ToLower();
+                if(processname == ("ffxiv") || processname == ("ffxiv_dx11"))
+                {
+                    if (!IPAddress.IsLoopback(connection.LocalAddress) && !IPAddress.IsLoopback(connection.RemoteAddress))
+                    {
+                        local = connection.LocalAddress;
+                    }
+                }
+            }
+            if (local != null)
+            {
+                var Settings = plugin.GetType().GetField("Settings", BindingFlags.Public | BindingFlags.Instance).GetValue(plugin);
+                if (Settings != null)
+                {
+                    {
+                        var field = Settings.GetType().GetField("cboNetwork", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (field != null)
+                        {
+                            ComboBox combo = (ComboBox)field.GetValue(Settings);
+                            if (combo != null)
+                            {
+                                try
+                                {
+                                    if (combo.Items.Contains(local.ToString()))
+                                    {
+                                        Invoke(()=>
+                                        {
+                                            try
+                                            {
+                                                int index = combo.Items.IndexOf(local.ToString());
+                                                if (index > 0)
+                                                {
+                                                    combo.SelectedIndex = index;
+                                                }
+                                                else
+                                                {
+                                                    combo.SelectedIndex = 0;
+                                                    //combo.Text = local.ToString();///*combo.Items[combo.Items.IndexOf(local.ToString())]*/;
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                combo.SelectedIndex = 0;
+                                                //combo.Text = "All (Default)";
+                                            }
+                                        });
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         public void StartServer()
         {
             core.Filters["/BeforeLogLineRead"] = true;
             core.Filters["/OnLogLineRead"] = true;
             core.Filters["/MiniParse"] = true;
+
+            if(UpdateAddress)
+            {
+                // Set Local IP
+                Task task = new Task(() =>
+                {
+                    try
+                    {
+                        foreach (var x in ActGlobals.oFormActMain.ActPlugins)
+                        {
+                            if (x.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() && x.cbEnabled.Checked)
+                            {
+                                IActPluginV1 o = x.pluginObj;
+                                if (o != null)
+                                {
+                                    try
+                                    {
+                                        SetLocalIP(o);
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
+                task.Start();
+            }
 
             if (UseUPnP)
             {
@@ -1306,9 +1945,9 @@ namespace ACTWebSocket_Plugin
                         var device = await discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
                         // not registered when first invoke...
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
-                        await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
+                        await device.CreatePortMapAsync(new Mapping(Open.Nat.Protocol.Tcp, Port, UPnPPort, "ACTWebSocket Port"));
                     }
                     catch(Exception e)
                     {
@@ -1316,19 +1955,6 @@ namespace ACTWebSocket_Plugin
                     }
                 });
                 upnpTask.Start();
-            }
-            
-            var addresses = Dns.GetHostAddresses(Hostname);
-
-            bool localhostOnly = false;
-            for(int i=0;i< addresses.Length;++i)
-            {
-                var ip = addresses[i];
-                if (IPAddress.IsLoopback(ip))
-                {
-                    localhostOnly = true;
-                    break;
-                }
             }
             
             if (RandomURL)
@@ -1341,13 +1967,18 @@ namespace ACTWebSocket_Plugin
             }
             try
             {
+                String address = IPAddress.Any.ToString();
+                if(Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >=0)
+                {
+                    address = addressMap[Hostname];
+                }
                 if (UseUPnP)
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, UPnPPort, Hostname, SkinOnAct, false);
+                    core.StartServer(address, Port, UPnPPort, Hostname, SkinOnAct, UseSSL);
                 }
                 else
                 {
-                    core.StartServer(localhostOnly ? "127.0.0.1" : "0.0.0.0", Port, Port, Hostname, SkinOnAct, false);
+                    core.StartServer(address, Port, Port, Hostname, SkinOnAct, UseSSL);
                 }
             }
             catch (Exception e)
@@ -1359,7 +1990,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = false;
             //MiniParseUse.Enabled = false;
             //chatFilter.Enabled = false;
-            //SSLUse.Enabled = false;
+            SSLUse.Enabled = false;
             skinOnAct.Enabled = false;
             UPNPUse.Enabled = false;
             DiscoveryUse.Enabled = false;
@@ -1369,6 +2000,7 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = false;
             buttonOff.Enabled = true;
+            //UpdatePluginAddress.Enabled = false;
 
 
             if(UseDiscovery)
@@ -1426,7 +2058,7 @@ namespace ACTWebSocket_Plugin
             //OnLogLineReadUse.Enabled = true;
             //MiniParseUse.Enabled = true;
             //chatFilter.Enabled = true;
-            //SSLUse.Enabled = true;
+            SSLUse.Enabled = true;
             skinOnAct.Enabled = true;
             UPNPUse.Enabled = true;
             DiscoveryUse.Enabled = true;
@@ -1436,6 +2068,7 @@ namespace ACTWebSocket_Plugin
             uPnPPort.Enabled = false;
             hostnames.Enabled = true;
             buttonOff.Enabled = false;
+            //UpdatePluginAddress.Enabled = true;
         }
 
         public void consolelog(object s)
@@ -1551,7 +2184,20 @@ namespace ACTWebSocket_Plugin
         {
             string url = "";
             {
-                url = "://" + Hostname + ":" + Port + "/";
+                String address = IPAddress.Any.ToString();
+                if (Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >= 0)
+                {
+                    address = addressMap[Hostname];
+                    if (address == "[::]")
+                    {
+                        address = (externalIP != null) ? externalIP : "[::1]";
+                    }
+                    if (address == "0.0.0.0")
+                    {
+                        address = (externalIP != null) ? externalIP : "127.0.0.1";
+                    }
+                }
+                url = "://" + address + ":" + Port + "/";
             }
             if (withRandomURL)
             {
@@ -1564,7 +2210,7 @@ namespace ACTWebSocket_Plugin
             {
                 try
                 {
-                    Uri uri = new Uri(skinPath + "?HOST_PORT=" + "ws" + url);
+                    Uri uri = new Uri(skinPath + "?HOST_PORT=" + (UseSSL ? "wss" : "ws") + url);
                     return uri.ToString();
                 }
                 catch (Exception e)
@@ -1578,7 +2224,7 @@ namespace ACTWebSocket_Plugin
                 {
                     try
                     {
-                        string fullURL = ("http") + url + Uri.EscapeDataString(skinPath);
+                        string fullURL = (UseSSL ? "https" : "http") + url + Uri.EscapeDataString(skinPath);
                         fullURL = fullURL.Replace("%5C", "/");
                         fullURL = fullURL.Replace("%2F", "/");
                         return fullURL;
@@ -1590,7 +2236,7 @@ namespace ACTWebSocket_Plugin
                 }
                 else
                 {
-                    return url;
+                    return (UseSSL ? "wss" : "ws") + url;
                 }
             }
             return null;
@@ -1611,7 +2257,7 @@ namespace ACTWebSocket_Plugin
             BeforeLogLineRead = BeforeLogLineReadUse.Checked;
             OnLogLineRead = OnLogLineReadUse.Checked;
             MiniParse = MiniParseUse.Checked;
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
             UseUPnP = UPNPUse.Checked;
             UseDiscovery = DiscoveryUse.Checked;
             RandomURL = randomURL.Checked;
@@ -1643,7 +2289,10 @@ namespace ACTWebSocket_Plugin
         private void buttonOn_Click(object sender, EventArgs e)
         {
             UpdateFormSettings();
-            StartServer();
+            Task task = Task.Factory.StartNew(() =>
+            {
+                StartServer();
+            });
         }
 
         void onServiceChanged(object sender, ServiceAnnouncementEventArgs e)
@@ -1677,7 +2326,10 @@ namespace ACTWebSocket_Plugin
 
         private void buttonOff_Click(object sender, EventArgs e)
         {
-            StopServer();
+            Task task = Task.Factory.StartNew(() =>
+            {
+                StopServer();
+            });
         }
 
         private void port_KeyPress(object sender, KeyPressEventArgs e)
@@ -1721,41 +2373,47 @@ namespace ACTWebSocket_Plugin
         {
             string url = ShowDialog("Add URL", "Add URL").Trim() ;
             SkinURLList.Add(url);
-            AddWebURL(url);
+            Task task = Task.Factory.StartNew(() =>
+            {
+                AddWebURL(url);
+            });
         }
 
         private void buttonURL_Click(object sender, EventArgs e)
         {
-            if (WebSkinListView.SelectedItems == null) return;
-            if(WebSkinListView.SelectedItems.Count > 0)
+            lock (WebSkinListView)
             {
-                string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                SkinURLList.Remove(url);
-                WebSkinListView.Items.RemoveAt(WebSkinListView.SelectedItems[0].Index);
+                if (WebSkinListView.SelectedItems == null) return;
+                if (WebSkinListView.SelectedItems.Count > 0)
                 {
-                    if (core != null)
+                    string url = (string)WebSkinListView.SelectedItems[0].Tag;
+                    SkinURLList.Remove(url);
+                    WebSkinListView.Items.RemoveAt(WebSkinListView.SelectedItems[0].Index);
                     {
-                        lock (core.skinObject)
+                        if (core != null)
                         {
-                            JArray urlConverted = new JArray();
-                            JArray array = (JArray)core.skinObject["URLList"].DeepClone();
-                            if (array != null)
+                            lock (core.skinObject)
                             {
-                                foreach (JToken obj in array)
+                                JArray urlConverted = new JArray();
+                                JArray array = (JArray)core.skinObject["URLList"].DeepClone();
+                                if (array != null)
                                 {
-                                    if (obj["URL"].ToObject<String>() == url)
+                                    foreach (JToken obj in array)
                                     {
-                                        obj.Remove();
-                                        break;
+                                        if (obj["URL"].ToObject<String>() == url)
+                                        {
+                                            obj.Remove();
+                                            break;
+                                        }
                                     }
                                 }
+                                core.skinObject["URLList"] = array;
+                                SendMessage(JObject.FromObject(new
+                                {
+                                    cmd = "urllist",
+                                    value = core.skinObject
+                                }));
                             }
-                            core.skinObject["URLList"] = array;
-                            SendMessage(JObject.FromObject(new
-                            {
-                                cmd = "urllist",
-                                value = core.skinObject
-                            }));
                         }
                     }
                 }
@@ -1764,20 +2422,26 @@ namespace ACTWebSocket_Plugin
 
         private void copyURL_Click(object sender, EventArgs e)
         {
-            if (WebSkinListView.SelectedItems == null) return;
-            if (WebSkinListView.SelectedItems.Count > 0)
+            lock (FileSkinListView)
             {
-                string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                copyURLPath(url);
-            }
-            else if (FileSkinListView.SelectedItems.Count > 0)
-            {
-                string url = (string)FileSkinListView.SelectedItems[0].Tag;
-                copyURLPath(url);
-            }
-            else
-            {
-                copyURLPath();
+                lock (WebSkinListView)
+                {
+                    if (WebSkinListView.SelectedItems == null) return;
+                    if (WebSkinListView.SelectedItems.Count > 0)
+                    {
+                        string url = (string)WebSkinListView.SelectedItems[0].Tag;
+                        copyURLPath(url);
+                    }
+                    else if (FileSkinListView.SelectedItems.Count > 0)
+                    {
+                        string url = (string)FileSkinListView.SelectedItems[0].Tag;
+                        copyURLPath(url);
+                    }
+                    else
+                    {
+                        copyURLPath();
+                    }
+                }
             }
         }
         
@@ -1800,6 +2464,7 @@ namespace ACTWebSocket_Plugin
                 else
                 {
                     WebClient wc = new WebClient();
+                    wc.Headers["User-Agent"] = "ACTWebSocket ("+currentVersionString+")";
                     wc.Encoding = Encoding.UTF8;
                     string source = wc.DownloadString(path);
                     title = Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
@@ -1815,20 +2480,20 @@ namespace ACTWebSocket_Plugin
 
         private void AddWebURL(string a)
         {
-            string title = null;
-            Task task = Task.Factory.StartNew(() =>
+            try
             {
+                string title = null;
                 title = GetTitle(a);
-            });
-            Task UITask = task.ContinueWith((t) =>
-            {
                 {
                     bool find = false;
-                    foreach (ListViewItem i in WebSkinListView.Items)
+                    lock(WebSkinListView)
                     {
-                        if (((string)i.Tag).CompareTo(a) == 0)
+                        foreach (ListViewItem i in WebSkinListView.Items)
                         {
-                            find = true;
+                            if (((string)i.Tag).CompareTo(a) == 0)
+                            {
+                                find = true;
+                            }
                         }
                     }
 
@@ -1838,7 +2503,10 @@ namespace ACTWebSocket_Plugin
                         ListViewItem lvi = new ListViewItem();
                         lvi.Text = title;
                         lvi.Tag = a;
-                        WebSkinListView.Items.Add(lvi);
+                        lock (WebSkinListView)
+                        {
+                            WebSkinListView.Items.Add(lvi);
+                        }
                         if (core != null)
                         {
                             lock (core.skinObject)
@@ -1858,7 +2526,11 @@ namespace ACTWebSocket_Plugin
                         }
                     }
                 }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         List<Task> tasklist = new List<Task>();
         private ServiceBrowser serviceBrowser;
@@ -1868,14 +2540,11 @@ namespace ACTWebSocket_Plugin
         {
             a = a.Replace("\\", "/");
             string title = null;
-            Task task = Task.Factory.StartNew(() =>
+            title = GetTitle(a);
             {
-                title = GetTitle(a);
-            });
-            Task UITask = task.ContinueWith((t) =>
-            {
+                bool find = false;
+                lock (FileSkinListView)
                 {
-                    bool find = false;
                     foreach (ListViewItem i in FileSkinListView.Items)
                     {
                         if (((string)i.Tag).CompareTo(a) == 0)
@@ -1884,85 +2553,91 @@ namespace ACTWebSocket_Plugin
                             break;
                         }
                     }
+                }
 
-                    if (!find)
+                if (!find)
+                {
+                    title = (title == null || title == "") ? a : title;
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = title;
+                    lvi.Tag = a;
+                    lock (FileSkinListView)
                     {
-                        title = (title == null || title == "") ? a : title;
-                        ListViewItem lvi = new ListViewItem();
-                        lvi.Text = title;
-                        lvi.Tag = a;
                         FileSkinListView.Items.Add(lvi);
-                        if (core != null)
+                    }
+                    if (core != null)
+                    {
+                        lock (core.skinObject)
                         {
-                            lock (core.skinObject)
+                            JObject skinInfo = new JObject();
+                            skinInfo["Title"] = title;
+                            skinInfo["URL"] = a;
+                            JArray array = (JArray)core.skinObject["URLList"];
+                            if (array == null)
                             {
-                                JObject skinInfo = new JObject();
-                                skinInfo["Title"] = title;
-                                skinInfo["URL"] = a;
-                                JArray array = (JArray)core.skinObject["URLList"];
-                                if (array == null)
-                                {
-                                    array = new JArray();
-                                    core.skinObject["URLList"] = array;
-                                }
-                                array.Add(skinInfo);
-                                ServerUrlChanged();
+                                array = new JArray();
+                                core.skinObject["URLList"] = array;
                             }
+                            array.Add(skinInfo);
+                            ServerUrlChanged();
                         }
                     }
                 }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-            Task finalTask = UITask.ContinueWith((t) =>
-            {
-                tasklist.Remove(UITask);
-                tasklist.Remove(task);
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-            lock(tasklist)
-            {
-                tasklist.Add(task);
-                tasklist.Add(UITask);
             }
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            lock (tasklist)
+            try
             {
-                foreach(var task in tasklist)
+                Task task = Task.Factory.StartNew(() =>
                 {
-                    task.Wait();
-                }
-                tasklist.Clear();
-            }
-
-            lock (core.skinObject)
-            {
-                JArray array = (JArray)core.skinObject["URLList"];
-                array = new JArray();
-                core.skinObject["URLList"] = array;
-            }
-            FileSkinListView.Items.Clear();
-            WebSkinListView.Items.Clear();
-            foreach (var a in SkinURLList)
-            {
-                AddWebURL(a);
-            }
-
-            List<string> list =  GetFileSkinList();
-            foreach(var a in list)
-            {
-                bool find = false;
-                for(int i=0;i< FileSkinListView.Items.Count;++i)
-                {
-                    if(FileSkinListView.Items[i].Tag == a)
+                    skinOnAct.Enabled = false;
+                    int s = 0;
+                    lock (core.skinObject)
                     {
-                        find = true;
+                        JArray array = (JArray)core.skinObject["URLList"];
+                        array = new JArray();
+                        core.skinObject["URLList"] = array;
                     }
-                }
-                if(!find)
-                {
-                    AddFileURL(a);
-                }
+                    lock (FileSkinListView)
+                    {
+                        FileSkinListView.Items.Clear();
+                    }
+                    lock (WebSkinListView)
+                    {
+                        WebSkinListView.Items.Clear();
+                    }
+                    foreach (var a in SkinURLList)
+                    {
+                        AddWebURL(a);
+                    }
+
+                    List<string> list = GetFileSkinList();
+                    foreach (var a in list)
+                    {
+                        bool find = false;
+                        lock (FileSkinListView)
+                        {
+                            for (int i = 0; i < FileSkinListView.Items.Count; ++i)
+                            {
+                                if (FileSkinListView.Items[i].Tag == a)
+                                {
+                                    find = true;
+                                }
+                            }
+                        }
+                        if (!find)
+                        {
+                            AddFileURL(a);
+                        }
+                    }
+                    skinOnAct.Enabled = buttonOn.Enabled;
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Out.Write(ex.Message);
             }
         }
 
@@ -1993,7 +2668,7 @@ namespace ACTWebSocket_Plugin
 
         private void UseSSL_CheckedChanged(object sender, EventArgs e)
         {
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
         }
 
         private void skinOnAct_CheckedChanged(object sender, EventArgs e)
@@ -2042,27 +2717,33 @@ namespace ACTWebSocket_Plugin
         }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
-            if (WebSkinListView.SelectedItems.Count > 0)
+            lock(FileSkinListView)
             {
-                string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                url = getURLPath(url);
-                if(url != null)
+                lock(WebSkinListView)
                 {
-                    System.Diagnostics.Process.Start(url);
+                    if (WebSkinListView.SelectedItems.Count > 0)
+                    {
+                        string url = (string)WebSkinListView.SelectedItems[0].Tag;
+                        url = getURLPath(url);
+                        if (url != null)
+                        {
+                            System.Diagnostics.Process.Start(url);
+                        }
+                    }
+                    else if (FileSkinListView.SelectedItems.Count > 0)
+                    {
+                        string url = (string)FileSkinListView.SelectedItems[0].Tag;
+                        url = getURLPath(url);
+                        if (url != null)
+                        {
+                            System.Diagnostics.Process.Start(url);
+                        }
+                    }
+                    else
+                    {
+                        copyURLPath();
+                    }
                 }
-            }
-            else if (FileSkinListView.SelectedItems.Count > 0)
-            {
-                string url = (string)FileSkinListView.SelectedItems[0].Tag;
-                url = getURLPath(url);
-                if (url != null)
-                {
-                    System.Diagnostics.Process.Start(url);
-                }
-            }
-            else
-            {
-                copyURLPath();
             }
         }
 
@@ -2073,17 +2754,29 @@ namespace ACTWebSocket_Plugin
 
         private void skinList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (WebSkinListView.SelectedItems.Count > 0)
+            lock (FileSkinListView)
             {
-                FileSkinListView.SelectedItems.Clear();
+                lock (WebSkinListView)
+                {
+                    if (WebSkinListView.SelectedItems.Count > 0)
+                    {
+                        FileSkinListView.SelectedItems.Clear();
+                    }
+                }
             }
         }
 
         private void FileSkinListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (FileSkinListView.SelectedItems.Count > 0)
+            lock (FileSkinListView)
             {
-                WebSkinListView.SelectedItems.Clear();
+                lock (WebSkinListView)
+                {
+                    if (FileSkinListView.SelectedItems.Count > 0)
+                    {
+                        WebSkinListView.SelectedItems.Clear();
+                    }
+                }
             }
         }
 
@@ -2184,10 +2877,15 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     WebClient webClient = new WebClient();
+                    webClient.Headers["User-Agent"] = "ACTWebSocket (" + currentVersionString + ")";
+
                     string extractDir = pluginDirectory + "/overlay_proc";
                     string revisionFile = extractDir + "/.revision";
-                    string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+comboBoxOverlayProcType.Text.Trim()+"/";
-                    string infourl = baseurl + "info.json";
+
+                    //string baseurl = "https://static.zcube.kr/publish/OverlayProc/" + comboBoxOverlayProcType.Text.Trim() + "/";
+                    //string infourl = baseurl + "info.json";
+                    string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
+                    string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                     byte[] info = webClient.DownloadData(infourl);
                     String infotext = System.Text.Encoding.UTF8.GetString(info);
                     JObject jobject = JObject.Parse(infotext);
@@ -2252,10 +2950,7 @@ namespace ACTWebSocket_Plugin
                 catch (Exception ex)
                 {
                 }
-            });
-            Task UITask = task.ContinueWith((t) =>
-            {
-                if(updateNeeded)
+                if (updateNeeded)
                 {
                     updateLabel.Text = "New : " + version;
                 }
@@ -2263,8 +2958,7 @@ namespace ACTWebSocket_Plugin
                 {
                     updateLabel.Text = "";
                 }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-
+            });
 
         }
 
@@ -2287,6 +2981,8 @@ namespace ACTWebSocket_Plugin
                 string savefile = pluginDirectory + "/overlay_proc.zip";
                 
                 WebClient webClient = new WebClient();
+                webClient.Headers["User-Agent"] = "ACTWebSocket (" + currentVersionString + ")";
+
                 progressBar.Value = 0;
                 progressBar.Minimum = 0;
                 progressBar.Maximum = 100;
@@ -2296,8 +2992,10 @@ namespace ACTWebSocket_Plugin
                 string extractDir = pluginDirectory + "/overlay_proc";
                 string revisionFile = extractDir + "/.revision";
 
-                string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
-                string infourl = baseurl + "info.json";
+                //string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
+                //string infourl = baseurl + "info.json";
+                string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
+                string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                 byte[] info = webClient.DownloadData(infourl);
                 String infotext = System.Text.Encoding.UTF8.GetString(info);
                 JObject jobject = JObject.Parse(infotext);
@@ -2402,16 +3100,13 @@ namespace ACTWebSocket_Plugin
                         {
                             MessageBox.Show(ex.Message);
                         }
-                    });
-                    Task UITask = task.ContinueWith((t) =>
-                    {
                         progressBar.Hide();
                         comboBoxOverlayProcType.Enabled = true;
                         buttonDownload.Enabled = true;
                         UpdateOverlayProc();
                         CheckUpdate();
                         SaveSettings();
-                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                    });
                 };
                 //+= new AsyncCompletedEventHandler(Completed);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
@@ -2477,27 +3172,30 @@ namespace ACTWebSocket_Plugin
                 {
                     MessageBox.Show(ex.Message);
                 }
-            });
-            Task UITask = task.ContinueWith((t) =>
-            {
                 progressBar.Hide();
                 comboBoxOverlayProcType.Enabled = true;
                 buttonDownload.Enabled = true;
                 UpdateOverlayProc();
                 CheckUpdate();
                 SaveSettings();
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            });
         }
 
         private void buttonStartStopOverlayProc_Click(object sender, EventArgs e)
         {
             bool b = File.Exists(overlayProcExe);
-            if (!SendMessage(JObject.FromObject(new
+            bool boverlayenabled = buttonOpenOverlayProcManager.Enabled;
+                // 종료에 2초 이상 걸릴시 갱신되어
+                // 재실행 되는 오류 발생 가능.
+                if (!SendMessage(JObject.FromObject(new
             {
                 cmd = "stop"
             })))
             {
                 // run instance
+            }
+            if(!boverlayenabled)
+            {
                 StartOverlayProc();
             }
         }
@@ -2533,49 +3231,55 @@ namespace ACTWebSocket_Plugin
 
         private void buttonOverlay_Click(object sender, EventArgs e)
         {
-            if (FileSkinListView.SelectedItems.Count > 0)
+            lock (FileSkinListView)
             {
-                string url = (string)FileSkinListView.SelectedItems[0].Tag;
-                SendMessage(JObject.FromObject(new
+                lock (WebSkinListView)
                 {
-                    cmd = "set",
-                    value = new
+                    if (FileSkinListView.SelectedItems.Count > 0)
                     {
-                        opacity = 1.0,
-                        zoom = 1.0,
-                        fps = 30.0,
-                        hide = false,
-                        useDragFilter = true,
-                        useDragMove = true,
-                        useResizeGrip = true,
-                        NoActivate = false,
-                        Transparent = false,
-                        url = getURLPath(url, false),
-                        title = FileSkinListView.SelectedItems[0].Text
+                        string url = (string)FileSkinListView.SelectedItems[0].Tag;
+                        SendMessage(JObject.FromObject(new
+                        {
+                            cmd = "set",
+                            value = new
+                            {
+                                opacity = 1.0,
+                                zoom = 1.0,
+                                fps = 30.0,
+                                hide = false,
+                                useDragFilter = true,
+                                useDragMove = true,
+                                useResizeGrip = true,
+                                NoActivate = false,
+                                Transparent = false,
+                                url = getURLPath(url, false),
+                                title = FileSkinListView.SelectedItems[0].Text
+                            }
+                        }));
                     }
-                }));
-            }
-            else if (WebSkinListView.SelectedItems.Count > 0)
-            {
-                string url = (string)WebSkinListView.SelectedItems[0].Tag;
-                SendMessage(JObject.FromObject(new
-                {
-                    cmd = "set",
-                    value = new
+                    else if (WebSkinListView.SelectedItems.Count > 0)
                     {
-                        opacity = 1.0,
-                        zoom = 1.0,
-                        fps = 30.0,
-                        hide = false,
-                        useDragFilter = true,
-                        useDragMove = true,
-                        useResizeGrip = true,
-                        NoActivate = false,
-                        Transparent = false,
-                        url = getURLPath(url, false),
-                        title = WebSkinListView.SelectedItems[0].Text
+                        string url = (string)WebSkinListView.SelectedItems[0].Tag;
+                        SendMessage(JObject.FromObject(new
+                        {
+                            cmd = "set",
+                            value = new
+                            {
+                                opacity = 1.0,
+                                zoom = 1.0,
+                                fps = 30.0,
+                                hide = false,
+                                useDragFilter = true,
+                                useDragMove = true,
+                                useResizeGrip = true,
+                                NoActivate = false,
+                                Transparent = false,
+                                url = getURLPath(url, false),
+                                title = WebSkinListView.SelectedItems[0].Text
+                            }
+                        }));
                     }
-                }));
+                }
             }
         }
 
@@ -2594,35 +3298,59 @@ namespace ACTWebSocket_Plugin
             Hostname = hostnames.Text;
             if (core != null)
             {
-                lock (core.skinObject)
+                Task task = Task.Factory.StartNew(() =>
                 {
-                    JToken skinObject = core.skinObject.DeepClone();
-                    JArray urlConverted = new JArray();
-                    JArray array = (JArray)skinObject["URLList"];
-                    core.skinObject["Token"] = ACTWebSocketCore.randomDir;
-                    if (array != null)
+                    lock (core.skinObject)
                     {
-                        foreach (JToken obj in array)
+                        JToken skinObject = core.skinObject.DeepClone();
+                        JArray urlConverted = new JArray();
+                        JArray array = (JArray)skinObject["URLList"];
+                        if(core.skinObject["Vars"] == null)
                         {
-                            obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                            core.skinObject["Vars"] = new JObject();
                         }
+                        core.skinObject["Vars"]["HOST_PORT"] = getURLPath("", ACTWebSocketCore.randomDir != null ? ACTWebSocketCore.randomDir.Length > 0 : false);
+                        String address = IPAddress.Any.ToString();
+                        if (Array.IndexOf(addressMap.Keys.ToArray(), Hostname) >= 0)
+                        {
+                            address = addressMap[Hostname];
+                            if (address == "[::]")
+                            {
+                                address = (externalIP != null) ? externalIP : "[::1]";
+                            }
+                            if (address == "0.0.0.0")
+                            {
+                                address = (externalIP != null) ? externalIP : "127.0.0.1";
+                            }
+                        }
+                        core.skinObject["Vars"]["Address"] = address.ToString();
+                        core.skinObject["Vars"]["Port"] = Port;
+                        core.skinObject["Vars"]["SSL"] = UseSSL;
+                        core.skinObject["Vars"]["Token"] = ACTWebSocketCore.randomDir;
+                        if (array != null)
+                        {
+                            foreach (JToken obj in array)
+                            {
+                                obj["URL"] = getURLPath(obj["URL"].ToObject<String>(), false);
+                            }
+                        }
+                        else
+                        {
+                            skinObject["URLList"] = new JArray();
+                        }
+                        SendMessage(JObject.FromObject(new
+                        {
+                            cmd = "urllist",
+                            value = skinObject
+                        }));
                     }
-                    else
-                    {
-                        skinObject["URLList"] = new JArray();
-                    }
-                    SendMessage(JObject.FromObject(new
-                    {
-                        cmd = "urllist",
-                        value = skinObject
-                    }));
-                }
+                });
             }
         }
 
         private void SSLUse_CheckedChanged(object sender, EventArgs e)
         {
-            //UseSSL = SSLUse.Checked;
+            UseSSL = SSLUse.Checked;
         }
 
         private void buttonInstall_Click(object sender, EventArgs e)
@@ -2654,12 +3382,425 @@ namespace ACTWebSocket_Plugin
 
         private void buttonLatest_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1");
+            System.Diagnostics.Process.Start("https://www.dropbox.com/s/jg4qoe7iwj6qgud/ACTWebSocket_latest.zip?dl=1");
         }
 
         private void buttonVersionCheck_Click(object sender, EventArgs e)
         {
             VersionCheck();
+        }
+        
+        private void buttonFindDirectory_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            switch(game.SelectedIndex)
+            {
+                case 4:
+                    ofd.Filter = "ffxiv,exe|ffxiv.exe;ffxiv_dx11.exe";
+                    break;
+                default:
+                    ofd.Filter = "*.exe|*.exe";
+                    break;
+            }
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK) // Test result.
+            {
+                gamepath.Text = ofd.FileName;
+                buttonDXInstall.Enabled = true;
+            }
+        }
+
+        private void gamepath_TextChanged(object sender, EventArgs e)
+        {
+            if (File.Exists(gamepath.Text))
+            {
+                string filepath = Path.GetFileName(gamepath.Text);
+                if (filepath.ToLower() == "ffxiv.exe")
+                {
+                    game.SelectedIndex = 4;
+                }
+                else if (filepath.ToLower() == "ffxiv_dx11.exe")
+                {
+                    game.SelectedIndex = 4;
+                }
+                buttonDXInstall.Enabled = true;
+                OverlayVersionCheck(gamepath.Text);
+            }
+            else
+            {
+                buttonDXInstall.Enabled = false;
+            }
+        }
+
+        private void buttonDXInstall_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                buttonDXInstall.Enabled = false;
+                gamepath.Enabled = false;
+                game.Enabled = false;
+
+                string url = "https://www.dropbox.com/s/rcypgitu9icz7kp/ACTWebSocketOverlay_latest.zip?dl=1";
+                string savefile = Directory.GetParent(gamepath.Text).FullName + "/ACTWebsocketOverlay_latest.zip";
+
+                WebClient webClient = new WebClient();
+                webClient.Headers["User-Agent"] = "ACTWebSocket (" + currentVersionString + ")";
+
+                dx_progress.Value = 0;
+                dx_progress.Minimum = 0;
+                dx_progress.Maximum = 100;
+                dx_progress.Show();
+
+                // updater
+                string extractDir = Directory.GetParent(gamepath.Text).FullName;
+                string versionFile = Directory.GetParent(gamepath.Text).FullName + "/overlay_version";
+
+                string filename = Path.GetFileNameWithoutExtension(gamepath.Text);
+
+                webClient.DownloadFileCompleted += (s, e2) =>
+                {
+                    progressBar.Value = 100;
+                    Task task = Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            string version = Utility.DevelVersion("https://www.dropbox.com/s/cqxosnmm073a0u5/ACTWebSocketOverlay_version?dl=1");
+                            string dir = Directory.GetCurrentDirectory();
+
+                            var zipArchive = SharpCompress.Archives.Zip.ZipArchive.Open(savefile);
+                            foreach (var entry in zipArchive.Entries)
+                            {
+                                if (!entry.IsDirectory)
+                                {
+                                    string filepath = extractDir + "/" + entry.Key;
+                                    if (!Directory.Exists(Directory.GetParent(filepath).FullName))
+                                    {
+                                        Directory.CreateDirectory(Directory.GetParent(filepath).FullName);
+                                    }
+                                    if(File.Exists(filepath))
+                                    {
+                                        File.Delete(filepath);
+                                    }
+                                    using (var fileStream = File.Create(filepath))
+                                    {
+                                        Stream stream = entry.OpenEntryStream();
+                                        stream.CopyTo(fileStream);
+                                        stream.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    string filepath = extractDir + "/" + entry.Key;
+                                    if (!Directory.Exists(filepath))
+                                    {
+                                        Directory.CreateDirectory(filepath);
+                                    }
+                                }
+                            }
+                            switch(game.SelectedIndex)
+                            {
+                                //32bit dx9
+                                case 0:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/d3d9.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //32bit dx11
+                                case 1:
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //64bit dx9
+                                case 2:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //64bit dx11                                
+                                case 3:
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade64.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/" + filename + "_mod.dll");
+                                    break;
+                                //ffxiv
+                                case 4:
+                                    System.IO.File.Delete(extractDir + "/d3d9.dll");
+                                    System.IO.File.Delete(extractDir + "/dxgi.dll");
+                                    System.IO.File.Delete(extractDir + "/ffxiv_mod.dll");
+                                    System.IO.File.Delete(extractDir + "/ffxiv_dx11_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade32.dll", extractDir + "/d3d9.dll");
+                                    System.IO.File.Move(extractDir + "/ReShade64.dll", extractDir + "/dxgi.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay32.dll", extractDir + "/ffxiv_mod.dll");
+                                    System.IO.File.Move(extractDir + "/ACTWebSocketOverlay64.dll", extractDir + "/ffxiv_dx11_mod.dll");
+                                    break;
+                            }
+                            zipArchive.Dispose();
+                            File.WriteAllText(versionFile, version);
+                            MessageBox.Show("Successfully installed");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                        buttonDXInstall.Enabled = true;
+                        gamepath.Enabled = true;
+                        game.Enabled = true;
+                        OverlayVersionCheck(gamepath.Text);
+                        SaveSettings();
+                    });
+                };
+                //+= new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(OverlayProgressChanged);
+
+                webClient.DownloadFileAsync(new Uri(url), savefile);
+
+            }
+            catch (Exception ex)
+            {
+                buttonDXInstall.Enabled = true;
+                gamepath.Enabled = true;
+                game.Enabled = true;
+                OverlayVersionCheck(gamepath.Text);
+                SaveSettings();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonBackup_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String extractDir = Directory.GetParent(gamepath.Text).FullName;
+                String settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                String backupDir = pluginDirectory + "/SettingsBackup";
+                String backupname = "mod_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
+                String backupFile = backupDir + "/" + backupname;
+
+                if (File.Exists(backupFile))
+                {
+                    DialogResult dialogResult = MessageBox.Show("\'mod.json\' file is already exists. Do you want overwrite it ? ", "Backup error", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+                    File.Delete(backupFile);
+                }
+
+                Directory.CreateDirectory(backupDir);
+                System.IO.File.Copy(settingsFile, backupFile);
+                UpdateBackupFiles();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        void UpdateBackupFiles()
+        {
+            String dir = gamepath.Text.Trim();
+            if (dir.Length == 0)
+                return;
+            try
+            {
+                backupFiles.Items.Clear();
+                string extractDir = Directory.GetParent(gamepath.Text).FullName;
+                string settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                string backupDir = pluginDirectory + "/SettingsBackup";
+                if (Directory.Exists(backupDir))
+                {
+                    string[] files = Directory.GetFiles(backupDir, "*.json").Select(Path.GetFileName).ToArray();
+
+                    for (int i = 0; i < files.Length; ++i)
+                    {
+                        backupFiles.Items.Add(new ListViewItem(files[i]));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonRestore_Click(object sender, EventArgs e)
+        {
+            if (backupFiles.SelectedItems.Count != 1)
+                return;
+            try
+            {
+                String extractDir = Directory.GetParent(gamepath.Text).FullName;
+                String settingsFile = Directory.GetParent(gamepath.Text).FullName + "/mod.json";
+                String backupDir = pluginDirectory + "/SettingsBackup";
+                String backupname = backupFiles.SelectedItems[0].Text;
+                String backupFile = backupDir + "/" + backupname;
+
+                if (File.Exists(settingsFile))
+                {
+                    DialogResult dialogResult = MessageBox.Show("\'mod.json\' file is already exists. Do you want overwrite it ? ", "Restore error", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+                    File.Delete(settingsFile);
+                }
+
+                System.IO.File.Copy(backupFile, settingsFile);
+                UpdateBackupFiles();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonUninstall_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string extractDir = Directory.GetParent(gamepath.Text).FullName;
+                string versionFile = Directory.GetParent(gamepath.Text).FullName + "/overlay_version";
+                string filename = Path.GetFileNameWithoutExtension(gamepath.Text);
+                System.IO.File.Delete(versionFile);
+                switch (game.SelectedIndex)
+                {
+                    //32bit dx9
+                    case 0:
+                        System.IO.File.Delete(extractDir + "/d3d9.dll");
+                        System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                        break;
+                    //32bit dx11
+                    case 1:
+                        System.IO.File.Delete(extractDir + "/dxgi.dll");
+                        System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                        break;
+                    //64bit dx9
+                    case 2:
+                        System.IO.File.Delete(extractDir + "/d3d9.dll");
+                        System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                        break;
+                    //64bit dx11                                
+                    case 3:
+                        System.IO.File.Delete(extractDir + "/dxgi.dll");
+                        System.IO.File.Delete(extractDir + "/" + filename + "_mod.dll");
+                        break;
+                    //ffxiv
+                    case 4:
+                        System.IO.File.Delete(extractDir + "/d3d9.dll");
+                        System.IO.File.Delete(extractDir + "/dxgi.dll");
+                        System.IO.File.Delete(extractDir + "/ffxiv_mod.dll");
+                        System.IO.File.Delete(extractDir + "/ffxiv_dx11_mod.dll");
+                        break;
+                }
+                OverlayVersionCheck(gamepath.Text);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void OverlayProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (e.TotalBytesToReceive == -1)
+            {
+                if (dx_progress.Style != ProgressBarStyle.Marquee)
+                {
+                    dx_progress.Value = 100;
+                    dx_progress.Style = ProgressBarStyle.Marquee;
+                }
+            }
+            else
+            {
+                dx_progress.Value = e.ProgressPercentage;
+                dx_progress.Style = ProgressBarStyle.Blocks;
+            }
+        }
+        
+        private void game_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonFindDirectory.Enabled = game.SelectedIndex >= 0;
+        }
+
+        private void buttonOverlayGitHub_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ZCube/ACTWebSocketOverlay");
+        }
+
+        private void buttonOverlayVersionCheck_Click(object sender, EventArgs e)
+        {
+            OverlayVersionCheck(gamepath.Text);
+        }
+
+        String releaseOverlayTag = null;
+        String currentOverlayTag = null;
+        String currentOverlayVersionString = null;
+        String latestOverlayVersionString = null;
+
+        void OverlayVersionCheck(String filepath = null)
+        {
+            try
+            {
+                if (filepath != null)
+                {
+                    currentOverlayVersionString = File.ReadAllText(Directory.GetParent(filepath).FullName + "/overlay_version").Trim();
+                    currentOverlayVersion.Text = currentOverlayVersionString;
+                }
+            }
+            catch (Exception ex)
+            {
+                currentOverlayVersion.Text = currentOverlayVersionString = "";
+            }
+
+            Task task2 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    releaseOverlayTag = Utility.ReleaseTag("https://github.com/ZCube/ACTWebSocketOverlay/releases");
+                }
+                catch (Exception ex)
+                {
+
+                }
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    releaseOverlayVersion.Text = releaseOverlayTag;
+                    labelOverlayRelease.ForeColor = (VersionCompare(releaseOverlayVersion.Text, currentOverlayVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+
+            Task task3 = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    latestOverlayVersionString = Utility.DevelVersion("https://www.dropbox.com/s/cqxosnmm073a0u5/ACTWebSocketOverlay_version?dl=1");
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+                //develVersion.Text = latestTag + "." + develVersion;
+                try
+                {
+                    latestOverlayVersion.Text = latestOverlayVersionString;
+                    labelOverlayLatest.ForeColor = (VersionCompare(latestOverlayVersion.Text, currentOverlayVersion.Text) > 0) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
         }
     }
 }

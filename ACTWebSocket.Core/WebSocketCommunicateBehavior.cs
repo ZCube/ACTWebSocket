@@ -107,12 +107,12 @@ namespace ACTWebSocket_Plugin
             public void Broadcast(String from, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                String str = GenMessage("broadcast", from, msgtype, message).ToString();
+                String str = GenMessage("broadcast", from, msgtype, message).ToString(Newtonsoft.Json.Formatting.None);
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id != from)
                     {
-                        s.Send(str);
+                        s.SendAsync(str, null);
                     }
                 }
             }
@@ -120,12 +120,12 @@ namespace ACTWebSocket_Plugin
             public void Broadcast(String msgtype, JToken message)
             {
                 String from = id;
-                String str = GenMessage("broadcast", from, msgtype, message).ToString();
+                String str = GenMessage("broadcast", from, msgtype, message).ToString(Newtonsoft.Json.Formatting.None);
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id != from)
                     {
-                        s.Send(str);
+                        s.SendAsync(str, null);
                     }
                 }
             }
@@ -133,12 +133,12 @@ namespace ACTWebSocket_Plugin
             public void Send(String to, String msgtype, JToken message)
             {
                 String from = id;
-                String str = GenMessage("send", from, to, msgtype, message).ToString();
+                String str = GenMessage("send", from, to, msgtype, message).ToString(Newtonsoft.Json.Formatting.None);
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id == to)
                     {
-                        s.Send(str);
+                        s.SendAsync(str, null);
                         break;
                     }
                 }
@@ -147,12 +147,12 @@ namespace ACTWebSocket_Plugin
             public void Send(String from, String to, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                String str = GenMessage("send", from, to, msgtype, message).ToString();
+                String str = GenMessage("send", from, to, msgtype, message).ToString(Newtonsoft.Json.Formatting.None);
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id == to)
                     {
-                        s.Send(str);
+                        s.SendAsync(str, null);
                         break;
                     }
                 }
@@ -161,12 +161,12 @@ namespace ACTWebSocket_Plugin
             public void Send(String type, String from, String to, String msgtype, JToken message)
             {
                 JObject obj = new JObject();
-                String str = GenMessage(type, from, to, msgtype, message).ToString();
+                String str = GenMessage(type, from, to, msgtype, message).ToString(Newtonsoft.Json.Formatting.None);
                 foreach (WebSocketCommunicateBehavior s in Sessions.Sessions)
                 {
                     if (s.id == to)
                     {
-                        s.Send(str);
+                        s.SendAsync(str, null);
                         break;
                     }
                 }

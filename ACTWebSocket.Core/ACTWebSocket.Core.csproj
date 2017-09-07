@@ -72,6 +72,10 @@
     <Reference Include="Advanced Combat Tracker">
       <HintPath>C:\ACTv3\Advanced Combat Tracker.exe</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MimeTypeMap, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediaTypeMap.2.1.0.0\lib\net40\MimeTypeMap.dll</HintPath>
       <Private>True</Private>
@@ -117,6 +121,7 @@
     <Compile Include="Classes\CombatData.cs" />
     <Compile Include="Classes\MP3.cs" />
     <Compile Include="Classes\StaticAPI.cs" />
+    <Compile Include="Functions\SocketConnections.cs" />
     <Compile Include="IPC_COPYDATA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +152,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +175,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACTWebSocket_Plugin;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace ACTWebSocket.Core
 {
     class Utility
     {
+        public static long ToUnixTimestamp(DateTime value)
+        {
+            return (long)Math.Truncate((value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
         public static string GetRelativePath(string filespec, string folder)
         {
             Uri pathUri = new Uri(filespec);
@@ -79,9 +85,11 @@ namespace ACTWebSocket.Core
         }
         public static String GetExternalIp()
         {
-            string whatIsMyIp = "http://act.project.so/ip.php";
+            string whatIsMyIp = "https://api.ipify.org";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
+
             UTF8Encoding utf8 = new UTF8Encoding();
             string ipAddress = "";
             try
@@ -94,11 +102,11 @@ namespace ACTWebSocket.Core
             }
             return ipAddress;
         }
-        public static String ReleaseTag()
+        public static String ReleaseTag(string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases")
         {
-            string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
             UTF8Encoding utf8 = new UTF8Encoding();
             ///ZCube/ACTWebSocket/tree/
             string releaseTag = null;
@@ -108,6 +116,16 @@ namespace ACTWebSocket.Core
                 //<a href="/ZCube/ACTWebSocket/tree/1.1.3" class="css-truncate">
                 var zz = Regex.Match(releaseTag, "/tree/(?<tag>[^\"]*)", RegexOptions.IgnoreCase);
                 releaseTag = zz.Groups["tag"].Value;
+
+                int dotCount = releaseTag.Count(x => x == '.');
+                if (dotCount == 0)
+                {
+                    releaseTag = "0.0.0.0";
+                }
+                else if (dotCount < 3 && dotCount > 0)
+                {
+                    releaseTag += string.Concat(Enumerable.Repeat(".0", 3 - dotCount));
+                }
             }
             catch (WebException we)
             {
@@ -115,11 +133,11 @@ namespace ACTWebSocket.Core
             }
             return releaseTag;
         }
-        public static String DevelVersion()
+        public static String DevelVersion(string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1")
         {
-            string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1";
             ToggleAllowUnsafeHeaderParsing(true);
             WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
             UTF8Encoding utf8 = new UTF8Encoding();
             ///ZCube/ACTWebSocket/tree/
             string version = null;

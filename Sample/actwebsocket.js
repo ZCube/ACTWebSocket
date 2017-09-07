@@ -30,39 +30,61 @@ var QueryString = function ()
 
 // webs
 var host_port = QueryString["HOST_PORT"];
+var need_to_get_host_port = false;
+var need_to_set_wsuri = (typeof wsUri === "undefined");
 
-var host_port = "192.168.0.2///";
-var wsUri = "@HOST_PORT@/MiniParse"; /*DO NOT EDIT THIS VALUE*/
-
-while(host_port.endsWith('/')) {
-	host_port = host_port.substring(0, host_port.length - 1);
-}
-
-if(wsUri.indexOf("//") == 0) {
-	wsUri = wsUri.substring(2);
-}
-
-if(wsUri.indexOf("ws://") == 0 || wsUri.indexOf("wss://") == 0)
+if (need_to_set_wsuri)
 {
-	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
-	{
-		wsUri = wsUri.replace(/ws:\/\/@HOST_PORT@/im, host_port);
-		wsUri = wsUri.replace(/wss:\/\/@HOST_PORT@/im, host_port);
-	}
-	else
-	{
-		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
-	}
+	window.wsUri = "ws://@HOST_PORT@/MiniParse";
+	need_to_get_host_port = typeof host_port === "undefined";
 }
 else
 {
-	if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+	need_to_get_host_port = (typeof host_port === "undefined") ? wsUri.indexOf('HOST_PORT') === -1 : true;
+}
+
+if(need_to_get_host_port)
+{
+	// ws://localhost:10501/
+	if(window.location.host != "")
+		host_port = 'ws://' + window.location.host + '/';
+	else
+		host_port = 'ws://localhost:10501/';
+}
+
+// wsUri check
+if (wsUri.indexOf('@HOST_PORT') !== -1)
+{
+	while(host_port.endsWith('/')) {
+		host_port = host_port.substring(0, host_port.length - 1);
+	}
+
+	if(wsUri.indexOf("//") == 0) {
+		wsUri = wsUri.substring(2);
+	}
+
+	if(wsUri.indexOf("ws://") == 0 || wsUri.indexOf("wss://") == 0)
 	{
-		wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+		if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+		{
+			wsUri = wsUri.replace(/ws:\/\/@HOST_PORT@/im, host_port);
+			wsUri = wsUri.replace(/wss:\/\/@HOST_PORT@/im, host_port);
+		}
+		else
+		{
+			wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+		}
 	}
 	else
 	{
-		wsUri = "ws://" + wsUri.replace(/@HOST_PORT@/im, host_port);
+		if(host_port.indexOf("ws://") == 0 || host_port.indexOf("wss://") == 0)
+		{
+			wsUri = wsUri.replace(/@HOST_PORT@/im, host_port);
+		}
+		else
+		{
+			wsUri = "ws://" + wsUri.replace(/@HOST_PORT@/im, host_port);
+		}
 	}
 }
 
@@ -73,7 +95,7 @@ class ActWebsocketInterface
 		var querySet = this.getQuerySet();
 		if(typeof querySet["HOST_PORT"] != 'undefined')
 		{
-		    uri = querySet["HOST_PORT"] + path;
+				uri = querySet["HOST_PORT"] + path;
 		}
 		this.uri = uri;
 		this.id = null;
