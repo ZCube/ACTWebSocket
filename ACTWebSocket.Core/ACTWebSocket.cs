@@ -1016,6 +1016,10 @@ namespace ACTWebSocket_Plugin
         System.Timers.Timer overlayProcCheckTimer = null;
         public ACTWebSocketMain()
         {
+          // from Trecourt Nicolas <fosco@fosconetwork.org>
+          // github forced TLSv1.2
+          System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+          
             ChatFilter = false;
             InitializeComponent();
             if (ipc == null)
