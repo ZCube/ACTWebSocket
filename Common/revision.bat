@@ -1,1 +1,1 @@
-rev.py
+py -2 rev.py
