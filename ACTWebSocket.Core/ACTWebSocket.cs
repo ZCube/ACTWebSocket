@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Advanced_Combat_Tracker;
-using System.Xml;
 
 #pragma warning disable 0168 // variable declared but not used. 
 
 namespace ACTWebSocket_Plugin
 {
-    using static ACTWebSocketCore;
     using ACTWebSocket.Core;
-    using Classes;
     using Newtonsoft.Json.Linq;
     using Open.Nat;
-    using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
     using System.Threading;
@@ -23,9 +19,7 @@ namespace ACTWebSocket_Plugin
     using System.ComponentModel;
     using System.Text.RegularExpressions;
     using Tmds.MDns;
-    using System.Security.AccessControl;
     using System.Runtime.InteropServices;
-    using SharpCompress.Readers;
     using Microsoft.Win32;
     using System.Reflection;
     using System.Linq;

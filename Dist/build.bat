@@ -1,13 +1,14 @@
 @echo off
 if exist config.bat call config.bat
 
-CALL "%VS140COMNTOOLS%vsvars32.bat"
+REM CALL "%VS140COMNTOOLS%vsvars32.bat"
+set PATH=D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;%PATH%
 pushd ..
-if not exist nuget.exe wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+if not exist nuget.exe curl https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -o nuget.exe
 if %errorlevel% neq 0 exit /b %errorlevel%
 nuget restore -SolutionDirectory .
 if %errorlevel% neq 0 exit /b %errorlevel%
-devenv ActWebSocket.sln /build "Release"
+msbuild ActWebSocket.sln /tv:15.0 /t:Build /p:Configuration=Release /p:TargetFramework=v4.5
 if %errorlevel% neq 0 exit /b %errorlevel%
 if not exist Dist\temp mkdir Dist\temp
 if %errorlevel% neq 0 exit /b %errorlevel%

@@ -192,6 +192,16 @@ namespace ACTWebSocket_Plugin
                                 content = wc.DownloadData(github_url);
                                 res.StatusCode = 200;
                                 res.ContentType = wc.ResponseHeaders["Content-Type"];
+                                var tmp = Encoding.UTF8.GetString(content);
+
+                                string host_port = "//"+ req.Url.Host + ":" + req.Url.Port.ToString();
+                                string path_dir = "/github/" + m.Groups[1] + "/";
+
+                                tmp = tmp.Replace("href=\'/", "href=\'" + host_port + path_dir);
+                                tmp = tmp.Replace("href=\"/", "href=\"" + host_port + path_dir);
+                                tmp = tmp.Replace("src=\'/", "src=\'" + host_port + path_dir);
+                                tmp = tmp.Replace("src=\"/", "src=\"" + host_port + path_dir);
+                                content = Encoding.UTF8.GetBytes(tmp); 
                             }
                             catch (System.Net.WebException we)
                             {
