@@ -2209,6 +2209,12 @@ namespace ACTWebSocket_Plugin
                 try
                 {
                     Uri uri = new Uri(skinPath + "?HOST_PORT=" + (UseSSL ? "wss" : "ws") + url);
+                    int idx = -1;
+                    if ((idx = uri.Host.IndexOf(".github.io")) > 0)
+                    {
+                        var repo = uri.Host.Substring(0, idx);
+                        uri = new Uri((UseSSL ? "https" : "http") + url + "github/" + repo + uri.PathAndQuery);
+                    }
                     return uri.ToString();
                 }
                 catch (Exception e)

@@ -197,10 +197,20 @@ namespace ACTWebSocket_Plugin
                                 string host_port = "//"+ req.Url.Host + ":" + req.Url.Port.ToString();
                                 string path_dir = "/github/" + m.Groups[1] + "/";
 
+                                tmp = tmp.Replace("href=\'//", "href=\'$//");
+                                tmp = tmp.Replace("href=\"//", "href=\"$//");
+                                tmp = tmp.Replace("src=\'//", "src=\'$//");
+                                tmp = tmp.Replace("src=\"//", "src=\"$//");
+
                                 tmp = tmp.Replace("href=\'/", "href=\'" + host_port + path_dir);
                                 tmp = tmp.Replace("href=\"/", "href=\"" + host_port + path_dir);
                                 tmp = tmp.Replace("src=\'/", "src=\'" + host_port + path_dir);
                                 tmp = tmp.Replace("src=\"/", "src=\"" + host_port + path_dir);
+
+                                tmp = tmp.Replace("href=\'$//", "href=\'//");
+                                tmp = tmp.Replace("href=\"$//", "href=\"//");
+                                tmp = tmp.Replace("src=\'$//", "src=\'//");
+                                tmp = tmp.Replace("src=\"$//", "src=\"//");
                                 content = Encoding.UTF8.GetBytes(tmp); 
                             }
                             catch (System.Net.WebException we)
