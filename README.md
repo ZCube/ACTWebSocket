@@ -51,6 +51,11 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
 * Skin Directory : [ACT 경로]/OverlaySkin
 
+## GitHub.IO Reverse Proxy ##
+
+* from : https://user.github.io/somepath
+* to : http://localhost:10501/github/user/somepath (when ACTWebSocket use localhost:10501)
+
 ## Binary ##
 
 latest : [download](https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1)
