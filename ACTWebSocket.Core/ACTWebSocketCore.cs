@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -143,6 +144,7 @@ namespace ACTWebSocket_Plugin
 
             EventHandler<HttpRequestEventArgs> onget = (sender, e) =>
             {
+                byte[] content = null;
                 try
                 {
                     var req = e.Request;
@@ -175,32 +177,27 @@ namespace ACTWebSocket_Plugin
                     path = Uri.UnescapeDataString(path);
                     //uri.Query;
                     //uri.AbsolutePath;
-                    var content = httpServer.GetFile(path);
-
-                    if (content == null)
+                    if (path.StartsWith("/github/"))
                     {
-                        if (path == "/skins.json" || path == "/pages.json")
+                        Regex r = new Regex(@"\/github\/(?<User>[\w]*)\/(?<Other>.*)");
+                        // Match the regular expression pattern against a text string.
+                        Match m = r.Match(req.Url.PathAndQuery);
+                        if(m.Success)
                         {
-                            if (skinObject != null)
+                            System.Net.WebClient wc = new System.Net.WebClient();
+                            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
+                            string github_url = "https://" + m.Groups[1] + ".github.io/" + m.Groups[2];
+                            try
                             {
-                                lock (skinObject)
-                                {
-                                    res.ContentType = "text/html";
-                                    res.ContentEncoding = Encoding.UTF8;
-                                    var clone = skinObject.DeepClone();
-
-                                    JArray array = (JArray)clone["URLList"];
-                                    if (array != null)
-                                    {
-                                        foreach (JToken obj in array)
-                                        {
-                                            obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
-                                        }
-                                    }
-                                    res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString(Newtonsoft.Json.Formatting.None)));
-                                }
+                                content = wc.DownloadData(github_url);
+                                res.StatusCode = 200;
+                                res.ContentType = wc.ResponseHeaders["Content-Type"];
                             }
-                            else
+                            catch (System.Net.WebException we)
+                            {
+                                res.StatusCode = (int)we.Status;
+                            }
+                            catch (Exception)
                             {
                                 res.StatusCode = (int)HttpStatusCode.NotFound;
                             }
@@ -209,34 +206,71 @@ namespace ACTWebSocket_Plugin
                         {
                             res.StatusCode = (int)HttpStatusCode.NotFound;
                         }
-                        return;
                     }
-
-                    string extension = System.IO.Path.GetExtension(path);
-                    extension = extension.ToLower();
-                    res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
-                    if (extension == ".html" || extension == ".js")
+                    else
                     {
-                        res.ContentType = "text/html";
-                        res.ContentEncoding = Encoding.UTF8;
+                        httpServer.GetFile(path);
 
-                        string host_port = req.Url.Host+":"+req.Url.Port.ToString();// host + ":" + extPort.ToString();
-                        if (context.User != null)
+                        if (content == null)
                         {
-                            string username = context.User.Identity.Name;
-                            NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
-                            string password = cred.Password;
-                            host_port = username + ":" + password + "@" + host_port;
-                        }
-                        host_port += parent_path;
-                        res.SetCookie(new Cookie("HOST_PORT", host_port));
-                        String co = res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port);
-                        if (e.Request.Url.Scheme == "https")
-                        {
-                            co = co.Replace("ws://", "wss://").Replace("http://", "https://");
-                        }
-                        content = res.ContentEncoding.GetBytes(co);
+                            if (path == "/skins.json" || path == "/pages.json")
+                            {
+                                if (skinObject != null)
+                                {
+                                    lock (skinObject)
+                                    {
+                                        res.ContentType = "text/html";
+                                        res.ContentEncoding = Encoding.UTF8;
+                                        var clone = skinObject.DeepClone();
 
+                                        JArray array = (JArray)clone["URLList"];
+                                        if (array != null)
+                                        {
+                                            foreach (JToken obj in array)
+                                            {
+                                                obj["URL"] = gui.getURLPath(obj["URL"].ToObject<String>(), gui.RandomURL);
+                                            }
+                                        }
+                                        res.WriteContent(res.ContentEncoding.GetBytes(clone.ToString(Newtonsoft.Json.Formatting.None)));
+                                    }
+                                }
+                                else
+                                {
+                                    res.StatusCode = (int)HttpStatusCode.NotFound;
+                                }
+                            }
+                            else
+                            {
+                                res.StatusCode = (int)HttpStatusCode.NotFound;
+                            }
+                            return;
+                        }
+
+                        string extension = System.IO.Path.GetExtension(path);
+                        extension = extension.ToLower();
+                        res.ContentType = MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(path));
+                        if (extension == ".html" || extension == ".js")
+                        {
+                            res.ContentType = "text/html";
+                            res.ContentEncoding = Encoding.UTF8;
+
+                            string host_port = req.Url.Host + ":" + req.Url.Port.ToString();// host + ":" + extPort.ToString();
+                            if (context.User != null)
+                            {
+                                string username = context.User.Identity.Name;
+                                NetworkCredential cred = httpServer.UserCredentialsFinder(context.User.Identity);
+                                string password = cred.Password;
+                                host_port = username + ":" + password + "@" + host_port;
+                            }
+                            host_port += parent_path;
+                            res.SetCookie(new Cookie("HOST_PORT", host_port));
+                            String co = res.ContentEncoding.GetString(content).Replace("@HOST_PORT@", host_port);
+                            if (e.Request.Url.Scheme == "https")
+                            {
+                                co = co.Replace("ws://", "wss://").Replace("http://", "https://");
+                            }
+                            content = res.ContentEncoding.GetBytes(co);
+                        }
                     }
 
                     res.WriteContent(content);
