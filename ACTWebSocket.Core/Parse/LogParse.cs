@@ -114,9 +114,27 @@ namespace ACTWebSocket_Plugin
                         break;
                     case MessageType.AddBuff:
                         Combatants[Convert.ToUInt32(data[7], 16)].AddBuff(Convert.ToInt32(data[2], 16), Convert.ToInt32(data[4]));
+                        SendJSON(SendMessageType.AddBuff,
+                            JObject.FromObject(new
+                            {
+                                buffid = Convert.ToUInt32(data[2], 16),
+                                buffname = data[3],
+                                bufftick = Convert.ToDouble(data[4]),
+                                actor = data[7],
+                                target = data[9]
+                            }));
                         break;
                     case MessageType.RemoveBuff:
                         Combatants[Convert.ToUInt32(data[7], 16)].RemoveBuff(Convert.ToInt32(data[2], 16));
+                        SendJSON(SendMessageType.RemoveBuff,
+                            JObject.FromObject(new
+                            {
+                                buffid = Convert.ToUInt32(data[2], 16),
+                                buffname = data[3],
+                                bufftick = Convert.ToDouble(data[4]),
+                                actor = data[7],
+                                target = data[9]
+                            }));
                         break;
                     case MessageType.OutgoingAbility:
                         // 메모리?
@@ -210,7 +228,7 @@ namespace ACTWebSocket_Plugin
                          * 36|ActorMaxMP
                          * 37|ActorCurrentTP
                          * 38|ActorMaxTP (1000...)
-                         * 39|47.55971
+                         * 39|47.55971 <- 좌표와 관련 있음
                          * 40|-81.14174
                          * 41|54.5
                          * --------ACTORSTATUS

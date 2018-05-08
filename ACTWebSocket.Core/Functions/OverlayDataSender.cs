@@ -296,6 +296,7 @@ namespace ACTWebSocket_Plugin
                     Encounter[pair.Key] = pair.Value.ReplaceNaN();
                 }
                 obj["Encounter"] = Encounter;
+                obj["Encounter"]["CurrentZoneRaw"] = CurrentZoneID;
                 JObject Combatant = new JObject();
                 foreach (var pair in combatant)
                 {

@@ -81,5 +81,7 @@
         AbilityUse = 8,
         DoTHoT = 9,
         CombatData = 10,
+        AddBuff = 11,
+        RemoveBuff = 12,
     }
 }
