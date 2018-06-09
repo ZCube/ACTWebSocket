@@ -76,25 +76,22 @@
       <HintPath>C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.2\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="MimeTypeMap, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediaTypeMap.2.1.0.0\lib\net40\MimeTypeMap.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
       <HintPath>..\packages\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.15.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.15.2\lib\net45\SharpCompress.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.21.1\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -106,9 +103,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tmds.MDns, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tmds.MDns.0.6.0\lib\net45\Tmds.MDns.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Tmds.MDns, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tmds.MDns.0.7.0\lib\net45\Tmds.MDns.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.7528, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
