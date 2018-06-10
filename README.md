@@ -58,8 +58,6 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
 ## Binary ##
 
-latest : [download](https://www.dropbox.com/s/3lrsetatf9mrmnp/ACTWebSocket_latest.7z?dl=1)
-
 Release : [download](https://github.com/ZCube/ACTWebSocket/releases)
 
 ## License ##
