@@ -53,8 +53,8 @@ WebSocket Plugin for Advanced Combat Tracker v3
 
 ## GitHub.IO Reverse Proxy ##
 
-* from : https://user.github.io/somepath
-* to : http://localhost:10501/github/user/somepath (when ACTWebSocket use localhost:10501)
+* from : https://user.github.io/project/
+* to : http://localhost:10501/github/user/project/ (when ACTWebSocket use localhost:10501)
 
 ## Binary ##
 
