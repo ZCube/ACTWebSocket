@@ -197,7 +197,7 @@ namespace ACTWebSocket_Plugin
                                 {
                                     var tmp = Encoding.UTF8.GetString(content);
 
-                                    string host_port = "//" + req.Url.Host + ":" + req.Url.Port.ToString();
+                                    string host_port = req.Url.Host + ":" + req.Url.Port.ToString();
                                     string path_dir = "/github/" + m.Groups[1] + "/";
 
                                     tmp = tmp.Replace("href=\'//", "href=\'$//");
@@ -205,15 +205,19 @@ namespace ACTWebSocket_Plugin
                                     tmp = tmp.Replace("src=\'//", "src=\'$//");
                                     tmp = tmp.Replace("src=\"//", "src=\"$//");
 
-                                    tmp = tmp.Replace("href=\'/", "href=\'" + host_port + path_dir);
-                                    tmp = tmp.Replace("href=\"/", "href=\"" + host_port + path_dir);
-                                    tmp = tmp.Replace("src=\'/", "src=\'" + host_port + path_dir);
-                                    tmp = tmp.Replace("src=\"/", "src=\"" + host_port + path_dir);
+                                    tmp = tmp.Replace("href=\'/", "href=\'//" + host_port + path_dir);
+                                    tmp = tmp.Replace("href=\"/", "href=\"//" + host_port + path_dir);
+                                    tmp = tmp.Replace("src=\'/", "src=\'//" + host_port + path_dir);
+                                    tmp = tmp.Replace("src=\"/", "src=\"//" + host_port + path_dir);
 
                                     tmp = tmp.Replace("href=\'$//", "href=\'//");
                                     tmp = tmp.Replace("href=\"$//", "href=\"//");
                                     tmp = tmp.Replace("src=\'$//", "src=\'//");
                                     tmp = tmp.Replace("src=\"$//", "src=\"//");
+
+                                    tmp = tmp.Replace("@HOST_PORT@", host_port);
+                                    res.SetCookie(new Cookie("HOST_PORT", host_port));
+
                                     content = Encoding.UTF8.GetBytes(tmp);
                                 }
                             }
