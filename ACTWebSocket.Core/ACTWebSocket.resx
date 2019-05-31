@@ -1030,22 +1030,10 @@
     <value>5</value>
   </data>
   <data name="comboBoxOverlayProcType.Items" xml:space="preserve">
-    <value>x86_QT5.7.1</value>
+    <value>x86_QT5.12.2</value>
   </data>
   <data name="comboBoxOverlayProcType.Items1" xml:space="preserve">
-    <value>x64_QT5.7.1</value>
-  </data>
-  <data name="comboBoxOverlayProcType.Items2" xml:space="preserve">
-    <value>x86_QT5.8.0</value>
-  </data>
-  <data name="comboBoxOverlayProcType.Items3" xml:space="preserve">
-    <value>x64_QT5.8.0</value>
-  </data>
-  <data name="comboBoxOverlayProcType.Items4" xml:space="preserve">
-    <value>x86_QT5.12.3</value>
-  </data>
-  <data name="comboBoxOverlayProcType.Items5" xml:space="preserve">
-    <value>x64_QT5.12.3</value>
+    <value>x64_QT5.12.2</value>
   </data>
   <data name="comboBoxOverlayProcType.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 71</value>

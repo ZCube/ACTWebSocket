@@ -585,11 +585,7 @@ namespace ACTWebSocket_Plugin
             this.comboBoxOverlayProcType.FormattingEnabled = true;
             this.comboBoxOverlayProcType.Items.AddRange(new object[] {
             resources.GetString("comboBoxOverlayProcType.Items"),
-            resources.GetString("comboBoxOverlayProcType.Items1"),
-            resources.GetString("comboBoxOverlayProcType.Items2"),
-            resources.GetString("comboBoxOverlayProcType.Items3"),
-            resources.GetString("comboBoxOverlayProcType.Items4"),
-            resources.GetString("comboBoxOverlayProcType.Items5")});
+            resources.GetString("comboBoxOverlayProcType.Items1")});
             resources.ApplyResources(this.comboBoxOverlayProcType, "comboBoxOverlayProcType");
             this.comboBoxOverlayProcType.Name = "comboBoxOverlayProcType";
             this.comboBoxOverlayProcType.SelectedIndexChanged += new System.EventHandler(this.comboBoxOverlayProcType_SelectedIndexChanged);
@@ -1531,7 +1527,19 @@ namespace ACTWebSocket_Plugin
 
         private void ACTWebSocket_Load(object sender, EventArgs e)
         {
-            comboBoxOverlayProcType.SelectedIndex = 0;
+            List<string> OverlayProcTags = Utility.ReleaseInfos("https://github.com/ZCube/OverlayProc/releases/latest");
+            if (OverlayProcTags.Count > 0)
+            {
+                this.comboBoxOverlayProcType.Items.Clear();
+                for (int i=0;i<OverlayProcTags.Count;++i)
+                {
+                    this.comboBoxOverlayProcType.Items.Add(OverlayProcTags[i]);
+                }
+            }
+            if (comboBoxOverlayProcType.Items.Count>0)
+            {
+                comboBoxOverlayProcType.SelectedIndex = 0;
+            }
             String strHostName = string.Empty;
             strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
@@ -2880,6 +2888,7 @@ namespace ACTWebSocket_Plugin
 
             Task task = Task.Factory.StartNew(() =>
             {
+                string OverlayProcTag = Utility.ReleaseTag("https://github.com/ZCube/OverlayProc/releases");
                 try
                 {
                     WebClient webClient = new WebClient();
@@ -2890,8 +2899,8 @@ namespace ACTWebSocket_Plugin
 
                     //string baseurl = "https://static.zcube.kr/publish/OverlayProc/" + comboBoxOverlayProcType.Text.Trim() + "/";
                     //string infourl = baseurl + "info.json";
-                    string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
-                    string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
+                    string baseurl = "https://github.com/ZCube/OverlayProc/releases/download/"+OverlayProcTag + "/";
+                    string infourl = "https://github.com/ZCube/OverlayProc/releases/download/" + OverlayProcTag + "/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                     byte[] info = webClient.DownloadData(infourl);
                     String infotext = System.Text.Encoding.UTF8.GetString(info);
                     JObject jobject = JObject.Parse(infotext);
@@ -2998,10 +3007,12 @@ namespace ACTWebSocket_Plugin
                 string extractDir = pluginDirectory + "/overlay_proc";
                 string revisionFile = extractDir + "/.revision";
 
+                string OverlayProcTag = Utility.ReleaseTag("https://github.com/ZCube/OverlayProc/releases");
+
                 //string baseurl = "https://static.zcube.kr/publish/OverlayProc/"+ comboBoxOverlayProcType.Text.Trim() +"/";
                 //string infourl = baseurl + "info.json";
-                string baseurl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/";
-                string infourl = "https://github.com/ZCube/ACTWebSocket/releases/download/init/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
+                string baseurl = "https://github.com/ZCube/OverlayProc/releases/download/" + OverlayProcTag + "/";
+                string infourl = "https://github.com/ZCube/OverlayProc/releases/download/" + OverlayProcTag + "/OverlayProc_" + comboBoxOverlayProcType.Text.Trim() + "_info.json";
                 byte[] info = webClient.DownloadData(infourl);
                 String infotext = System.Text.Encoding.UTF8.GetString(info);
                 JObject jobject = JObject.Parse(infotext);

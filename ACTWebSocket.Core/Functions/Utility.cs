@@ -133,6 +133,44 @@ namespace ACTWebSocket.Core
             }
             return releaseTag;
         }
+        public static List<String> ReleaseInfos(string releaseURL = "https://github.com/ZCube/ACTWebSocket/releases/latest")
+        {
+            List<String> ret = new List<String>();
+
+            ToggleAllowUnsafeHeaderParsing(true);
+            WebClient wc = new WebClient();
+            wc.Headers["User-Agent"] = "ACTWebSocket (" + ACTWebSocketCore.currentVersionString + ")";
+            UTF8Encoding utf8 = new UTF8Encoding();
+            ///ZCube/ACTWebSocket/tree/
+            string releaseTag = null;
+            try
+            {
+                string data = utf8.GetString(wc.DownloadData(releaseURL));
+                //<a href="/ZCube/ACTWebSocket/tree/1.1.3" class="css-truncate">
+                var zz = Regex.Match(data, "/tree/(?<tag>[^\"]*)", RegexOptions.IgnoreCase);
+                releaseTag = zz.Groups["tag"].Value;
+
+                int dotCount = releaseTag.Count(x => x == '.');
+                if (dotCount == 0)
+                {
+                    releaseTag = "0.0.0.0";
+                }
+                else if (dotCount < 3 && dotCount > 0)
+                {
+                    releaseTag += string.Concat(Enumerable.Repeat(".0", 3 - dotCount));
+                }
+
+                var zz2 = Regex.Matches(data, "/download/"+ releaseTag + "/OverlayProc_" + "(?<name>[^.]*)" + ".zip/", RegexOptions.IgnoreCase);
+                for (int i = 0;i< zz2.Count;i++) {
+                    ret.Add(zz2[i].Groups["name"].Value);
+                }
+            }
+            catch (WebException we)
+            {
+                Console.Write(we.ToString());
+            }
+            return ret;
+        }
         public static String DevelVersion(string versionURL = "https://www.dropbox.com/s/eivc89zuj1lclhd/ACTWebSocket_version?dl=1")
         {
             ToggleAllowUnsafeHeaderParsing(true);
