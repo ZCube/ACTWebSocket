@@ -1,5 +1,4 @@
 # ACTWebSocket Plugin
-![N|Solid](https://raw.githubusercontent.com/laiglinne-ff/ACTWebSocket/master/logo.png)
 WebSocket Plugin for Advanced Combat Tracker v3
 
 [![Build status](https://ci.appveyor.com/api/projects/status/fsp6dwdeqsxp3anw/branch/master?svg=true)](https://ci.appveyor.com/project/ZCube/actwebsocket/branch/master)
